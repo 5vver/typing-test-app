@@ -2,28 +2,36 @@ import {
   Body,
   Controller,
   ForbiddenException,
-  Get,
   Post,
   Request,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../modules/users/dto/create-user.dto';
 import { UsersService } from '../modules/users/users.service';
-import { JwtAuthGuard } from './jwt-auth.guard';
+import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
     private usersService: UsersService,
+    private configService: ConfigService,
   ) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req) {
-    return this.authService.login(req.user);
+  async login(@Request() req, @Res() res: Response) {
+    const jwt = await this.authService.login(req.user);
+    res.cookie('jwt-access-token', jwt.access_token, {
+      httpOnly: true,
+      secure: this.configService.get<string>('NODE_ENV') !== 'development',
+      sameSite: 'strict',
+    });
+    return res.send('Logged in successfully');
   }
 
   @Post('register')
@@ -32,11 +40,5 @@ export class AuthController {
     if (await this.usersService.findByUsername(username))
       throw new ForbiddenException('User already exists');
     return await this.usersService.create(registerDto);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
   }
 }
