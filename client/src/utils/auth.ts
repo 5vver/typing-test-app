@@ -22,3 +22,5 @@ export const auth: Auth = {
   login,
   logout,
 };
+
+export const useAuth = () => ({ ...auth, isAuth: auth.status === "loggedIn" });
