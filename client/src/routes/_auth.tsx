@@ -5,7 +5,7 @@ export const Route = createFileRoute("/_auth")({
     if (context.auth.status !== "loggedIn") {
       throw redirect({
         to: "/login",
-        search: { redirectTo: location.pathname },
+        search: { redirect: location.pathname },
       });
     }
 
