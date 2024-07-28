@@ -34,6 +34,12 @@ export class AuthController {
     return res.send('Logged in successfully');
   }
 
+  @Post('logout')
+  async logout(@Res() res: Response) {
+    res.clearCookie('jwt-access-token');
+    return res.send('Logged out successfully');
+  }
+
   @Post('register')
   async register(@Body() registerDto: CreateUserDto) {
     const { username } = registerDto;

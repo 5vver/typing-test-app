@@ -26,6 +26,7 @@ function LoginComponent() {
 
   const router = useRouter();
   const search = Route.useSearch();
+  const navigate = Route.useNavigate();
 
   const isLoading = useRouterState({ select: (s) => s.isLoading });
 
@@ -38,13 +39,19 @@ function LoginComponent() {
     }
   }, [router, status, search.redirect]);
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     if (!username || !password) return;
 
-    auth.login(username, password);
-    router.invalidate();
+    try {
+      e.preventDefault();
+
+      auth.login(username, password);
+      router.invalidate();
+
+      await navigate({ to: search.redirect || fallback });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

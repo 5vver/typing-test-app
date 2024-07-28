@@ -62,10 +62,20 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout: Auth["logout"] = async () => {
+    if (auth.status === "loggedOut") return;
+
+    const { data, error } = await httpRequest<string>("auth/logout", {
+      method: "POST",
+      withCredentials: true,
+    });
+
+    if (error || data !== "Logged out successfully") return;
+
     setAuth((prev) => ({
       ...prev,
       status: "loggedOut",
       username: undefined,
+      role: undefined,
     }));
   };
 
