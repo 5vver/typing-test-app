@@ -19,8 +19,6 @@ export const httpRequest = async <T extends Record<keyof T, unknown>>(
       requestError = error;
     else requestError = new Error("An unknown error occurred");
   }
-  
-  console.log(requestData, requestError);
 
   return { data: requestData, error: requestError };
 };

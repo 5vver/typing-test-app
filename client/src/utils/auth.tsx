@@ -49,10 +49,10 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const login: Auth["login"] = async (username, password) => {
-    console.log("login");
     const { data, error } = await httpRequest<string>("auth/login", {
       method: "POST",
       data: { username, password },
+      withCredentials: true,
     });
 
     if (error || data !== "Logged in successfully") return;
