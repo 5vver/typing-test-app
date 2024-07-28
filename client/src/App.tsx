@@ -1,10 +1,12 @@
 import { RouterProvider } from "@tanstack/react-router";
-import { auth } from "@/utils/auth.ts";
+import { AuthProvider, useAuth } from "@/utils/auth.tsx";
 import { createRouter, TanStackRouterDevtools } from "./utils/router.tsx";
 
 const router = createRouter();
 
-function App() {
+const InnerApp = () => {
+  const auth = useAuth();
+
   return (
     <>
       <RouterProvider
@@ -15,6 +17,12 @@ function App() {
       <TanStackRouterDevtools router={router} position="bottom-right" />
     </>
   );
-}
+};
+
+const App = () => (
+  <AuthProvider>
+    <InnerApp />
+  </AuthProvider>
+);
 
 export default App;

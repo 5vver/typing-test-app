@@ -12,6 +12,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { AuthenticatedRequest } from '../../auth/types';
 
 @Controller('/users')
 export class UsersController {
@@ -29,8 +30,11 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  async getProfile(@Request() req: AuthenticatedRequest) {
+    const { userId } = req.user;
+    const { id, username, email, role } =
+      await this.usersService.findOne(userId);
+    return { id, username, email, role };
   }
 
   @Get(':id')

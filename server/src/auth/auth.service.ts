@@ -20,13 +20,15 @@ export class AuthService {
     pass: string,
   ): Promise<Omit<UserEntity, 'password'> | null> {
     const user = await this.usersService.findByUsername(username);
-    const isValid = await bcrypt.compare(pass, user.password);
+    if (!user) return null;
 
+    const isValid = await bcrypt.compare(pass, user.password);
     if (isValid) {
-      //eslint-disable-next-line @typescript-eslint/no-unused-vars
+      //eslint-disable-next-line @typescript-eslint/no-unused-vars -- take out password from user object
       const { password, ...result } = user;
       return result;
     }
+
     return null;
   }
 

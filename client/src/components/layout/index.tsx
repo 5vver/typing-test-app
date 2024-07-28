@@ -1,5 +1,5 @@
-import { FC, ReactNode } from "react";
-import { useAuth } from "@/utils/auth.ts";
+import { type FC, ReactNode } from "react";
+import { useAuth } from "@/utils/auth.tsx";
 import { Link } from "@tanstack/react-router";
 
 type Props = {

@@ -4,7 +4,7 @@ import {
   useRouter,
   useRouterState,
 } from "@tanstack/react-router";
-import { FormEvent, useLayoutEffect, useState } from "react";
+import { type FormEvent, useLayoutEffect, useState } from "react";
 import { z } from "zod";
 
 const fallback = "/" as const;
@@ -36,7 +36,7 @@ function LoginComponent() {
     if (status === "loggedIn" && search.redirect) {
       router.history.push(search.redirect);
     }
-  }, [status, search.redirect]);
+  }, [router, status, search.redirect]);
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
