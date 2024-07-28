@@ -39,16 +39,28 @@ const Layout: FC<Props> = ({ children }) => {
           <div className="p-0.5 text-white">Status: {status}</div>
 
           <div className="flex gap-4 text-slate-300">
-            <div>
-              <Link to="/profile" preload="intent">
-                Profile
-              </Link>
-            </div>
-            <div>
-              <Link to="/login" preload="intent">
-                login
-              </Link>
-            </div>
+            {status === "loggedIn" && (
+              <div>
+                <Link to="/profile" preload="intent">
+                  Profile
+                </Link>
+              </div>
+            )}
+
+            {status === "loggedOut" && (
+              <div className="flex gap-4">
+                <div>
+                  <Link to="/register" preload="intent">
+                    register
+                  </Link>
+                </div>
+                <div>
+                  <Link to="/login" preload="intent">
+                    login
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         </nav>
       </header>

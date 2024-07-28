@@ -1,16 +1,12 @@
-import {
-  createFileRoute,
-  redirect,
-  useRouter,
-  useRouterState,
-} from "@tanstack/react-router";
-import { type FormEvent, useLayoutEffect, useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
+import { redirect, useRouter, useRouterState } from "@tanstack/react-router";
+import { FormEvent, useLayoutEffect, useState } from "react";
 
 const fallback = "/" as const;
 
-export const Route = createFileRoute("/login")({
-  component: LoginComponent,
+export const Route = createFileRoute("/register")({
+  component: RegisterComponent,
   validateSearch: z.object({ redirect: z.string().optional().catch("") }),
   beforeLoad: ({ context, search }) => {
     if (context.auth.status === "loggedIn") {
@@ -19,7 +15,7 @@ export const Route = createFileRoute("/login")({
   },
 });
 
-function LoginComponent() {
+function RegisterComponent() {
   const { auth, status } = Route.useRouteContext({
     select: ({ auth }) => ({ auth, status: auth.status }),
   });
@@ -32,6 +28,7 @@ function LoginComponent() {
 
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
 
   useLayoutEffect(() => {
     if (status === "loggedIn" && search.redirect) {
@@ -41,22 +38,24 @@ function LoginComponent() {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    if (!username || !password) return;
+    if (!username || !password || !email) return;
+    let registered = false;
 
     try {
-      auth.login(username, password);
-      router.invalidate();
+      registered = await auth.register(username, password, email);
 
       await navigate({ to: search.redirect || fallback });
     } catch (error) {
       console.error(error);
+    } finally {
+      if (registered) alert(`Registered successfully: ${username}`);
+      else alert("Failed to register");
     }
   };
 
   return (
     <div className="p-2 grid gap-2 place-items-center">
-      <div>You must log in!</div>
+      <div>Register</div>
       <div className="h-2" />
       <form onSubmit={onSubmit} className="flex gap-2">
         <input
@@ -73,11 +72,18 @@ function LoginComponent() {
           className="border p-1 px-2 rounded"
           disabled={isLoading}
         />
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className="border p-1 px-2 rounded"
+          disabled={isLoading}
+        />
         <button
           type="submit"
           className="text-sm bg-blue-500 text-white border inline-block py-1 px-2 rounded"
         >
-          Login
+          Register
         </button>
       </form>
     </div>

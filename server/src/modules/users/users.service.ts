@@ -16,7 +16,7 @@ export class UsersService {
     private readonly usersStatisticsRepository: Repository<UserStatisticsEntity>,
   ) {}
 
-  async create(dto: CreateUserDto): Promise<UserEntity> {
+  async create(dto: CreateUserDto): Promise<string> {
     const { username, password, email, role } = dto;
 
     const user = new UserEntity();
@@ -25,7 +25,9 @@ export class UsersService {
     user.password = await bcrypt.hash(password, saltRounds);
     if (dto.role) user.role = role;
 
-    return await this.usersRepository.save(user);
+    const createdUser = await this.usersRepository.save(user);
+    if (!createdUser) throw new Error('Failed to create user');
+    return 'User created successfully';
   }
 
   async findAll(): Promise<UserEntity[]> {

@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserEntity } from './entities/user.entity';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { AuthenticatedRequest } from '../../auth/types';
 
@@ -19,12 +18,12 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
+  create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
-  getAll(): Promise<UserEntity[]> {
+  getAll() {
     return this.usersService.findAll();
   }
 
@@ -38,12 +37,12 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<UserEntity> {
+  findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
+  remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
 }

@@ -12,6 +12,11 @@ import { getUserProfile } from "@/queries/user-queries.ts";
 export type Auth = {
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  register: (
+    username: string,
+    password: string,
+    email: string,
+  ) => Promise<boolean>;
   status: "loggedIn" | "loggedOut";
   username?: string;
   role?: string;
@@ -20,6 +25,7 @@ export type Auth = {
 const authInstance: Auth = {
   login: async () => {},
   logout: async () => {},
+  register: async () => false,
   status: "loggedOut",
   username: undefined,
   role: undefined,
@@ -79,8 +85,21 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     }));
   };
 
+  const register: Auth["register"] = async (username, password, email) => {
+    const { data, error } = await httpRequest<string>("auth/register", {
+      method: "POST",
+      data: { username, password, email },
+      withCredentials: true,
+    });
+
+    if (error || data !== "User created successfully") return false;
+
+    console.log(`Registered successfully: ${username}`);
+    return true;
+  };
+
   return (
-    <AuthContext.Provider value={{ ...auth, login, logout }}>
+    <AuthContext.Provider value={{ ...auth, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
