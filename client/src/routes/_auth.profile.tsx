@@ -25,7 +25,7 @@ function ProfileComponent() {
       <div>Username: {username}</div>
       <button
         onClick={logOut}
-        className="text-sm bg-blue-500 text-white border inline-block py-1 px-2 rounded"
+        className="text-sm border inline-block py-1 px-2 rounded"
       >
         Logout
       </button>

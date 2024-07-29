@@ -29,7 +29,22 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ]
+      ],
+      "@assets/*": [
+        "./src/assets/*"
+      ],
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@queries/*": [
+        "./src/queries/*"
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ],
+      "@routes/*": [
+        "./src/routes/*"
+      ],
     }
   },
   "include": [
