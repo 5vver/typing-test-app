@@ -26,17 +26,23 @@ export class AuthController {
   @Post('login')
   async login(@Request() req, @Res() res: Response) {
     const jwt = await this.authService.login(req.user);
-    res.cookie('jwt-access-token', jwt.access_token, {
-      httpOnly: true,
-      secure: this.configService.get<string>('NODE_ENV') !== 'development',
-      sameSite: 'strict',
-    });
+
+    for (const [name, value] of Object.entries(jwt)) {
+      res.cookie(name, value, {
+        httpOnly: true,
+        secure: this.configService.get<string>('NODE_ENV') !== 'development',
+        sameSite: 'strict',
+      });
+    }
+
     return res.send('Logged in successfully');
   }
 
   @Post('logout')
   async logout(@Res() res: Response) {
     res.clearCookie('jwt-access-token');
+    res.clearCookie('jwt-refresh-token');
+    // increment version of refresh token in db to invalidate all refresh tokens
     return res.send('Logged out successfully');
   }
 

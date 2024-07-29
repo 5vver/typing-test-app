@@ -1,4 +1,4 @@
-import { type FC, ReactNode } from "react";
+import { type FC, type ReactNode } from "react";
 import { useAuth } from "@/utils/auth.tsx";
 import { Link } from "@tanstack/react-router";
 

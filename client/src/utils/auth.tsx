@@ -1,8 +1,8 @@
 import { httpRequest } from "@/utils/http-request.ts";
 import {
   createContext,
-  FC,
-  ReactNode,
+  type FC,
+  type ReactNode,
   useContext,
   useEffect,
   useState,
@@ -10,8 +10,8 @@ import {
 import { getUserProfile } from "@/queries/user-queries.ts";
 
 export type Auth = {
-  login: (username: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
+  login: (username: string, password: string) => Promise<boolean>;
+  logout: () => Promise<boolean>;
   register: (
     username: string,
     password: string,
@@ -23,8 +23,8 @@ export type Auth = {
 };
 
 const authInstance: Auth = {
-  login: async () => {},
-  logout: async () => {},
+  login: async () => false,
+  logout: async () => false,
   register: async () => false,
   status: "loggedOut",
   username: undefined,
@@ -61,21 +61,23 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       withCredentials: true,
     });
 
-    if (error || data !== "Logged in successfully") return;
+    if (error || data !== "Logged in successfully") return false;
 
     setAuth((prev) => ({ ...prev, status: "loggedIn", username }));
     console.log(password);
+
+    return true;
   };
 
   const logout: Auth["logout"] = async () => {
-    if (auth.status === "loggedOut") return;
+    if (auth.status === "loggedOut") return false;
 
     const { data, error } = await httpRequest<string>("auth/logout", {
       method: "POST",
       withCredentials: true,
     });
 
-    if (error || data !== "Logged out successfully") return;
+    if (error || data !== "Logged out successfully") return false;
 
     setAuth((prev) => ({
       ...prev,
@@ -83,6 +85,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       username: undefined,
       role: undefined,
     }));
+
+    return true;
   };
 
   const register: Auth["register"] = async (username, password, email) => {
@@ -91,6 +95,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       data: { username, password, email },
       withCredentials: true,
     });
+    
+    console.log(data);
 
     if (error || data !== "User created successfully") return false;
 

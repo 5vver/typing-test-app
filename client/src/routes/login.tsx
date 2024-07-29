@@ -43,9 +43,9 @@ function LoginComponent() {
     if (!username || !password) return;
 
     try {
-      await login(username, password);
+      const loggedIn = await login(username, password);
+      if (!loggedIn) return;
       router.invalidate();
-
       await navigate({ to: fallback });
     } catch (error) {
       console.error(error);

@@ -39,11 +39,27 @@ export class AuthService {
     };
 
     return {
-      access_token: this.jwtService.sign(payload),
+      'jwt-access-token': this.jwtService.sign(payload, {
+        expiresIn: '15 minutes',
+      }),
+      'jwt-refresh-token': this.jwtService.sign(payload, {
+        expiresIn: '30 days',
+      }),
     };
   }
 
-  getJwtSecretKey() {
-    return this.configService.get<string>('JWT_SECRET_KEY');
+  async refreshAccessToken(refreshToken: string) {
+    const payload = this.jwtService.verify<JwtPayload>(refreshToken);
+    const { sub } = payload;
+    const user = await this.usersService.findOne(sub);
+    if (!user) return null;
+
+    return {
+      access_token: this.jwtService.sign(payload, { expiresIn: '15 minutes' }),
+    };
+  }
+
+  async decodeToken(token: string) {
+    return this.jwtService.decode<JwtPayload>(token);
   }
 }

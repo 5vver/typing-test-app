@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { redirect, useRouter, useRouterState } from "@tanstack/react-router";
-import { FormEvent, useLayoutEffect, useState } from "react";
+import { type FormEvent, useLayoutEffect, useState } from "react";
 import { useAuth } from "@/utils/auth.tsx";
 
 const fallback = "/" as const;
@@ -10,7 +10,6 @@ export const Route = createFileRoute("/register")({
   component: RegisterComponent,
   validateSearch: z.object({ redirect: z.string().optional().catch("") }),
   beforeLoad: ({ context }) => {
-    console.log(context.auth.status);
     if (context.auth.status === "loggedIn") {
       throw redirect({ to: fallback });
     }
