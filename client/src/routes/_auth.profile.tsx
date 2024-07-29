@@ -9,7 +9,7 @@ function ProfileComponent() {
   const router = useRouter();
 
   const logOut = async () => {
-    auth.logout();
+    await auth.logout();
 
     router.invalidate();
     router.history.push("/");

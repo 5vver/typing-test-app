@@ -6,26 +6,24 @@ import {
 } from "@tanstack/react-router";
 import { type FormEvent, useLayoutEffect, useState } from "react";
 import { z } from "zod";
+import { useAuth } from "@/utils/auth.tsx";
 
 const fallback = "/" as const;
 
 export const Route = createFileRoute("/login")({
   component: LoginComponent,
   validateSearch: z.object({ redirect: z.string().optional().catch("") }),
-  beforeLoad: ({ context, search }) => {
+  beforeLoad: ({ context }) => {
     if (context.auth.status === "loggedIn") {
-      throw redirect({ to: search.redirect || fallback });
+      throw redirect({ to: fallback });
     }
   },
 });
 
 function LoginComponent() {
-  const { auth, status } = Route.useRouteContext({
-    select: ({ auth }) => ({ auth, status: auth.status }),
-  });
+  const { status, login } = useAuth();
 
   const router = useRouter();
-  const search = Route.useSearch();
   const navigate = Route.useNavigate();
 
   const isLoading = useRouterState({ select: (s) => s.isLoading });
@@ -34,21 +32,21 @@ function LoginComponent() {
   const [password, setPassword] = useState<string>("");
 
   useLayoutEffect(() => {
-    if (status === "loggedIn" && search.redirect) {
-      router.history.push(search.redirect);
+    if (status === "loggedIn") {
+      router.history.push(fallback);
     }
-  }, [router, status, search.redirect]);
+  }, [router, status]);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     if (!username || !password) return;
 
     try {
-      auth.login(username, password);
+      await login(username, password);
       router.invalidate();
 
-      await navigate({ to: search.redirect || fallback });
+      await navigate({ to: fallback });
     } catch (error) {
       console.error(error);
     }

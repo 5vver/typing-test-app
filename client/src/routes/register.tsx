@@ -2,26 +2,25 @@ import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { redirect, useRouter, useRouterState } from "@tanstack/react-router";
 import { FormEvent, useLayoutEffect, useState } from "react";
+import { useAuth } from "@/utils/auth.tsx";
 
 const fallback = "/" as const;
 
 export const Route = createFileRoute("/register")({
   component: RegisterComponent,
   validateSearch: z.object({ redirect: z.string().optional().catch("") }),
-  beforeLoad: ({ context, search }) => {
+  beforeLoad: ({ context }) => {
+    console.log(context.auth.status);
     if (context.auth.status === "loggedIn") {
-      throw redirect({ to: search.redirect || fallback });
+      throw redirect({ to: fallback });
     }
   },
 });
 
 function RegisterComponent() {
-  const { auth, status } = Route.useRouteContext({
-    select: ({ auth }) => ({ auth, status: auth.status }),
-  });
+  const { status, register } = useAuth();
 
   const router = useRouter();
-  const search = Route.useSearch();
   const navigate = Route.useNavigate();
 
   const isLoading = useRouterState({ select: (s) => s.isLoading });
@@ -31,10 +30,10 @@ function RegisterComponent() {
   const [email, setEmail] = useState<string>("");
 
   useLayoutEffect(() => {
-    if (status === "loggedIn" && search.redirect) {
-      router.history.push(search.redirect);
+    if (status === "loggedIn") {
+      router.history.push(fallback);
     }
-  }, [router, status, search.redirect]);
+  }, [router, status]);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,9 +41,9 @@ function RegisterComponent() {
     let registered = false;
 
     try {
-      registered = await auth.register(username, password, email);
+      registered = await register(username, password, email);
 
-      await navigate({ to: search.redirect || fallback });
+      await navigate({ to: "/login" });
     } catch (error) {
       console.error(error);
     } finally {
