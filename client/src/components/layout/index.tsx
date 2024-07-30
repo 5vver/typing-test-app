@@ -11,7 +11,7 @@ const Layout: FC<Props> = ({ children }) => {
   return (
     <div className='min-h-screen min-w-full'>
       <Header auth={auth} />
-      <div>{children}</div>
+      <div className='pt-2'>{children}</div>
     </div>
   );
 };

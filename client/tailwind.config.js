@@ -13,7 +13,6 @@ module.exports = {
       center: true,
       padding: "2rem",
     },
-    
     // custom properties
     screens: {
       'sm': '640px',
@@ -83,6 +82,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        current: 'currentColor',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
