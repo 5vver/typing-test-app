@@ -48,14 +48,30 @@ export class AuthService {
     };
   }
 
+  async verifyToken(token: string): Promise<JwtPayload | null> {
+    try {
+      return this.jwtService.verify<JwtPayload>(token);
+    } catch (error) {
+      return null;
+    }
+  }
+
   async refreshAccessToken(refreshToken: string) {
-    const payload = this.jwtService.verify<JwtPayload>(refreshToken);
-    const { sub } = payload;
+    const verifiedRefreshToken = await this.verifyToken(refreshToken);
+    if (!verifiedRefreshToken) return null;
+
+    const { sub } = verifiedRefreshToken;
     const user = await this.usersService.findOne(sub);
     if (!user) return null;
 
+    const payload: JwtPayload = {
+      username: user.username,
+      sub: user.id,
+    };
     return {
-      access_token: this.jwtService.sign(payload, { expiresIn: '15 minutes' }),
+      access_token: this.jwtService.sign(payload, {
+        expiresIn: '15 minutes',
+      }),
     };
   }
 
