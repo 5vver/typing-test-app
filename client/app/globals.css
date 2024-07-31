@@ -57,20 +57,20 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 240deg, 21%, 15%; /* --base color in hsl */
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 237deg, 16%, 23%; /* --surface0 */
+    --popover-foreground: 232deg, 97%, 85%;  /* --lavender */
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
+    --muted: 234deg, 13%, 31%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 234deg, 13%, 31%; /* --surface1 */
+    --accent-foreground: 226deg, 64%, 88%; /* --text */
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
@@ -89,7 +89,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
-    @apply text-[color:var(--lavender)];
+    @apply bg-background text-text;
+    /*@apply text-[color:var(--text)];*/
   }
 }

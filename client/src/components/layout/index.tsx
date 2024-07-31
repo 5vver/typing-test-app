@@ -9,9 +9,9 @@ const Layout: FC<Props> = ({ children }) => {
   const auth = useAuth();
 
   return (
-    <div className='min-h-screen min-w-full'>
+    <div className="min-h-screen min-w-full">
       <Header auth={auth} />
-      <div className='pt-2'>{children}</div>
+      <div className="pt-2">{children}</div>
     </div>
   );
 };

@@ -1,16 +1,19 @@
-import { type FC } from "react";
-import { Link } from "@tanstack/react-router";
+import { type FC, useCallback } from "react";
 import { Auth } from "@utils/auth.tsx";
-import { Icon } from "@components/Icon/icon.tsx";
 import { Logo } from "@components/layout/header/Logo.tsx";
-import {NavButtons} from "@components/layout/header/NavButtons.tsx";
+import { NavButtons } from "@components/layout/header/NavButtons.tsx";
+import { AccountDropdown } from "@components/layout/header/AccountDropdown.tsx";
 
 type Props = {
   auth: Auth;
 };
 
 const Header: FC<Props> = ({ auth }) => {
-  const { status } = auth;
+  const { status, logout } = auth;
+
+  const onLogout = useCallback(async () => {
+    return await logout();
+  }, [logout]);
 
   return (
     <div className="flex-row gap-x-1 h-14">
@@ -20,33 +23,8 @@ const Header: FC<Props> = ({ auth }) => {
           className="flex items-center content-center justify-between p-6 lg:px-8"
         >
           <Logo />
-
           <NavButtons />
-
-          <div className="flex gap-4 text-slate-300">
-            {status === "loggedIn" && (
-              <div>
-                <Link to="/profile" preload="intent">
-                  <Icon name="user-circle-solid" size={36} color="rosewater" />
-                </Link>
-              </div>
-            )}
-
-            {status === "loggedOut" && (
-              <div className="flex gap-4">
-                <div>
-                  <Link to="/register" preload="intent">
-                    register
-                  </Link>
-                </div>
-                <div>
-                  <Link to="/login" preload="intent">
-                    login
-                  </Link>
-                </div>
-              </div>
-            )}
-          </div>
+          <AccountDropdown status={status} onLogout={onLogout} />
         </nav>
       </header>
     </div>
