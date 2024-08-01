@@ -32,6 +32,9 @@ export class AuthController {
         httpOnly: true,
         secure: this.configService.get<string>('NODE_ENV') !== 'development',
         sameSite: 'strict',
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30), // 30 days
+        // for access token 30 days too, but it doesnt matter, it anyways will be invalid after 15 minutes
+        maxAge: 1000 * 60 * 60 * 24 * 30,
       });
     }
 

@@ -51,6 +51,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       httpOnly: true,
       secure: this.configService.get<string>('NODE_ENV') !== 'development',
       sameSite: 'strict',
+      expires: new Date(Date.now() + 1000 * 60 * 15), // 15 minutes
+      maxAge: 1000 * 60 * 15,
     });
 
     const newPayload = await this.authService.decodeToken(
