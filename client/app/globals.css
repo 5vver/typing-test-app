@@ -50,6 +50,7 @@
     --yellow: #f9e2af;
     --peach: #fab387;
     --maroon: #eba0ac;
+    --red: #ed8796;
     --mauve: #cba6f7;
     --pink: #f5c2e7;
     --flamingo: #f2cdcd;
@@ -71,10 +72,10 @@
     --muted-foreground: 215 20.2% 65.1%;
     --accent: 234deg, 13%, 31%; /* --surface1 */
     --accent-foreground: 226deg, 64%, 88%; /* --text */
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 351deg, 74%, 73%; /* --red */
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+    --border: 237deg, 16%, 23%;
+    --input: 237deg, 16%, 23%;
     --ring: 212.7 26.8% 83.9%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;

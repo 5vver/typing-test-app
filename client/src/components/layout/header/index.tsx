@@ -2,7 +2,7 @@ import { type FC, useCallback } from "react";
 import { Auth } from "@utils/auth.tsx";
 import { Logo } from "@components/layout/header/Logo.tsx";
 import { NavButtons } from "@components/layout/header/NavButtons.tsx";
-import { AccountDropdown } from "@components/layout/header/AccountDropdown.tsx";
+import { AccountDropdown } from "@components/layout/header/Account/AccountDropdown.tsx";
 
 type Props = {
   auth: Auth;
