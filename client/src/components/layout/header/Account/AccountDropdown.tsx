@@ -14,6 +14,7 @@ import { type Auth } from "@utils/auth.tsx";
 import { Dialog } from "@components/ui/dialog.tsx";
 import { LoginDialog } from "@components/layout/header/Account/LoginDialog.tsx";
 import { RegisterDialog } from "@components/layout/header/Account/RegisterDialog.tsx";
+import {Typography} from "@components/Typography.tsx";
 
 type Props = {
   status: Auth["status"];
@@ -57,16 +58,16 @@ const AccountDropdown: FC<Props> = ({ status, onLogout }) => {
           {status === "loggedOut" && (
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={onLoginClick}>
-                <div className="flex gap-x-1">
+                <div className="flex gap-x-1 items-center">
                   <Icon name="arrow-left-end-on-rectangle" size={20} />
-                  <span>Login</span>
+                  <Typography size='small'>Login</Typography>
                 </div>
               </DropdownMenuItem>
 
               <DropdownMenuItem onClick={onRegisterClick}>
-                <div className="flex gap-x-1">
+                <div className="flex gap-x-1 items-center">
                   <Icon name="user-plus-mini" size={20} />
-                  <span>Register</span>
+                  <Typography size='small'>Register</Typography>
                 </div>
               </DropdownMenuItem>
             </DropdownMenuGroup>

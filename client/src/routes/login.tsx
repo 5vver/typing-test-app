@@ -8,7 +8,7 @@ import { useLayoutEffect } from "react";
 import { z } from "zod";
 import { useAuth } from "@/utils/auth.tsx";
 import { LoginForm } from "@components/LoginForm";
-import { LoginFormValues } from "@components/LoginForm/form-schema.ts";
+import { type LoginFormValues } from "@components/LoginForm/form-schema.ts";
 
 const fallback = "/" as const;
 

@@ -13,7 +13,7 @@ const Layout: FC<Props> = ({ children }) => {
     <div className="min-h-screen min-w-full">
       <Header auth={auth} />
       <div className="pt-2 flex flex-col place-content-between">
-        <div className="lg:min-h-[836px]">{children}</div>
+        <div className="lg:min-h-[852px] p-6 lg:p-8">{children}</div>
         <Footer />
       </div>
     </div>

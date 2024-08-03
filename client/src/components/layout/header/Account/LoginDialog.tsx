@@ -5,11 +5,12 @@ import {
   DialogTitle,
 } from "@components/ui/dialog.tsx";
 import { LoginForm } from "@components/LoginForm";
-import { LoginFormValues } from "@components/LoginForm/form-schema.ts";
+import { type LoginFormValues } from "@components/LoginForm/form-schema.ts";
 import { useAuth } from "@utils/auth.tsx";
 
 export const LoginDialog: FC = () => {
   const { login } = useAuth();
+
   const onSubmit = useCallback(
     async (values: LoginFormValues) => {
       const { username, password } = values;
