@@ -1,4 +1,4 @@
-import { type FC, useCallback } from "react";
+import { Dispatch, type FC, SetStateAction, useCallback } from "react";
 import {
   DialogContent,
   DialogHeader,
@@ -6,11 +6,14 @@ import {
 } from "@components/ui/dialog.tsx";
 import { LoginForm } from "@components/LoginForm";
 import { type LoginFormValues } from "@components/LoginForm/form-schema.ts";
-import { useAuth } from "@utils/auth.tsx";
+import { type Auth } from "@utils/auth.tsx";
 
-export const LoginDialog: FC = () => {
-  const { login } = useAuth();
+type Props = {
+  login: Auth["login"];
+  setOpen: Dispatch<SetStateAction<boolean>>;
+};
 
+export const LoginDialog: FC<Props> = ({ login, setOpen }) => {
   const onSubmit = useCallback(
     async (values: LoginFormValues) => {
       const { username, password } = values;
@@ -20,11 +23,12 @@ export const LoginDialog: FC = () => {
       try {
         const loggedIn = await login(username, password);
         if (!loggedIn) return;
+        setOpen(false);
       } catch (error) {
         console.error(error);
       }
     },
-    [login],
+    [login, setOpen],
   );
 
   return (

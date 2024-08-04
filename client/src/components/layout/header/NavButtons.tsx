@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import type { Icons } from "@components/Icon/types.ts";
 import { Link } from "@tanstack/react-router";
-import { Icon } from "@components/Icon/icon.tsx";
+import { Icon } from "@components/Icon";
 import type { Color } from "@/types/tailwind.ts";
 
 type Nav = {

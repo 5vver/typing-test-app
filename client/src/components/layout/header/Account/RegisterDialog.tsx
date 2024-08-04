@@ -1,20 +1,25 @@
-import { type Dispatch, type FC, type SetStateAction, useCallback } from "react";
+import {
+  type Dispatch,
+  type FC,
+  type SetStateAction,
+  useCallback,
+} from "react";
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@components/ui/dialog.tsx";
-import { useAuth } from "@utils/auth.tsx";
+import { type Auth } from "@utils/auth.tsx";
 import { RegisterForm } from "@components/RegisterForm";
 import { type RegisterFormValues } from "@components/RegisterForm/form-schema.ts";
 import { useNavigate } from "@tanstack/react-router";
 
 type Props = {
-  setOpen?: Dispatch<SetStateAction<boolean>>;
+  register: Auth["register"];
+  setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const RegisterDialog: FC<Props> = ({ setOpen }) => {
-  const { register } = useAuth();
+const RegisterDialog: FC<Props> = ({ register, setOpen }) => {
   const navigate = useNavigate();
 
   const onSubmit = useCallback(
@@ -26,7 +31,7 @@ const RegisterDialog: FC<Props> = ({ setOpen }) => {
       try {
         const registered = await register(username, password, email);
         if (!registered) return;
-        setOpen?.(false);
+        setOpen(false);
         await navigate({ to: "/login" });
       } catch (error) {
         console.error(error);

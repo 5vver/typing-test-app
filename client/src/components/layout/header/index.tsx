@@ -1,20 +1,9 @@
-import { type FC, useCallback } from "react";
-import { Auth } from "@utils/auth.tsx";
+import { type FC } from "react";
 import { Logo } from "@components/layout/header/Logo.tsx";
 import { NavButtons } from "@components/layout/header/NavButtons.tsx";
-import { AccountDropdown } from "@components/layout/header/Account/AccountDropdown.tsx";
+import { AccountDropdown } from "@components/layout/header/Account";
 
-type Props = {
-  auth: Auth;
-};
-
-const Header: FC<Props> = ({ auth }) => {
-  const { status, logout } = auth;
-
-  const onLogout = useCallback(async () => {
-    return await logout();
-  }, [logout]);
-
+const Header: FC = () => {
   return (
     <div className="flex-row gap-x-1 h-14">
       <header className="absolute inset-x-0 top-0 z-50">
@@ -24,7 +13,7 @@ const Header: FC<Props> = ({ auth }) => {
         >
           <Logo />
           <NavButtons />
-          <AccountDropdown status={status} onLogout={onLogout} />
+          <AccountDropdown />
         </nav>
       </header>
     </div>

@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import { Icon } from "@components/Icon/icon.tsx";
+import { Icon } from "@components/Icon";
 import {Typography} from "@components/Typography.tsx";
 
 export const Logo: FC = () => {
