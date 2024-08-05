@@ -3,6 +3,13 @@ import type { Icons } from "@components/Icon/types.ts";
 import { Link } from "@tanstack/react-router";
 import { Icon } from "@components/Icon";
 import type { Color } from "@/types/tailwind.ts";
+import { Typography } from "@components/Typography.tsx";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@components/ui/tooltip.tsx";
 
 type Nav = {
   label: string;
@@ -13,25 +20,25 @@ type Nav = {
 
 const navElements: Nav[] = [
   {
-    label: "typing",
+    label: "Typing",
     link: "/",
     icon: "rocket-launch-solid",
     color: "maroon",
   },
   {
-    label: "leaderboard",
+    label: "Leaderboard",
     link: "/leaderboard",
     icon: "star-solid",
     color: "yellow",
   },
   {
-    label: "settings",
+    label: "Settings",
     link: "/settings",
     icon: "cog-6-tooth-solid",
     color: "blue",
   },
   {
-    label: "about",
+    label: "About",
     link: "/about",
     icon: "information-circle-solid",
     color: "teal",
@@ -40,15 +47,26 @@ const navElements: Nav[] = [
 
 const NavButtons: FC = () => {
   return (
-    <div className="hidden sm:flex gap-x-8 md:gap-x-12">
-      {navElements.map(({ label, link, icon, color }) => (
-        <Link key={label} to={link} preload="intent" title={label}>
-          <div className="flex gap-x-0.5 items-center">
-            <Icon name={icon} size={28} color={color} className="transition-colors duration-150 ease-in-out" hover />
-          </div>
-        </Link>
-      ))}
-    </div>
+    <TooltipProvider delayDuration={150}>
+      <div className="hidden sm:flex gap-x-8 md:gap-x-12">
+        {navElements.map(({ label, link, icon, color }) => (
+          <Tooltip key={label}>
+            <TooltipTrigger>
+              <Link to={link} preload="intent">
+                <div className="flex gap-x-1 items-center justify-center w-[36px] h-[36px] rounded-full hover:bg-surface2 transition-colors duration-150 ease-in-out">
+                  <Icon name={icon} size={24} color={color} />
+                </div>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <Typography size="small" className="font-medium">
+                {label}
+              </Typography>
+            </TooltipContent>
+          </Tooltip>
+        ))}
+      </div>
+    </TooltipProvider>
   );
 };
 

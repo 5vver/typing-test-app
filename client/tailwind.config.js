@@ -147,6 +147,13 @@ module.exports = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      boxShadow: {
+        'red': '30px 0 0 #ff3d00',
+        'white': '30px 0 0 #fff',
+      },
+      rotate: {
+        '3d-90-90-0-180': 'rotate3d(90, 90, 0, 180deg)',
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -156,10 +163,59 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        
+        // custom keyframes
+        rotate: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        "rotate2": {
+          "0%": { transform: "rotate(0deg) scale(0.8)" },
+          "50%": { transform: "rotate(360deg) scale(1.2)" },
+          "100%": { transform: "rotate(720deg) scale(0.8)" },
+        },
+        "ball1": {
+          "0%": {
+            boxShadow: "30px 0 0 #ff3d00",
+          },
+          "50%": {
+            boxShadow: "0 0 0 #ff3d00",
+            marginBottom: "0",
+            transform: "translate(15px, 15px)",
+          },
+          "100%": {
+            boxShadow: "30px 0 0 #ff3d00",
+            marginBottom: "10px",
+          },
+        },
+        "ball2": {
+          "0%": {
+            boxShadow: "30px 0 0 #fff",
+          },
+          "50%": {
+            boxShadow: "0 0 0 #fff",
+            marginTop: "-20px",
+            transform: "translate(15px, 15px)",
+          },
+          "100%": {
+            boxShadow: "30px 0 0 #fff",
+            marginTop: "0",
+          },
+        },
+        prixClip: {
+          '0%': { clipPath: 'polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)' },
+          '50%': { clipPath: 'polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)' },
+          '75%, 100%': { clipPath: 'polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        // custom animations
+        "rotate": "rotate 1s linear infinite",
+        "ball1": "ball1 1s infinite",
+        "ball2": "ball2 1s infinite",
+        "prixClip": "prixClip 1s linear infinite",
       },
     },
   },

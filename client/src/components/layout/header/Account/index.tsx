@@ -13,14 +13,16 @@ import { LoginDialog } from "@components/layout/header/Account/LoginDialog.tsx";
 import { RegisterDialog } from "@components/layout/header/Account/RegisterDialog.tsx";
 import { LoggedOutGroup } from "@components/layout/header/Account/LoggedOutGroup.tsx";
 import { LoggedInGroup } from "@components/layout/header/Account/LoggedInGroup.tsx";
+import { useNavigate } from "@tanstack/react-router";
 
 const AccountDropdown = () => {
   const { status, login, register, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState<"login" | "register">("login");
-
-  const [menuOpen, setMenuOpen] = useState(false);
 
   const onLoginClick = useCallback(() => {
     setDialogType("login");
@@ -36,7 +38,8 @@ const AccountDropdown = () => {
     const loggedOut = await logout();
     if (!loggedOut) return;
     setMenuOpen(false);
-  }, [logout, setMenuOpen]);
+    await navigate({ to: "/" });
+  }, [logout, setMenuOpen, navigate]);
 
   return (
     <>

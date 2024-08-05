@@ -61,7 +61,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       withCredentials: true,
     });
 
-    if (error || data !== "Logged in successfully") return false;
+    if (error) throw error;
+    if (data !== "Logged in successfully") return false;
 
     setAuth((prev) => ({ ...prev, status: "loggedIn", username }));
     console.log(password);
@@ -95,10 +96,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       data: { username, password, email },
       withCredentials: true,
     });
-    
-    console.log(data);
 
-    if (error || data !== "User created successfully") return false;
+    if (error) throw error;
+    if (data !== "User created successfully") return false;
 
     console.log(`Registered successfully: ${username}`);
     return true;
