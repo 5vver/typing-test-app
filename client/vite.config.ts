@@ -17,4 +17,8 @@ export default defineConfig({
       "@routes": path.resolve(__dirname, "./src/routes"),
     },
   },
+  server: {
+    host: 'localhost',
+    port: 5173,
+  }
 });

@@ -4,13 +4,16 @@ import {
 } from "@tanstack/react-router";
 import { routeTree } from "../routeTree.gen.ts";
 import { lazy } from "react";
+import { Spinner } from "@components/Spinner.tsx";
 
 export const createRouter = () => {
   const router = createTanStackRouter({
     routeTree,
     context: { auth: undefined! },
     defaultPendingComponent: () => (
-      <div className={`p-2 text-2xl`}>loading..</div>
+      <div className={`flex justify-center items-center p-2`}>
+        <Spinner />
+      </div>
     ),
     defaultErrorComponent: ({ error }) => <ErrorComponent error={error} />,
   });

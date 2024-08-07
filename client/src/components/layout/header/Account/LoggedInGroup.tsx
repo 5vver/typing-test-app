@@ -2,9 +2,7 @@ import { type FC, type MouseEvent, useCallback, useState } from "react";
 import {
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuSeparator,
 } from "@components/ui/dropdown-menu.tsx";
-import { Link } from "@tanstack/react-router";
 import { Icon } from "@components/Icon";
 import {
   AlertDialog,
@@ -28,7 +26,7 @@ export const LoggedInGroup: FC<Props> = ({ onLogoutClick }) => {
     (e: MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
       e.preventDefault();
-      
+
       setOpen(true);
     },
     [setOpen],
@@ -39,30 +37,23 @@ export const LoggedInGroup: FC<Props> = ({ onLogoutClick }) => {
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle>
+            <AlertDialogTitle>
+              Are you sure you want to log out?
+            </AlertDialogTitle>
             <AlertDialogDescription>
               You will be logged out of your account.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={onLogoutClick}>Continue</AlertDialogAction>
+            <AlertDialogAction onClick={onLogoutClick}>
+              Continue
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
       <DropdownMenuGroup>
-        <DropdownMenuItem>
-          <Link to="/profile" preload="intent" className="w-full">
-            <div className="flex gap-x-1">
-              <Icon name="user-circle-mini" size={20} />
-              <span>Profile</span>
-            </div>
-          </Link>
-        </DropdownMenuItem>
-
-        <DropdownMenuSeparator />
-
         <DropdownMenuItem onClick={onInnerLogout}>
           <div className="flex gap-x-1">
             <Icon name="arrow-right-start-on-rectangle" size={20} />

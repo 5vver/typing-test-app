@@ -13,7 +13,7 @@ const Spinner: FC<Props> = ({ size = "md" }) => {
 
   return (
     <div
-      className={`${sizeClasses[size]} border-solid border-[5px] border-white border-b-transparent rounded-full inline-block box-border animate-rotate`}
+      className={`${sizeClasses[size]} border-solid border-[5px] border-lavender border-b-transparent rounded-full inline-block box-border animate-rotate`}
     ></div>
   );
 

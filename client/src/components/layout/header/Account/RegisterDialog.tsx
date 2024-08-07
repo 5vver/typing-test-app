@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 import {
-  DialogContent,
+  DialogContent, DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@components/ui/dialog.tsx";
@@ -14,7 +14,7 @@ import { type Auth } from "@utils/auth.tsx";
 import { RegisterForm } from "@components/RegisterForm";
 import { type RegisterFormValues } from "@components/RegisterForm/form-schema.ts";
 import { useNavigate } from "@tanstack/react-router";
-import axios from "axios";
+import { isAxiosError } from "axios";
 import { Alert } from "@components/Alert.tsx";
 
 type Props = {
@@ -28,26 +28,30 @@ const RegisterDialog: FC<Props> = ({ register, setOpen }) => {
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const onSubmit = useCallback(
     async (values: RegisterFormValues) => {
       const { username, password, email } = values;
 
       if (!username || !password) return;
 
+      setIsLoading(true);
       try {
         const registered = await register(username, password, email);
         if (!registered) return;
         setOpen(false);
         await navigate({ to: "/login" });
       } catch (error) {
-        if (axios.isAxiosError(error))
-          setAlertMessage(error.response?.data.message);
+        if (isAxiosError(error)) setAlertMessage(error.response?.data.message);
         else if (error instanceof Error) setAlertMessage(error.message);
         else setAlertMessage("An error occurred during registration.");
         setAlertOpen(true);
+      } finally {
+        setIsLoading(false);
       }
     },
-    [register, setOpen, navigate, setAlertMessage, setAlertOpen],
+    [register, setOpen, navigate, setAlertMessage, setAlertOpen, setIsLoading],
   );
 
   return (
@@ -55,9 +59,10 @@ const RegisterDialog: FC<Props> = ({ register, setOpen }) => {
       <DialogContent className="w-full xs:w-1/2 lg:w-1/3">
         <DialogHeader>
           <DialogTitle>Register</DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
         <div className="p-4">
-          <RegisterForm onSubmit={onSubmit} />
+          <RegisterForm onSubmit={onSubmit} isLoading={isLoading} />
         </div>
       </DialogContent>
 

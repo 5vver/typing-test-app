@@ -1,11 +1,12 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { Profile } from "@components/Profile/Profile.tsx";
 
 export const Route = createFileRoute("/_auth/profile")({
   component: ProfileComponent,
 });
 
 function ProfileComponent() {
-  const { username, auth } = Route.useRouteContext();
+  const { auth } = Route.useRouteContext();
   const router = useRouter();
 
   const logOut = async () => {
@@ -20,15 +21,5 @@ function ProfileComponent() {
     router.history.push("/");
   };
 
-  return (
-    <div>
-      <div>Username: {username}</div>
-      <button
-        onClick={logOut}
-        className="text-sm border inline-block py-1 px-2 rounded"
-      >
-        Logout
-      </button>
-    </div>
-  );
+  return <Profile auth={auth} />;
 }

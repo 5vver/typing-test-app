@@ -16,12 +16,14 @@ import {
 } from "@components/ui/form.tsx";
 import { Input } from "@components/ui/input.tsx";
 import { Button } from "@components/ui/button.tsx";
+import { Spinner } from "@components/Spinner.tsx";
 
 type Props = {
   onSubmit: (values: RegisterFormValues) => void;
+  isLoading?: boolean;
 };
 
-const RegisterForm: FC<Props> = ({ onSubmit }) => {
+const RegisterForm: FC<Props> = ({ onSubmit, isLoading }) => {
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
@@ -42,7 +44,11 @@ const RegisterForm: FC<Props> = ({ onSubmit }) => {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="Your username" {...field} />
+                <Input
+                  placeholder="Your username"
+                  autoComplete="username"
+                  {...field}
+                />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />
@@ -55,7 +61,12 @@ const RegisterForm: FC<Props> = ({ onSubmit }) => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="Your password" {...field} />
+                <Input
+                  type="password"
+                  placeholder="Your password"
+                  autoComplete="new-password"
+                  {...field}
+                />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />
@@ -68,7 +79,12 @@ const RegisterForm: FC<Props> = ({ onSubmit }) => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="Your email" {...field} />
+                <Input
+                  type="email"
+                  placeholder="Your email"
+                  autoComplete="email"
+                  {...field}
+                />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />
@@ -78,7 +94,9 @@ const RegisterForm: FC<Props> = ({ onSubmit }) => {
         />
 
         <div className="flex justify-end">
-          <Button type="submit">Register</Button>
+          <Button type="submit">
+            {isLoading ? <Spinner size="sm" /> : <>Register</>}
+          </Button>
         </div>
       </form>
     </Form>

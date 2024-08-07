@@ -2,7 +2,6 @@ import { useCallback, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu.tsx";
@@ -14,9 +13,10 @@ import { RegisterDialog } from "@components/layout/header/Account/RegisterDialog
 import { LoggedOutGroup } from "@components/layout/header/Account/LoggedOutGroup.tsx";
 import { LoggedInGroup } from "@components/layout/header/Account/LoggedInGroup.tsx";
 import { useNavigate } from "@tanstack/react-router";
+import { ProfileMini } from "@components/Profile/ProfileMini.tsx";
 
 const AccountDropdown = () => {
-  const { status, login, register, logout } = useAuth();
+  const { status, username, login, register, logout } = useAuth();
   const navigate = useNavigate();
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -62,7 +62,7 @@ const AccountDropdown = () => {
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-52">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <ProfileMini status={status} username={username} />
           <DropdownMenuSeparator />
           {status === "loggedOut" && (
             <LoggedOutGroup

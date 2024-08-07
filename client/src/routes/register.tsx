@@ -22,7 +22,7 @@ function RegisterComponent() {
   const router = useRouter();
   const navigate = Route.useNavigate();
 
-  const isLoading = useRouterState({ select: (s) => s.isLoading });
+  const isRouterLoading = useRouterState({ select: (s) => s.isLoading });
 
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -61,21 +61,21 @@ function RegisterComponent() {
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Username"
           className="border p-1 px-2 rounded"
-          disabled={isLoading}
+          disabled={isRouterLoading}
         />
         <input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           className="border p-1 px-2 rounded"
-          disabled={isLoading}
+          disabled={isRouterLoading}
         />
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
           className="border p-1 px-2 rounded"
-          disabled={isLoading}
+          disabled={isRouterLoading}
         />
         <button
           type="submit"

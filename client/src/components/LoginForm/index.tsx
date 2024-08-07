@@ -16,12 +16,14 @@ import {
   loginFormSchema,
   LoginFormValues,
 } from "@components/LoginForm/form-schema.ts";
+import { Spinner } from "@components/Spinner.tsx";
 
 type Props = {
   onSubmit: (values: LoginFormValues) => void;
+  isLoading?: boolean;
 };
 
-const LoginForm: FC<Props> = ({ onSubmit }) => {
+const LoginForm: FC<Props> = ({ onSubmit, isLoading }) => {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -32,13 +34,20 @@ const LoginForm: FC<Props> = ({ onSubmit }) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-2">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-y-2"
+      >
         <FormField
           render={({ field }) => (
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="Your username" {...field} />
+                <Input
+                  placeholder="Your username"
+                  autoComplete="username"
+                  {...field}
+                />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />
@@ -51,7 +60,12 @@ const LoginForm: FC<Props> = ({ onSubmit }) => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="Your password" {...field} />
+                <Input
+                  type="password"
+                  placeholder="Your password"
+                  autoComplete="current-password"
+                  {...field}
+                />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />
@@ -61,7 +75,7 @@ const LoginForm: FC<Props> = ({ onSubmit }) => {
         />
         <div className="flex justify-end">
           <Button type="submit" className="">
-            Log in
+            {isLoading ? <Spinner size="sm" /> : <>Log in</>}
           </Button>
         </div>
       </form>
