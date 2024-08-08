@@ -1,12 +1,12 @@
-import { type FC } from "react";
-import { Typography } from "@components/Typography.tsx";
-import { Icon } from "@components/Icon";
+import { Icon } from '@components/Icon';
+import { Typography } from '@components/Typography.tsx';
+import { type FC } from 'react';
 
 const Footer: FC = () => {
   return (
     <div className="bg-mantle">
       <div className="hidden lg:flex items-center place-content-between py-2 lg:px-8">
-        <div className='flex gap-8 px-32'>
+        <div className="flex gap-8 px-32">
           <Icon name="github" size={20} color="rosewater" />
           <Icon name="telegram" size={24} color="rosewater" />
         </div>

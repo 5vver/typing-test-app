@@ -1,9 +1,4 @@
-import { type FC, type MouseEvent, useCallback, useState } from "react";
-import {
-  DropdownMenuGroup,
-  DropdownMenuItem,
-} from "@components/ui/dropdown-menu.tsx";
-import { Icon } from "@components/Icon";
+import { Icon } from '@components/Icon';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,7 +8,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@components/ui/alert-dialog.tsx";
+} from '@components/ui/alert-dialog.tsx';
+import {
+  DropdownMenuGroup,
+  DropdownMenuItem,
+} from '@components/ui/dropdown-menu.tsx';
+import { type FC, type MouseEvent, useCallback, useState } from 'react';
 
 type Props = {
   onLogoutClick: () => void;

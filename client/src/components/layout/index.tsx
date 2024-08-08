@@ -1,6 +1,6 @@
-import { type FC, type ReactNode } from "react";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@components/layout/footer";
+import { Header } from '@/components/layout/header';
+import { Footer } from '@components/layout/footer';
+import { type FC, type ReactNode } from 'react';
 
 type Props = {
   children: ReactNode;

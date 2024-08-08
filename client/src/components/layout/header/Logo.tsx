@@ -1,13 +1,13 @@
-import { type FC } from "react";
-import { Icon } from "@components/Icon";
-import { Typography } from "@components/Typography.tsx";
-import { useIsScreenSmall } from "@/hooks/isScreenSmall.ts";
+import { useIsScreenSmall } from '@/hooks/isScreenSmall.ts';
+import { Icon } from '@components/Icon';
+import { NavButtons } from '@components/layout/header/NavButtons.tsx';
+import { Typography } from '@components/Typography.tsx';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@components/ui/dropdown-menu.tsx";
-import { NavButtons } from "@components/layout/header/NavButtons.tsx";
+} from '@components/ui/dropdown-menu.tsx';
+import { type FC } from 'react';
 
 export const Logo: FC = () => {
   const isScreenSmall = useIsScreenSmall();
@@ -24,8 +24,8 @@ export const Logo: FC = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="min-w-10">
         <NavButtons
-          className="flex flex-col"
-          tooltipContentProps={{ side: "right", sideOffset: 12 }}
+          className="flex flex-col gap-y-2"
+          tooltipContentProps={{ side: 'right', sideOffset: 12 }}
         />
       </DropdownMenuContent>
     </DropdownMenu>

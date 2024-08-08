@@ -1,16 +1,16 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { z } from "zod";
-import { redirect, useRouter, useRouterState } from "@tanstack/react-router";
-import { type FormEvent, useLayoutEffect, useState } from "react";
-import { useAuth } from "@/utils/auth.tsx";
+import { createFileRoute } from '@tanstack/react-router';
+import { z } from 'zod';
+import { redirect, useRouter, useRouterState } from '@tanstack/react-router';
+import { type FormEvent, useLayoutEffect, useState } from 'react';
+import { useAuth } from '@/utils/auth.tsx';
 
-const fallback = "/" as const;
+const fallback = '/' as const;
 
-export const Route = createFileRoute("/register")({
+export const Route = createFileRoute('/register')({
   component: RegisterComponent,
-  validateSearch: z.object({ redirect: z.string().optional().catch("") }),
+  validateSearch: z.object({ redirect: z.string().optional().catch('') }),
   beforeLoad: ({ context }) => {
-    if (context.auth.status === "loggedIn") {
+    if (context.auth.status === 'loggedIn') {
       throw redirect({ to: fallback });
     }
   },
@@ -24,12 +24,12 @@ function RegisterComponent() {
 
   const isRouterLoading = useRouterState({ select: (s) => s.isLoading });
 
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
 
   useLayoutEffect(() => {
-    if (status === "loggedIn") {
+    if (status === 'loggedIn') {
       router.history.push(fallback);
     }
   }, [router, status]);
@@ -42,12 +42,12 @@ function RegisterComponent() {
     try {
       registered = await register(username, password, email);
 
-      await navigate({ to: "/login" });
+      await navigate({ to: '/login' });
     } catch (error) {
       console.error(error);
     } finally {
       if (registered) alert(`Registered successfully: ${username}`);
-      else alert("Failed to register");
+      else alert('Failed to register');
     }
   };
 

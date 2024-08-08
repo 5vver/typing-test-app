@@ -1,7 +1,7 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { Profile } from "@components/Profile/Profile.tsx";
+import { Profile } from '@components/Profile/Profile.tsx';
+import { createFileRoute, useRouter } from '@tanstack/react-router';
 
-export const Route = createFileRoute("/_auth/profile")({
+export const Route = createFileRoute('/_auth/profile')({
   component: ProfileComponent,
 });
 
@@ -13,12 +13,12 @@ function ProfileComponent() {
     const loggedOut = await auth.logout();
 
     if (!loggedOut) {
-      console.error("Failed to log out");
+      console.error('Failed to log out');
       return;
     }
 
     router.invalidate();
-    router.history.push("/");
+    router.history.push('/');
   };
 
   return <Profile auth={auth} />;

@@ -1,24 +1,25 @@
+import { Alert } from '@components/Alert.tsx';
+import { RegisterForm } from '@components/RegisterForm';
+import { type RegisterFormValues } from '@components/RegisterForm/form-schema.ts';
+import {
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@components/ui/dialog.tsx';
+import { useNavigate } from '@tanstack/react-router';
+import { type Auth } from '@utils/auth.tsx';
+import { isAxiosError } from 'axios';
 import {
   type Dispatch,
   type FC,
   type SetStateAction,
   useCallback,
   useState,
-} from "react";
-import {
-  DialogContent, DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@components/ui/dialog.tsx";
-import { type Auth } from "@utils/auth.tsx";
-import { RegisterForm } from "@components/RegisterForm";
-import { type RegisterFormValues } from "@components/RegisterForm/form-schema.ts";
-import { useNavigate } from "@tanstack/react-router";
-import { isAxiosError } from "axios";
-import { Alert } from "@components/Alert.tsx";
+} from 'react';
 
 type Props = {
-  register: Auth["register"];
+  register: Auth['register'];
   setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
@@ -26,7 +27,7 @@ const RegisterDialog: FC<Props> = ({ register, setOpen }) => {
   const navigate = useNavigate();
 
   const [alertOpen, setAlertOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
+  const [alertMessage, setAlertMessage] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,11 +42,11 @@ const RegisterDialog: FC<Props> = ({ register, setOpen }) => {
         const registered = await register(username, password, email);
         if (!registered) return;
         setOpen(false);
-        await navigate({ to: "/login" });
+        await navigate({ to: '/login' });
       } catch (error) {
         if (isAxiosError(error)) setAlertMessage(error.response?.data.message);
         else if (error instanceof Error) setAlertMessage(error.message);
-        else setAlertMessage("An error occurred during registration.");
+        else setAlertMessage('An error occurred during registration.');
         setAlertOpen(true);
       } finally {
         setIsLoading(false);

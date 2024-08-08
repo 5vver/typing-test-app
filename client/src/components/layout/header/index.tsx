@@ -1,7 +1,7 @@
-import { type FC } from "react";
-import { Logo } from "@components/layout/header/Logo.tsx";
-import { NavButtons } from "@components/layout/header/NavButtons.tsx";
-import { AccountDropdown } from "@components/layout/header/Account";
+import { AccountDropdown } from '@components/layout/header/Account';
+import { Logo } from '@components/layout/header/Logo.tsx';
+import { NavButtons } from '@components/layout/header/NavButtons.tsx';
+import { type FC } from 'react';
 
 const Header: FC = () => {
   return (

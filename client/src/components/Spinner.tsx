@@ -1,14 +1,14 @@
-import { type FC } from "react";
+import { type FC } from 'react';
 
 type Props = {
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg';
 };
 
-const Spinner: FC<Props> = ({ size = "md" }) => {
+const Spinner: FC<Props> = ({ size = 'md' }) => {
   const sizeClasses = {
-    sm: "w-[24px] h-[24px]",
-    md: "w-[36px] h-[36px]",
-    lg: "w-[48px] h-[48px]",
+    sm: 'w-[24px] h-[24px]',
+    md: 'w-[36px] h-[36px]',
+    lg: 'w-[48px] h-[48px]',
   };
 
   return (

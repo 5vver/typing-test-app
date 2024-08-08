@@ -1,29 +1,30 @@
+import { Alert } from '@components/Alert.tsx';
+import { LoginForm } from '@components/LoginForm';
+import { type LoginFormValues } from '@components/LoginForm/form-schema.ts';
+import {
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@components/ui/dialog.tsx';
+import { type Auth } from '@utils/auth.tsx';
+import { isAxiosError } from 'axios';
 import {
   Dispatch,
   type FC,
   SetStateAction,
   useCallback,
   useState,
-} from "react";
-import {
-  DialogContent, DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@components/ui/dialog.tsx";
-import { LoginForm } from "@components/LoginForm";
-import { type LoginFormValues } from "@components/LoginForm/form-schema.ts";
-import { type Auth } from "@utils/auth.tsx";
-import { isAxiosError } from "axios";
-import { Alert } from "@components/Alert.tsx";
+} from 'react';
 
 type Props = {
-  login: Auth["login"];
+  login: Auth['login'];
   setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 export const LoginDialog: FC<Props> = ({ login, setOpen }) => {
   const [alertOpen, setAlertOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
+  const [alertMessage, setAlertMessage] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,7 +42,7 @@ export const LoginDialog: FC<Props> = ({ login, setOpen }) => {
       } catch (error) {
         if (isAxiosError(error)) setAlertMessage(error.response?.data.message);
         else if (error instanceof Error) setAlertMessage(error.message);
-        else setAlertMessage("An error occurred during login.");
+        else setAlertMessage('An error occurred during login.');
         setAlertOpen(true);
       } finally {
         setIsLoading(false);

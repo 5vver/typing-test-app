@@ -1,30 +1,30 @@
-import { type FC } from "react";
-import { type Auth } from "@utils/auth.tsx";
-import { DropdownMenuLabel } from "@components/ui/dropdown-menu.tsx";
-import { Avatar, AvatarFallback, AvatarImage } from "@components/ui/avatar.tsx";
-import { Typography } from "@components/Typography.tsx";
-import { Link } from "@tanstack/react-router";
+import { Typography } from '@components/Typography.tsx';
+import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar.tsx';
+import { DropdownMenuLabel } from '@components/ui/dropdown-menu.tsx';
+import { Link } from '@tanstack/react-router';
+import { type Auth } from '@utils/auth.tsx';
+import { type FC } from 'react';
 
 type Props = {
-  status: Auth["status"];
-  username?: Auth["username"];
+  status: Auth['status'];
+  username?: Auth['username'];
 };
 
 export const ProfileMini: FC<Props> = ({ status, username }) => {
   const fallback = username
     ? username
-        .split(" ")
+        .split(' ')
         .map((s) => s[0])
-        .join("")
+        .join('')
         .toUpperCase()
-    : "";
+    : '';
 
   return (
     <>
-      {status === "loggedOut" && (
+      {status === 'loggedOut' && (
         <DropdownMenuLabel>Authorization</DropdownMenuLabel>
       )}
-      {status === "loggedIn" && (
+      {status === 'loggedIn' && (
         <div className="flex flex-col gap-2 items-center">
           <Link to="/profile" preload="intent">
             <Avatar className="w-[50px] h-[50px]">

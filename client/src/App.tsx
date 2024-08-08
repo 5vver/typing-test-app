@@ -1,8 +1,8 @@
-import { RouterProvider } from "@tanstack/react-router";
-import { AuthProvider, useAuth } from "@/utils/auth.tsx";
-import { createRouter, TanStackRouterDevtools } from "./utils/router.tsx";
-import { type FC } from "react";
-import { ThemeProvider } from "@components/theme-provider.tsx";
+import { AuthProvider, useAuth } from '@/utils/auth.tsx';
+import { ThemeProvider } from '@components/theme-provider.tsx';
+import { RouterProvider } from '@tanstack/react-router';
+import { type FC } from 'react';
+import { createRouter, TanStackRouterDevtools } from './utils/router.tsx';
 
 const router = createRouter();
 

@@ -1,4 +1,9 @@
-import { type FC } from "react";
+import {
+  loginFormSchema,
+  LoginFormValues,
+} from '@components/LoginForm/form-schema.ts';
+import { Spinner } from '@components/Spinner.tsx';
+import { Button } from '@components/ui/button.tsx';
 import {
   Form,
   FormControl,
@@ -7,16 +12,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@components/ui/form.tsx";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@components/ui/button.tsx";
-import { Input } from "@components/ui/input.tsx";
-import {
-  loginFormSchema,
-  LoginFormValues,
-} from "@components/LoginForm/form-schema.ts";
-import { Spinner } from "@components/Spinner.tsx";
+} from '@components/ui/form.tsx';
+import { Input } from '@components/ui/input.tsx';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { type FC } from 'react';
+import { useForm } from 'react-hook-form';
 
 type Props = {
   onSubmit: (values: LoginFormValues) => void;
@@ -27,8 +27,8 @@ const LoginForm: FC<Props> = ({ onSubmit, isLoading }) => {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      username: "",
-      password: "",
+      username: '',
+      password: '',
     },
   });
 

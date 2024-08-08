@@ -1,9 +1,5 @@
-import {
-  type Dispatch,
-  type FC,
-  type SetStateAction,
-  useCallback,
-} from "react";
+import { Icon } from '@components/Icon';
+import { Typography } from '@components/Typography.tsx';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -11,10 +7,14 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@components/ui/alert-dialog.tsx";
-import { Icon } from "@components/Icon";
-import { Typography } from "@components/Typography.tsx";
-import { Button } from "@components/ui/button.tsx";
+} from '@components/ui/alert-dialog.tsx';
+import { Button } from '@components/ui/button.tsx';
+import {
+  type Dispatch,
+  type FC,
+  type SetStateAction,
+  useCallback,
+} from 'react';
 
 type Props = {
   alertOpen: boolean;
@@ -28,11 +28,11 @@ const Alert: FC<Props> = ({
   alertOpen,
   setAlertOpen,
   setAlertMessage,
-  title = "",
-  message = "",
+  title = '',
+  message = '',
 }) => {
   const closeAlert = useCallback(() => {
-    setAlertMessage?.("");
+    setAlertMessage?.('');
     setAlertOpen(false);
   }, [setAlertMessage, setAlertOpen]);
 
@@ -41,7 +41,11 @@ const Alert: FC<Props> = ({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex gap-x-2 items-center">
-            <Icon name="exclamation-circle-outline" size={24} strokeColor='red' />
+            <Icon
+              name="exclamation-circle-outline"
+              size={24}
+              strokeColor="red"
+            />
             <Typography>{title}</Typography>
           </AlertDialogTitle>
           <AlertDialogDescription>

@@ -1,14 +1,14 @@
-import { type FC } from "react";
-import { type Auth } from "@utils/auth.tsx";
-import { Avatar, AvatarFallback, AvatarImage } from "@components/ui/avatar.tsx";
-import { Typography } from "@components/Typography.tsx";
+import { Typography } from '@components/Typography.tsx';
+import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar.tsx';
+import { Separator } from '@components/ui/separator.tsx';
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@components/ui/tabs.tsx";
-import { Separator } from "@components/ui/separator.tsx";
+} from '@components/ui/tabs.tsx';
+import { type Auth } from '@utils/auth.tsx';
+import { type FC } from 'react';
 
 type Props = {
   auth: Auth;
@@ -20,11 +20,11 @@ export const Profile: FC<Props> = ({ auth }) => {
 
   const fallback = username
     ? username
-        .split(" ")
+        .split(' ')
         .map((s) => s[0])
-        .join("")
+        .join('')
         .toUpperCase()
-    : "";
+    : '';
 
   return (
     <Tabs
@@ -43,7 +43,10 @@ export const Profile: FC<Props> = ({ auth }) => {
           <TabsTrigger value="general" className="w-full justify-start text-md">
             General
           </TabsTrigger>
-          <TabsTrigger value="personal" className="w-full justify-start text-md">
+          <TabsTrigger
+            value="personal"
+            className="w-full justify-start text-md"
+          >
             Personal info
           </TabsTrigger>
         </TabsList>
@@ -58,10 +61,10 @@ export const Profile: FC<Props> = ({ auth }) => {
               />
               <AvatarFallback>{fallback}</AvatarFallback>
             </Avatar>
-            
-            <div className='flex flex-col'>
+
+            <div className="flex flex-col">
               <Typography size="large">{username}</Typography>
-              <Typography size='muted'>{role}</Typography>
+              <Typography size="muted">{role}</Typography>
             </div>
           </div>
         </TabsContent>

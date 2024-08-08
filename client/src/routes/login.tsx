@@ -1,25 +1,25 @@
+import { useAuth } from '@/utils/auth.tsx';
+import { Alert } from '@components/Alert.tsx';
+import { LoginForm } from '@components/LoginForm';
+import { type LoginFormValues } from '@components/LoginForm/form-schema.ts';
+import { Spinner } from '@components/Spinner.tsx';
 import {
   createFileRoute,
   redirect,
   useRouter,
   useRouterState,
-} from "@tanstack/react-router";
-import { useCallback, useLayoutEffect, useState } from "react";
-import { z } from "zod";
-import { useAuth } from "@/utils/auth.tsx";
-import { LoginForm } from "@components/LoginForm";
-import { type LoginFormValues } from "@components/LoginForm/form-schema.ts";
-import { Alert } from "@components/Alert.tsx";
-import { isAxiosError } from "axios";
-import { Spinner } from "@components/Spinner.tsx";
+} from '@tanstack/react-router';
+import { isAxiosError } from 'axios';
+import { useCallback, useLayoutEffect, useState } from 'react';
+import { z } from 'zod';
 
-const fallback = "/" as const;
+const fallback = '/' as const;
 
-export const Route = createFileRoute("/login")({
+export const Route = createFileRoute('/login')({
   component: LoginComponent,
-  validateSearch: z.object({ redirect: z.string().optional().catch("") }),
+  validateSearch: z.object({ redirect: z.string().optional().catch('') }),
   beforeLoad: ({ context }) => {
-    if (context.auth.status === "loggedIn") {
+    if (context.auth.status === 'loggedIn') {
       throw redirect({ to: fallback });
     }
   },
@@ -35,10 +35,10 @@ function LoginComponent() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [alertOpen, setAlertOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
+  const [alertMessage, setAlertMessage] = useState('');
 
   useLayoutEffect(() => {
-    if (status === "loggedIn") {
+    if (status === 'loggedIn') {
       router.history.push(fallback);
     }
   }, [router, status]);
@@ -58,7 +58,7 @@ function LoginComponent() {
       } catch (error) {
         if (isAxiosError(error)) setAlertMessage(error.response?.data.message);
         else if (error instanceof Error) setAlertMessage(error.message);
-        else setAlertMessage("An error occurred during login.");
+        else setAlertMessage('An error occurred during login.');
         setAlertOpen(true);
       } finally {
         setIsLoading(false);

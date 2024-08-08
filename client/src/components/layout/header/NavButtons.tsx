@@ -1,16 +1,16 @@
-import { type ComponentProps, type FC } from "react";
-import type { Icons } from "@components/Icon/types.ts";
-import { Link } from "@tanstack/react-router";
-import { Icon } from "@components/Icon";
-import type { Color } from "@/types/tailwind.ts";
-import { Typography } from "@components/Typography.tsx";
+import { cn } from '@/lib/utils.ts';
+import type { Color } from '@/types/tailwind.ts';
+import { Icon } from '@components/Icon';
+import type { Icons } from '@components/Icon/types.ts';
+import { Typography } from '@components/Typography.tsx';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@components/ui/tooltip.tsx";
-import { cn } from "@/lib/utils.ts";
+} from '@components/ui/tooltip.tsx';
+import { Link } from '@tanstack/react-router';
+import { type ComponentProps, type FC } from 'react';
 
 type Nav = {
   label: string;
@@ -21,28 +21,28 @@ type Nav = {
 
 const navElements: Nav[] = [
   {
-    label: "Typing",
-    link: "/",
-    icon: "rocket-launch-solid",
-    color: "maroon",
+    label: 'Typing',
+    link: '/',
+    icon: 'rocket-launch-solid',
+    color: 'maroon',
   },
   {
-    label: "Leaderboard",
-    link: "/leaderboard",
-    icon: "star-solid",
-    color: "yellow",
+    label: 'Leaderboard',
+    link: '/leaderboard',
+    icon: 'star-solid',
+    color: 'yellow',
   },
   {
-    label: "Settings",
-    link: "/settings",
-    icon: "cog-6-tooth-solid",
-    color: "blue",
+    label: 'Settings',
+    link: '/settings',
+    icon: 'cog-6-tooth-solid',
+    color: 'blue',
   },
   {
-    label: "About",
-    link: "/about",
-    icon: "information-circle-solid",
-    color: "teal",
+    label: 'About',
+    link: '/about',
+    icon: 'information-circle-solid',
+    color: 'teal',
   },
 ];
 
@@ -54,7 +54,7 @@ type Props = {
 const NavButtons: FC<Props> = ({ className, tooltipContentProps }) => {
   return (
     <TooltipProvider delayDuration={150}>
-      <div className={cn("hidden sm:flex gap-x-8 md:gap-x-12", className)}>
+      <div className={cn('hidden sm:flex gap-x-8 md:gap-x-12', className)}>
         {navElements.map(({ label, link, icon, color }) => (
           <Tooltip key={label}>
             <TooltipTrigger>

@@ -1,10 +1,10 @@
-import { type FC } from "react";
+import { Icon } from '@components/Icon';
+import { Typography } from '@components/Typography.tsx';
 import {
   DropdownMenuGroup,
   DropdownMenuItem,
-} from "@components/ui/dropdown-menu.tsx";
-import { Icon } from "@components/Icon";
-import { Typography } from "@components/Typography.tsx";
+} from '@components/ui/dropdown-menu.tsx';
+import { type FC } from 'react';
 
 type Props = {
   onLoginClick: () => void;

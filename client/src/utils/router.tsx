@@ -1,10 +1,10 @@
+import { Spinner } from '@components/Spinner.tsx';
 import {
   createRouter as createTanStackRouter,
   ErrorComponent,
-} from "@tanstack/react-router";
-import { routeTree } from "../routeTree.gen.ts";
-import { lazy } from "react";
-import { Spinner } from "@components/Spinner.tsx";
+} from '@tanstack/react-router';
+import { lazy } from 'react';
+import { routeTree } from '../routeTree.gen.ts';
 
 export const createRouter = () => {
   const router = createTanStackRouter({
@@ -21,18 +21,18 @@ export const createRouter = () => {
   return router;
 };
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface Register {
     router: ReturnType<typeof createRouter>;
   }
 }
 
 export const TanStackRouterDevtools =
-  process.env.NODE_ENV === "production"
+  process.env.NODE_ENV === 'production'
     ? () => null // Render nothing in production
     : lazy(() =>
         // Lazy load in development
-        import("@tanstack/router-devtools").then((res) => ({
+        import('@tanstack/router-devtools').then((res) => ({
           default: res.TanStackRouterDevtools,
         })),
       );

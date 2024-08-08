@@ -1,10 +1,9 @@
-import { type FC } from "react";
 import {
   registerFormSchema,
   type RegisterFormValues,
-} from "@components/RegisterForm/form-schema.ts";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from '@components/RegisterForm/form-schema.ts';
+import { Spinner } from '@components/Spinner.tsx';
+import { Button } from '@components/ui/button.tsx';
 import {
   Form,
   FormControl,
@@ -13,10 +12,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@components/ui/form.tsx";
-import { Input } from "@components/ui/input.tsx";
-import { Button } from "@components/ui/button.tsx";
-import { Spinner } from "@components/Spinner.tsx";
+} from '@components/ui/form.tsx';
+import { Input } from '@components/ui/input.tsx';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { type FC } from 'react';
+import { useForm } from 'react-hook-form';
 
 type Props = {
   onSubmit: (values: RegisterFormValues) => void;
@@ -27,9 +27,9 @@ const RegisterForm: FC<Props> = ({ onSubmit, isLoading }) => {
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
-      username: "",
-      password: "",
-      email: "",
+      username: '',
+      password: '',
+      email: '',
     },
   });
 
