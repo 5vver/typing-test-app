@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type ComponentProps, type FC } from "react";
 import type { Icons } from "@components/Icon/types.ts";
 import { Link } from "@tanstack/react-router";
 import { Icon } from "@components/Icon";
@@ -10,6 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@components/ui/tooltip.tsx";
+import { cn } from "@/lib/utils.ts";
 
 type Nav = {
   label: string;
@@ -45,10 +46,15 @@ const navElements: Nav[] = [
   },
 ];
 
-const NavButtons: FC = () => {
+type Props = {
+  className?: string;
+  tooltipContentProps?: ComponentProps<typeof TooltipContent>;
+};
+
+const NavButtons: FC<Props> = ({ className, tooltipContentProps }) => {
   return (
     <TooltipProvider delayDuration={150}>
-      <div className="hidden sm:flex gap-x-8 md:gap-x-12">
+      <div className={cn("hidden sm:flex gap-x-8 md:gap-x-12", className)}>
         {navElements.map(({ label, link, icon, color }) => (
           <Tooltip key={label}>
             <TooltipTrigger>
@@ -58,7 +64,7 @@ const NavButtons: FC = () => {
                 </div>
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="bottom">
+            <TooltipContent side="bottom" {...tooltipContentProps}>
               <Typography size="small" className="font-medium">
                 {label}
               </Typography>

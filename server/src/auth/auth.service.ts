@@ -20,7 +20,7 @@ export class AuthService {
     pass: string,
   ): Promise<Omit<UserEntity, 'password'> | null> {
     const user = await this.usersService.findByUsername(username);
-    if (!user) return null;
+    if (!user) throw new Error('User not found.');
 
     const isValid = await bcrypt.compare(pass, user.password);
     if (isValid) {
@@ -29,7 +29,7 @@ export class AuthService {
       return result;
     }
 
-    return null;
+    throw new Error('Invalid password.');
   }
 
   async login(user: UserEntity) {

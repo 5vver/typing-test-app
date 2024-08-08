@@ -15,6 +15,7 @@ type Props = {
 };
 
 export const Profile: FC<Props> = ({ auth }) => {
+  // need to useQuery getProfile here to get all the user's info
   const { username, role } = auth;
 
   const fallback = username

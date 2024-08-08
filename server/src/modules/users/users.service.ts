@@ -26,7 +26,7 @@ export class UsersService {
     if (dto.role) user.role = role;
 
     const createdUser = await this.usersRepository.save(user);
-    if (!createdUser) throw new Error('Failed to create user');
+    if (!createdUser) throw new Error('Failed to create user.');
     return 'User created successfully';
   }
 
