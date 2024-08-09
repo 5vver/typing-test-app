@@ -42,7 +42,10 @@
     --subtext0: #a6adc8;
     --subtext1: #bac2de;
     --text: #cdd6f4;
+    --text-30: #9096ab;
     --lavender: #b4befe;
+    --lavender-30: #7e85b2;
+    --lavender-70: #36394c;
     --blue: #89b4fa;
     --sapphire: #74c7ec;
     --sky: #89dceb;
@@ -82,6 +85,7 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    --text-30: #9096ab;
   }
 }
 

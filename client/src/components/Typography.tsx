@@ -16,7 +16,8 @@ type Props = {
     | 'lead'
     | 'large'
     | 'small'
-    | 'muted';
+    | 'muted'
+    | 'type';
   className?: string;
 };
 
@@ -118,7 +119,13 @@ const Typography: FC<Props> = ({ children, size = 'p', className }) => {
           {children}
         </p>
       );
+    case 'type':
+      return (
+        <div className={cn('text-3xl font-normal', className)}>
+          {children}
+        </div>
+      );
   }
 };
 
-export { Typography };
+export {Typography};
