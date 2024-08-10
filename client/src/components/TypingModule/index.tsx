@@ -2,7 +2,7 @@ import type { Word } from '@components/TypingModule/types.ts';
 import { WordsGrid } from '@components/TypingModule/WordsGrid.tsx';
 import { Input } from '@components/ui/input.tsx';
 import {
-  ChangeEvent,
+  type ChangeEvent,
   type FC,
   useCallback,
   useEffect,
@@ -45,15 +45,24 @@ const words: Word[] = [
 
 const TypingModule: FC = () => {
   const [wordList, setWordList] = useState<Word[]>(words);
+  const [activeWord, setActiveWord] = useState<Word | undefined>(undefined);
   const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const goToNextWord = useCallback(() => {
-    const misspelled = !!wordList.find(
-      (word) => word.status === 'active' && word.value !== inputValue,
-    );
+    //const activeWord = wordList.find((word) => word.status === 'active');
+    if (!activeWord) throw new Error('No active word found');
+
+    const mistakes = activeWord.value
+      .split('')
+      .reduce<number[]>((acc, letter, letterIndex) => {
+        if (letter !== inputValue[letterIndex]) acc.push(letterIndex);
+        return acc;
+      }, []);
+
+    const misspelled = mistakes.length > 0;
 
     setWordList((prev) => {
       const activeWordIndex = prev.findIndex(
@@ -63,23 +72,84 @@ const TypingModule: FC = () => {
 
       const newWordList: Word[] = prev.map((word, index) => {
         if (index === activeWordIndex)
-          return { ...word, status: misspelled ? 'failed' : 'finished' };
+          return {
+            ...word,
+            status: misspelled ? 'failed' : 'finished',
+            mistakes,
+            typed: inputValue,
+          };
         if (index === activeWordIndex + 1) return { ...word, status: 'active' };
         return word;
       });
       return newWordList;
     });
-  }, [wordList, setWordList, inputValue]);
+
+    setActiveWord(wordList.find((word) => word.status === 'active'));
+    setInputValue('');
+  }, [
+    wordList,
+    setWordList,
+    inputValue,
+    setInputValue,
+    activeWord,
+    setActiveWord,
+  ]);
+
+  const goToPrevWord = useCallback(() => {
+    if (inputValue.length > 0) return;
+    const prevWordIndex =
+      wordList.findIndex((word) => word.status === 'active') - 1;
+    if (prevWordIndex < 0 || wordList[prevWordIndex].status !== 'failed')
+      return;
+
+    // TODO: fix this later
+    setTimeout(() => {
+      setInputValue(wordList[prevWordIndex].typed ?? '');
+    }, 0);
+    setWordList((prev) =>
+      prev.map((word, index) => {
+        if (index === prevWordIndex)
+          return { ...word, status: 'active', mistakes: undefined };
+        if (index === prevWordIndex + 1) return { ...word, status: 'pending' };
+        return word;
+      }),
+    );
+    setActiveWord(wordList.find((word) => word.status === 'active'));
+  }, [inputValue, wordList, setInputValue, setWordList, setActiveWord]);
+
+  const handleOverTyped = useCallback(
+    (value: string) => {
+      if (!activeWord) return;
+
+      setWordList((prev) => {
+        const activeWordIndex = prev.findIndex(
+          (word) => word.status === 'active',
+        );
+        if (activeWordIndex === -1) return prev;
+
+        const newWordList: Word[] = prev.map((word, index) => {
+          if (index === activeWordIndex)
+            return {
+              ...word,
+              overTyped: value.slice(activeWord.value.length),
+            };
+          return word;
+        });
+        return newWordList;
+      });
+      setActiveWord(wordList.find((word) => word.status === 'active'));
+    },
+    [activeWord, wordList, setWordList, setActiveWord],
+  );
 
   const inputListener = useCallback(
     (e: globalThis.KeyboardEvent) => {
       if (!isFocused) return;
-      if (e.key === ' ') {
-        goToNextWord();
-        setInputValue('');
-      }
+
+      if (e.key === 'Backspace') goToPrevWord();
+      if (e.key === ' ') goToNextWord();
     },
-    [isFocused, setInputValue, goToNextWord],
+    [isFocused, goToPrevWord, goToNextWord],
   );
 
   useEffect(() => {
@@ -93,13 +163,22 @@ const TypingModule: FC = () => {
     };
   }, [inputRef, inputListener]);
 
+  useEffect(() => {
+    const activeWord = wordList.find((word) => word.status === 'active');
+    setActiveWord(activeWord);
+  }, [wordList, setActiveWord]);
+
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
+      if (!activeWord) return;
       const value = e.target.value;
       if (value === ' ') return;
       setInputValue(value);
+
+      /* overflow typed logic **/
+      if (value.length >= activeWord.value.length) handleOverTyped(value);
     },
-    [setInputValue],
+    [activeWord, setInputValue, handleOverTyped],
   );
 
   return (
