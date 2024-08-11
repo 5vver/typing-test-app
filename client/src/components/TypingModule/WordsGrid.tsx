@@ -14,10 +14,12 @@ const getLetterStyle = (
   inputValue: string,
   isLetterTyped: boolean,
   status: Word['status'],
+  isOverTyped: boolean,
   wordMistakes?: number[],
 ) => {
-  /* mistakes handle **/
+  /* mistakes & over typed handle **/
   if (wordMistakes?.includes(letterIndex)) return 'text-red-400';
+  else if (isOverTyped) return 'text-red-300';
   else if (wordMistakes && wordMistakes.length > 0) return 'text-lavender';
 
   /* statuses handle **/
@@ -44,51 +46,53 @@ const WordsGrid: FC<Props> = ({ words, inputValue }) => {
   return (
     <div className="px-8 items-center overflow-hidden select-none">
       <div className="flex flex-wrap gap-4 w-9/10 max-h-[calc(3*3rem)]">
-        {words.map(
-          ({ value, status, mistakes, overTyped }, wordIndex) => {
-            //const word = value + (overTyped || '');
-            const word = value;
-            return (
-              <div key={`${word}_${wordIndex}`} className="flex">
-                {word.split('').map((letter, index) => {
-                  const isWordActive = status === 'active';
-                  const isLetterActive =
-                    isWordActive && index === inputValue.length;
-                  const isLetterTyped =
-                    isWordActive && index < inputValue.length;
-                  /* caret stops flickering **/
-                  const isCaretIdle = wordIndex > 0 || inputValue.length > 0;
+        {words.map(({ value, status, mistakes, overTyped }, wordIndex) => {
+          const word = value + (overTyped || '');
+          //const word = value;
+          return (
+            <div key={`${word}_${wordIndex}`} className="flex">
+              {word.split('').map((letter, index) => {
+                const isWordActive = status === 'active';
+                // TODO: come up with a better solution
+                const isLetterActive =
+                  isWordActive &&
+                  ((!inputValue.length && index < 1) ||
+                    index + 1 === inputValue.length);
+                const isLetterTyped = isWordActive && index < inputValue.length;
+                const isOverTyped = index >= value.length;
+                /* caret stops flickering **/
+                const isCaretIdle = wordIndex > 0 || inputValue.length > 0;
 
-                  const letterStyle = getLetterStyle(
-                    letter,
-                    index,
-                    inputValue,
-                    isLetterTyped,
-                    status,
-                    mistakes,
-                  );
+                const letterStyle = getLetterStyle(
+                  letter,
+                  index,
+                  inputValue,
+                  isLetterTyped,
+                  status,
+                  isOverTyped,
+                  mistakes,
+                );
 
-                  return (
-                    <div key={index} className="relative">
-                      {isLetterActive && (
-                        <div
-                          id="letter-caret"
-                          className={`absolute h-full w-[2px] bg-yellow ${isCaretIdle ? '' : 'animate-flicker'}`}
-                        />
-                      )}
-                      <Typography
-                        size="type"
-                        className={`${letterStyle} transition-colors ease-in-out delay-0 duration-75`}
-                      >
-                        {letter}
-                      </Typography>
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          },
-        )}
+                return (
+                  <div key={index} className="relative">
+                    {isLetterActive && (
+                      <div
+                        id="letter-caret"
+                        className={`absolute h-full w-[2px] bg-yellow ${inputValue.length < 1 ? '' : 'right-0'} ${isCaretIdle ? '' : 'animate-flicker'}`}
+                      />
+                    )}
+                    <Typography
+                      size="type"
+                      className={`${letterStyle} transition-colors ease-in-out delay-0 duration-75`}
+                    >
+                      {letter}
+                    </Typography>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
