@@ -42,15 +42,22 @@ const getLetterStyle = (
   return 'text-subtext0';
 };
 
-const WordsGrid: FC<Props> = ({ words, inputValue }) => {
+const WordsGrid: FC<Props> = ({ words, inputValue, refWrapper }) => {
   return (
     <div className="px-8 items-center overflow-hidden select-none">
-      <div className="flex flex-wrap gap-4 w-9/10 max-h-[calc(3*3rem)]">
+      <div
+        className="flex flex-wrap gap-[16px] w-9/10 max-h-[calc(3*3rem)]"
+        ref={refWrapper}
+      >
         {words.map(({ value, status, mistakes, overTyped }, wordIndex) => {
           const word = value + (overTyped || '');
           //const word = value;
           return (
-            <div key={`${word}_${wordIndex}`} className="flex">
+            <div
+              id={`word_${status}`}
+              key={`${word}_${wordIndex}`}
+              className="flex"
+            >
               {word.split('').map((letter, index) => {
                 const isWordActive = status === 'active';
                 // TODO: come up with a better solution
@@ -74,7 +81,7 @@ const WordsGrid: FC<Props> = ({ words, inputValue }) => {
                 );
 
                 return (
-                  <div key={index} className="relative">
+                  <div id="letter" key={index} className="relative">
                     {isLetterActive && (
                       <div
                         id="letter-caret"

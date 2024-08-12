@@ -1,4 +1,5 @@
 import type { Word } from '@components/TypingModule/types.ts';
+import { formWords, sliceWordList } from '@components/TypingModule/utils.ts';
 import { WordsGrid } from '@components/TypingModule/WordsGrid.tsx';
 import { Input } from '@components/ui/input.tsx';
 import {
@@ -9,13 +10,6 @@ import {
   useRef,
   useState,
 } from 'react';
-
-const formWords = (words: string[]): Word[] => {
-  return words.map((word, index) => {
-    if (index === 0) return { value: word, status: 'active' };
-    return { value: word, status: 'pending' };
-  });
-};
 
 type Props = {
   words: string[];
@@ -30,6 +24,17 @@ const TypingCore: FC<Props> = ({ words }) => {
   const [isWordTransition, setIsWordTransition] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const activeWord = wordList.find((word) => word.status === 'active');
+    setActiveWord(activeWord);
+  }, [wordList, setActiveWord]);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    sliceWordList(setWordList, containerRef.current);
+  }, [wordList, setWordList, containerRef]);
 
   const goToNextWord = useCallback(() => {
     if (!activeWord) throw new Error('No active word found');
@@ -44,36 +49,24 @@ const TypingCore: FC<Props> = ({ words }) => {
     const misspelled = mistakes.length > 0;
     const failed = misspelled || !!activeWord.overTyped;
 
-    setWordList((prev) => {
-      const activeWordIndex = prev.findIndex(
-        (word) => word.status === 'active',
-      );
-      if (activeWordIndex === -1) return prev;
-
-      const newWordList: Word[] = prev.map((word, index) => {
-        if (index === activeWordIndex)
-          return {
-            ...word,
-            status: failed ? 'failed' : 'finished',
-            mistakes,
-            typed: inputValue,
-          };
-        if (index === activeWordIndex + 1) return { ...word, status: 'active' };
-        return word;
-      });
-      return newWordList;
+    const activeWordIndex = wordList.findIndex(
+      (word) => word.status === 'active',
+    );
+    const newWordList: Word[] = wordList.map((word, index) => {
+      if (index === activeWordIndex)
+        return {
+          ...word,
+          status: failed ? 'failed' : 'finished',
+          mistakes,
+          typed: inputValue,
+        };
+      if (index === activeWordIndex + 1) return { ...word, status: 'active' };
+      return word;
     });
 
-    setActiveWord(wordList.find((word) => word.status === 'active'));
+    setWordList(newWordList);
     setInputValue('');
-  }, [
-    wordList,
-    setWordList,
-    inputValue,
-    setInputValue,
-    activeWord,
-    setActiveWord,
-  ]);
+  }, [wordList, setWordList, inputValue, setInputValue, activeWord]);
 
   const goToPrevWord = useCallback(() => {
     if (inputValue.length > 0) return;
@@ -93,15 +86,7 @@ const TypingCore: FC<Props> = ({ words }) => {
         return word;
       }),
     );
-    setActiveWord(wordList.find((word) => word.status === 'active'));
-  }, [
-    inputValue,
-    wordList,
-    setInputValue,
-    setWordList,
-    setActiveWord,
-    setIsWordTransition,
-  ]);
+  }, [inputValue, wordList, setInputValue, setWordList, setIsWordTransition]);
 
   const handleOverTyped = useCallback(
     (value: string) => {
@@ -123,17 +108,17 @@ const TypingCore: FC<Props> = ({ words }) => {
         });
         return newWordList;
       });
-      setActiveWord(wordList.find((word) => word.status === 'active'));
     },
-    [activeWord, wordList, setWordList, setActiveWord],
+    [activeWord, setWordList],
   );
 
   const inputListener = useCallback(
     (e: globalThis.KeyboardEvent) => {
       if (!isFocused) return;
 
-      if (e.key === 'Backspace') goToPrevWord();
-      if (e.key === ' ' && inputValue.length > 0) goToNextWord();
+      if (e.ctrlKey && e.key === 'a') e.preventDefault();
+      else if (e.key === 'Backspace') goToPrevWord();
+      else if (e.key === ' ' && inputValue.length > 0) goToNextWord();
     },
     [isFocused, goToPrevWord, goToNextWord, inputValue],
   );
@@ -149,18 +134,13 @@ const TypingCore: FC<Props> = ({ words }) => {
     };
   }, [inputRef, inputListener]);
 
-  useEffect(() => {
-    const activeWord = wordList.find((word) => word.status === 'active');
-    setActiveWord(activeWord);
-  }, [wordList, setActiveWord]);
-
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       if (!activeWord) return;
       if (isWordTransition) return void setIsWordTransition(false);
 
       const value = e.target.value;
-      if (value === ' ') return;
+      if (value === ' ' || value.length - activeWord.value.length > 8) return;
       setInputValue(value);
 
       /* overflow typed logic **/
@@ -177,7 +157,11 @@ const TypingCore: FC<Props> = ({ words }) => {
 
   return (
     <div className="flex flex-col w-full h-full">
-      <WordsGrid words={wordList} inputValue={inputValue} />
+      <WordsGrid
+        words={wordList}
+        inputValue={inputValue}
+        refWrapper={containerRef}
+      />
       <Input
         type="text"
         value={inputValue}
