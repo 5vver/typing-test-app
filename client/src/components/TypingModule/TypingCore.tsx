@@ -1,5 +1,6 @@
+import { useGenerateWords } from '@components/TypingModule/generate-words.ts';
 import type { Word } from '@components/TypingModule/types.ts';
-import { formWords, sliceWordList } from '@components/TypingModule/utils.ts';
+import { sliceWordList } from '@components/TypingModule/utils.ts';
 import { WordsGrid } from '@components/TypingModule/WordsGrid.tsx';
 import { Input } from '@components/ui/input.tsx';
 import {
@@ -11,12 +12,10 @@ import {
   useState,
 } from 'react';
 
-type Props = {
-  words: string[];
-};
+const TypingCore: FC = () => {
+  const { generateWords } = useGenerateWords();
 
-const TypingCore: FC<Props> = ({ words }) => {
-  const [wordList, setWordList] = useState<Word[]>(formWords(words));
+  const [wordList, setWordList] = useState(generateWords());
   const [activeWord, setActiveWord] = useState<Word | undefined>(undefined);
   const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -32,9 +31,9 @@ const TypingCore: FC<Props> = ({ words }) => {
   }, [wordList, setActiveWord]);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-    sliceWordList(setWordList, containerRef.current);
-  }, [wordList, setWordList, containerRef]);
+    if (!containerRef.current || wordList.length === 0) return;
+    sliceWordList(setWordList, containerRef.current, generateWords);
+  }, [wordList, setWordList, containerRef, generateWords]);
 
   const goToNextWord = useCallback(() => {
     if (!activeWord) throw new Error('No active word found');
@@ -116,9 +115,9 @@ const TypingCore: FC<Props> = ({ words }) => {
     (e: globalThis.KeyboardEvent) => {
       if (!isFocused) return;
 
+      if (e.key === 'Backspace') goToPrevWord();
+      if (e.key === ' ' && inputValue.length > 0) goToNextWord();
       if (e.ctrlKey && e.key === 'a') e.preventDefault();
-      else if (e.key === 'Backspace') goToPrevWord();
-      else if (e.key === ' ' && inputValue.length > 0) goToNextWord();
     },
     [isFocused, goToPrevWord, goToNextWord, inputValue],
   );

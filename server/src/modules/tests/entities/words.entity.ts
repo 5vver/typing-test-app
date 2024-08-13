@@ -9,6 +9,9 @@ export class WordsEntity {
   @Column()
   word: string;
 
+  @Column()
+  lang: string;
+
   @OneToMany(() => TestWordsEntity, (testWords) => testWords.word)
   test_words: TestWordsEntity[];
 }

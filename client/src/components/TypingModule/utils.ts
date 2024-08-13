@@ -1,11 +1,17 @@
-import type { Word } from '@components/TypingModule/types.ts';
+import type { GenerateWords, Word } from '@components/TypingModule/types.ts';
 import { type Dispatch, type SetStateAction } from 'react';
 
+export const formWord = (
+  word: string,
+  index: number,
+  firstActive = true,
+): Word => {
+  if (firstActive && index === 0) return { value: word, status: 'active' };
+  return { value: word, status: 'pending' };
+};
+
 export const formWords = (words: string[]): Word[] => {
-  return words.map((word, index) => {
-    if (index === 0) return { value: word, status: 'active' };
-    return { value: word, status: 'pending' };
-  });
+  return words.map((word, index) => formWord(word, index));
 };
 
 const getWordWidth = (wordElement: Element): number => {
@@ -17,6 +23,7 @@ const getWordWidth = (wordElement: Element): number => {
 export const sliceWordList = (
   setWordList: Dispatch<SetStateAction<Word[]>>,
   wordListContainer: HTMLDivElement,
+  generateWordsFn?: GenerateWords['generateWords'],
 ) => {
   const fulfilledWordNodes = ['#word_finished', '#word_failed'].map((id) =>
     wordListContainer.querySelectorAll(id),
@@ -46,5 +53,15 @@ export const sliceWordList = (
   }
 
   if (!lastIndex) return;
-  setWordList((prev) => prev.slice(lastIndex + 1));
+  setWordList((prev) => {
+    const newWordList = prev.slice(lastIndex + 1);
+    if (generateWordsFn) {
+      const newWords = generateWordsFn({
+        count: lastIndex + 1,
+        firstActive: false,
+      });
+      if (newWords.length > 0) newWordList.push(...newWords);
+    }
+    return newWordList;
+  });
 };

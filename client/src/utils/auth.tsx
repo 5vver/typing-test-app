@@ -65,7 +65,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     if (data !== 'Logged in successfully') return false;
 
     setAuth((prev) => ({ ...prev, status: 'loggedIn', username }));
-    console.log(password);
 
     return true;
   };
