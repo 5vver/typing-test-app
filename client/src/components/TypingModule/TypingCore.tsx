@@ -1,7 +1,9 @@
+import { Icon } from '@components/Icon';
 import { useGenerateWords } from '@components/TypingModule/generate-words.ts';
 import type { Word } from '@components/TypingModule/types.ts';
 import { sliceWordList } from '@components/TypingModule/utils.ts';
 import { WordsGrid } from '@components/TypingModule/WordsGrid.tsx';
+import { Typography } from '@components/Typography.tsx';
 import { Input } from '@components/ui/input.tsx';
 import {
   type ChangeEvent,
@@ -117,7 +119,7 @@ const TypingCore: FC = () => {
 
       if (e.key === 'Backspace') goToPrevWord();
       if (e.key === ' ' && inputValue.length > 0) goToNextWord();
-      if (e.ctrlKey && e.key === 'a') e.preventDefault();
+      //if (e.ctrlKey && e.key === 'a') e.preventDefault();
     },
     [isFocused, goToPrevWord, goToNextWord, inputValue],
   );
@@ -140,6 +142,13 @@ const TypingCore: FC = () => {
 
       const value = e.target.value;
       if (value === ' ' || value.length - activeWord.value.length > 8) return;
+      if (value.length === 0)
+        setWordList((prev) => {
+          const activeWord = prev.find(({ status }) => status === 'active');
+          if (activeWord && activeWord.overTyped)
+            activeWord.overTyped = undefined;
+          return prev;
+        });
       setInputValue(value);
 
       /* overflow typed logic **/
@@ -147,6 +156,7 @@ const TypingCore: FC = () => {
     },
     [
       activeWord,
+      setWordList,
       setInputValue,
       handleOverTyped,
       isWordTransition,
@@ -154,12 +164,32 @@ const TypingCore: FC = () => {
     ],
   );
 
+  const onFocus = useCallback(() => {
+    const input = inputRef.current;
+
+    if (!input) throw new Error('Input element not found');
+
+    setIsFocused(true);
+    input.focus();
+  }, [inputRef, setIsFocused]);
+
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className={`w-full h-full relative`} onClick={onFocus}>
+      {!isFocused && (
+        <div className="absolute text-center top-[50px] w-full z-40 pointer-events-none">
+          <Icon name="cursor-arrow-micro" size={20} className="w-full" />
+          <Typography size="large" className="font-normal">
+            Click here to start typing
+          </Typography>
+        </div>
+      )}
+
       <WordsGrid
         words={wordList}
         inputValue={inputValue}
+        isFocused={isFocused}
         refWrapper={containerRef}
+        className={`${isFocused ? '' : 'blur-sm'}`}
       />
       <Input
         type="text"
@@ -172,6 +202,8 @@ const TypingCore: FC = () => {
         }}
         onChange={onChange}
         ref={inputRef}
+        autoFocus
+        className="absolute z-50 -bottom-8 left-0 right-0 w-40 opacity-0 pointer-events-none"
       />
     </div>
   );

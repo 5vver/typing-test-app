@@ -21,6 +21,7 @@ export const useGetRandomWords = (options: SelectWordOptions) => {
   return useQuery({
     queryKey: ['randomWords', options],
     queryFn: () => getRandomWords(options),
+    refetchOnWindowFocus: false,
     //placeholderData: keepPreviousData,
   });
 };

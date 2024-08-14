@@ -65,3 +65,37 @@ export const sliceWordList = (
     return newWordList;
   });
 };
+
+export const getLetterStyle = (
+  letter: string,
+  letterIndex: number,
+  inputValue: string,
+  isLetterTyped: boolean,
+  status: Word['status'],
+  isOverTyped: boolean,
+  wordMistakes?: number[],
+) => {
+  /* mistakes & over typed handle **/
+  if (wordMistakes?.includes(letterIndex)) return 'text-red-400';
+  else if (isOverTyped) return 'text-red-300';
+  else if (wordMistakes && wordMistakes.length > 0) return 'text-lavender';
+
+  /* statuses handle **/
+  if (status === 'finished') return 'text-lavender';
+  if (status === 'failed') return 'text-red-400';
+  if (status === 'pending') return 'text-subtext0';
+
+  // emphasize active latter
+  //if (isLetterActive && !inputValue[letterIndex]) return 'text-blue';
+
+  /* wrong typed letter **/
+  if (isLetterTyped && letter !== inputValue[letterIndex]) {
+    return 'text-red-400';
+  }
+  /* correct typed letter **/
+  if (letter === inputValue[letterIndex]) {
+    return 'text-lavender';
+  }
+  /* active pending letter **/
+  return 'text-subtext0';
+};

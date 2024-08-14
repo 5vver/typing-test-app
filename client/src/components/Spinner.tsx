@@ -1,19 +1,20 @@
 import { type FC } from 'react';
 
 type Props = {
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
 };
 
 const Spinner: FC<Props> = ({ size = 'md' }) => {
   const sizeClasses = {
-    sm: 'w-[24px] h-[24px]',
+    xs: 'w-[14px] h-[14px] border-[2px]',
+    sm: 'w-[24px] h-[24px] border-[3px]',
     md: 'w-[36px] h-[36px]',
     lg: 'w-[48px] h-[48px]',
   };
 
   return (
     <div
-      className={`${sizeClasses[size]} border-solid border-[5px] border-lavender border-b-transparent rounded-full inline-block box-border animate-rotate`}
+      className={`border-solid border-[5px] border-lavender border-b-transparent rounded-full inline-block box-border animate-rotate ${sizeClasses[size]}`}
     ></div>
   );
 
@@ -29,4 +30,4 @@ const Spinner: FC<Props> = ({ size = 'md' }) => {
   //);
 };
 
-export { Spinner };
+export {Spinner};
