@@ -1,5 +1,12 @@
 import type { GenerateWords, Word } from '@components/TypingModule/types.ts';
-import { type Dispatch, type SetStateAction } from 'react';
+import {
+  type Dispatch,
+  type RefObject,
+  type SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 
 export const formWord = (
   word: string,
@@ -98,4 +105,53 @@ export const getLetterStyle = (
   }
   /* active pending letter **/
   return 'text-subtext0';
+};
+
+export const useAreaFocus = (
+  isFocused: boolean,
+  setIsFocused: Dispatch<SetStateAction<boolean>>,
+  areaRef: RefObject<HTMLDivElement>,
+  inputRef: RefObject<HTMLInputElement>,
+) => {
+  const [isClicking, setIsClicking] = useState(false);
+
+  useEffect(() => {
+    const container = areaRef.current;
+    if (!container) return;
+
+    const handleMouseDown = () => void setIsClicking(true);
+    const handleMouseUp = () => void setIsClicking(false);
+
+    container.addEventListener('mousedown', handleMouseDown);
+    container.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      container.removeEventListener('mousedown', handleMouseDown);
+      container.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [areaRef, setIsClicking]);
+
+  const onFocus = useCallback(() => {
+    const input = inputRef.current;
+    if (!input) throw new Error('Input element not found');
+
+    input.focus();
+
+    if (isFocused) return;
+    setIsFocused(true);
+  }, [isFocused, inputRef, setIsFocused]);
+
+  const onBlur = useCallback(() => {
+    if (isClicking) return;
+
+    const focusTimeout = setTimeout(() => {
+      setIsFocused(false);
+    }, 500);
+
+    return () => {
+      clearTimeout(focusTimeout);
+    };
+  }, [isClicking, setIsFocused]);
+
+  return { onFocus, onBlur };
 };

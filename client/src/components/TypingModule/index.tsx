@@ -34,7 +34,7 @@ const TypingModule: FC = () => {
 
   return (
     <div className="flex flex-col gap-2 items-center">
-      <div className="px-8 w-full">
+      <div className="px-24 w-full">
         {isTypingCoreVisible ? (
           <TypingCore />
         ) : (

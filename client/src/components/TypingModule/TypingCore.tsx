@@ -1,7 +1,7 @@
 import { Icon } from '@components/Icon';
 import { useGenerateWords } from '@components/TypingModule/generate-words.ts';
 import type { Word } from '@components/TypingModule/types.ts';
-import { sliceWordList } from '@components/TypingModule/utils.ts';
+import { sliceWordList, useAreaFocus } from '@components/TypingModule/utils.ts';
 import { WordsGrid } from '@components/TypingModule/WordsGrid.tsx';
 import { Typography } from '@components/Typography.tsx';
 import { Input } from '@components/ui/input.tsx';
@@ -19,7 +19,7 @@ const TypingCore: FC = () => {
 
   const [wordList, setWordList] = useState(generateWords());
   const [activeWord, setActiveWord] = useState<Word | undefined>(undefined);
-  const [isFocused, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(true);
   const [inputValue, setInputValue] = useState('');
 
   const [isWordTransition, setIsWordTransition] = useState(false);
@@ -164,14 +164,12 @@ const TypingCore: FC = () => {
     ],
   );
 
-  const onFocus = useCallback(() => {
-    const input = inputRef.current;
-
-    if (!input) throw new Error('Input element not found');
-
-    setIsFocused(true);
-    input.focus();
-  }, [inputRef, setIsFocused]);
+  const { onFocus, onBlur } = useAreaFocus(
+    isFocused,
+    setIsFocused,
+    containerRef,
+    inputRef,
+  );
 
   return (
     <div className={`w-full h-full relative`} onClick={onFocus}>
@@ -189,17 +187,12 @@ const TypingCore: FC = () => {
         inputValue={inputValue}
         isFocused={isFocused}
         refWrapper={containerRef}
-        className={`${isFocused ? '' : 'blur-sm'}`}
+        className={`transition duration-500 ease-in-out ${isFocused ? '' : 'blur-sm'}`}
       />
       <Input
         type="text"
         value={inputValue}
-        onFocus={() => {
-          setIsFocused(true);
-        }}
-        onBlur={() => {
-          setIsFocused(false);
-        }}
+        onBlur={onBlur}
         onChange={onChange}
         ref={inputRef}
         autoFocus
