@@ -33,8 +33,8 @@ const TypingModule: FC = () => {
   if (!data || isError) return null;
 
   return (
-    <div className="flex flex-col gap-2 items-center">
-      <div className="px-24 w-full">
+    <div className="flex flex-col gap-2 items-center w-full h-full">
+      <div className="px-24 pt-16 w-full">
         {isTypingCoreVisible ? (
           <TypingCore />
         ) : (
