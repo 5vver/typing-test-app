@@ -35,15 +35,16 @@ export const sliceWordList = (
   const fulfilledWordNodes = ['#word_finished', '#word_failed'].map((id) =>
     wordListContainer.querySelectorAll(id),
   );
-  const pendingWordNodes = wordListContainer.querySelectorAll('#word_pending');
 
   const fulfilledWordElements = [
     ...(fulfilledWordNodes[0] ? fulfilledWordNodes[0].values() : []),
     ...(fulfilledWordNodes[1] ? fulfilledWordNodes[1].values() : []),
   ];
-  const pendingWordElement = [...pendingWordNodes.values()][0];
+  const activeWordElement = wordListContainer.querySelector('#word_active');
 
-  const pendingWordWidth = getWordWidth(pendingWordElement);
+  const activeWordWidth = activeWordElement
+    ? getWordWidth(activeWordElement)
+    : 0;
   const containerWidth = wordListContainer.offsetWidth;
   let currentRowWidth = 0;
   let lastIndex = 0;
@@ -52,7 +53,9 @@ export const sliceWordList = (
     const wordElement = fulfilledWordElements.at(i);
     if (!wordElement) continue;
     const wordWidth = getWordWidth(wordElement);
-    if (currentRowWidth + pendingWordWidth + wordWidth > containerWidth) {
+    const aWordWidth =
+      i === fulfilledWordElements.length - 1 ? activeWordWidth : 0; // last word element
+    if (currentRowWidth + wordWidth + aWordWidth > containerWidth) {
       lastIndex = i;
       break;
     }
