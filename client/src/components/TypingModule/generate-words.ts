@@ -1,10 +1,9 @@
-import { SelectWordOptions, WordData } from '@/types/test-types.ts';
+import { SelectWordOptions } from '@/types/test-types.ts';
+import { wordsDictAtom } from '@components/TypingModule/store.ts';
 import type { GenerateWords, Word } from '@components/TypingModule/types.ts';
 import { formWord } from '@components/TypingModule/utils.ts';
-import { atom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { useCallback } from 'react';
-
-const wordsDictAtom = atom<WordData[]>([]);
 
 const useGenerateWords = (): GenerateWords => {
   const wordsDict = useAtomValue(wordsDictAtom);

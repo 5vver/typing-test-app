@@ -1,10 +1,15 @@
-import type { GenerateWords, Word } from '@components/TypingModule/types.ts';
+import type {
+  GenerateWords,
+  Status,
+  Word,
+} from '@components/TypingModule/types.ts';
 import {
   type Dispatch,
   type RefObject,
   type SetStateAction,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 
@@ -21,10 +26,11 @@ export const formWords = (words: string[]): Word[] => {
   return words.map((word, index) => formWord(word, index));
 };
 
+const WORD_GAP = 16; // 16px
+
 const getWordWidth = (wordElement: Element): number => {
   const width = wordElement.clientWidth;
-  const gap = 16; // 16px
-  return width + gap;
+  return width + WORD_GAP;
 };
 
 export const sliceWordList = (
@@ -52,9 +58,12 @@ export const sliceWordList = (
   for (let i = 0; i < fulfilledWordElements.length; i++) {
     const wordElement = fulfilledWordElements.at(i);
     if (!wordElement) continue;
-    const wordWidth = getWordWidth(wordElement);
-    const aWordWidth =
-      i === fulfilledWordElements.length - 1 ? activeWordWidth : 0; // last word element
+
+    const isLast = i === fulfilledWordElements.length - 1;
+    const wordWidth = isLast
+      ? getWordWidth(wordElement) - WORD_GAP
+      : getWordWidth(wordElement);
+    const aWordWidth = isLast ? activeWordWidth : 0;
     if (currentRowWidth + wordWidth + aWordWidth > containerWidth) {
       lastIndex = i;
       break;
@@ -112,11 +121,12 @@ export const getLetterStyle = (
 
 export const useAreaFocus = (
   isFocused: boolean,
-  setIsFocused: Dispatch<SetStateAction<boolean>>,
+  setStatus: Dispatch<SetStateAction<Status>>,
   areaRef: RefObject<HTMLDivElement>,
   inputRef: RefObject<HTMLInputElement>,
 ) => {
   const [isClicking, setIsClicking] = useState(false);
+  const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const container = areaRef.current;
@@ -134,6 +144,12 @@ export const useAreaFocus = (
     };
   }, [areaRef, setIsClicking]);
 
+  useEffect(() => {
+    return () => {
+      if (focusTimeoutRef.current) clearTimeout(focusTimeoutRef.current);
+    };
+  }, []);
+
   const onFocus = useCallback(() => {
     const input = inputRef.current;
     if (!input) throw new Error('Input element not found');
@@ -141,20 +157,16 @@ export const useAreaFocus = (
     input.focus();
 
     if (isFocused) return;
-    setIsFocused(true);
-  }, [isFocused, inputRef, setIsFocused]);
+    setStatus((prev) => ({ ...prev, isFocused: true }));
+  }, [isFocused, inputRef, setStatus]);
 
   const onBlur = useCallback(() => {
     if (isClicking) return;
 
-    const focusTimeout = setTimeout(() => {
-      setIsFocused(false);
+    focusTimeoutRef.current = setTimeout(() => {
+      setStatus((prev) => ({ ...prev, isFocused: false }));
     }, 500);
-
-    return () => {
-      clearTimeout(focusTimeout);
-    };
-  }, [isClicking, setIsFocused]);
+  }, [isClicking, setStatus, focusTimeoutRef]);
 
   return { onFocus, onBlur };
 };

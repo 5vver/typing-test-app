@@ -14,3 +14,18 @@ export type GenerateWords = {
   ) => Word[];
   generateWord: () => Word | null;
 };
+
+export type Status = {
+  isTyping: boolean;
+  isFinished: boolean;
+  isFailed: boolean;
+  isFocused: boolean;
+};
+
+export type Stats = {
+  wpm: number;
+  accuracy: number;
+  correct: number;
+  incorrect: number;
+  total: number;
+};

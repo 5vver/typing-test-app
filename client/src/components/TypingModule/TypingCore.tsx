@@ -1,10 +1,12 @@
 import { Icon } from '@components/Icon';
 import { useGenerateWords } from '@components/TypingModule/generate-words.ts';
+import { statsAtom, statusAtom } from '@components/TypingModule/store.ts';
 import type { Word } from '@components/TypingModule/types.ts';
 import { sliceWordList, useAreaFocus } from '@components/TypingModule/utils.ts';
 import { WordsGrid } from '@components/TypingModule/WordsGrid.tsx';
 import { Typography } from '@components/Typography.tsx';
 import { Input } from '@components/ui/input.tsx';
+import { useAtom } from 'jotai';
 import {
   type ChangeEvent,
   type FC,
@@ -19,10 +21,11 @@ const TypingCore: FC = () => {
 
   const [wordList, setWordList] = useState(generateWords());
   const [activeWord, setActiveWord] = useState<Word | undefined>(undefined);
-  const [isFocused, setIsFocused] = useState(true);
   const [inputValue, setInputValue] = useState('');
-
   const [isWordTransition, setIsWordTransition] = useState(false);
+
+  const [{ isFocused }, setStatus] = useAtom(statusAtom);
+  const [stats, setStats] = useAtom(statsAtom);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -65,6 +68,19 @@ const TypingCore: FC = () => {
       return word;
     });
 
+    if (failed)
+      setStats((prev) => ({
+        ...prev,
+        total: prev.total + 1,
+        incorrect: prev.incorrect + 1,
+      }));
+    else
+      setStats((prev) => ({
+        ...prev,
+        total: prev.total + 1,
+        correct: prev.correct + 1,
+      }));
+
     setWordList(newWordList);
     setInputValue('');
   }, [wordList, setWordList, inputValue, setInputValue, activeWord]);
@@ -77,6 +93,11 @@ const TypingCore: FC = () => {
       return;
 
     setIsWordTransition(true); // in order to prevent onChange event
+    setStats((prev) => ({
+      ...prev,
+      total: prev.total - 1,
+      incorrect: prev.incorrect - 1,
+    }));
 
     setInputValue(wordList[prevWordIndex].typed ?? '');
     setWordList((prev) =>
@@ -87,7 +108,14 @@ const TypingCore: FC = () => {
         return word;
       }),
     );
-  }, [inputValue, wordList, setInputValue, setWordList, setIsWordTransition]);
+  }, [
+    inputValue,
+    wordList,
+    setInputValue,
+    setWordList,
+    setIsWordTransition,
+    setStats,
+  ]);
 
   const handleOverTyped = useCallback(
     (value: string) => {
@@ -149,9 +177,11 @@ const TypingCore: FC = () => {
             activeWord.overTyped = undefined;
           return prev;
         });
+      if (value.length > 0) setStatus((prev) => ({ ...prev, isTyping: true }));
+
       setInputValue(value);
 
-      /* overflow typed logic **/
+      /* over-typed logic **/
       if (value.length >= activeWord.value.length) handleOverTyped(value);
     },
     [
@@ -166,7 +196,7 @@ const TypingCore: FC = () => {
 
   const { onFocus, onBlur } = useAreaFocus(
     isFocused,
-    setIsFocused,
+    setStatus,
     containerRef,
     inputRef,
   );
