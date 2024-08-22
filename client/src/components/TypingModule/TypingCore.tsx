@@ -6,7 +6,7 @@ import { sliceWordList, useAreaFocus } from '@components/TypingModule/utils.ts';
 import { WordsGrid } from '@components/TypingModule/WordsGrid.tsx';
 import { Typography } from '@components/Typography.tsx';
 import { Input } from '@components/ui/input.tsx';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import {
   type ChangeEvent,
   type FC,
@@ -16,19 +16,35 @@ import {
   useState,
 } from 'react';
 
-const TypingCore: FC = () => {
+type Props = {
+  words: Word[];
+};
+
+const TypingCore: FC<Props> = ({ words }) => {
   const { generateWords } = useGenerateWords();
 
-  const [wordList, setWordList] = useState(generateWords());
+  const [wordList, setWordList] = useState(words);
   const [activeWord, setActiveWord] = useState<Word | undefined>(undefined);
   const [inputValue, setInputValue] = useState('');
   const [isWordTransition, setIsWordTransition] = useState(false);
 
   const [{ isFocused }, setStatus] = useAtom(statusAtom);
-  const [stats, setStats] = useAtom(statsAtom);
+  const setStats = useSetAtom(statsAtom);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  /* on props.words change - set new word list & clear states **/
+  useEffect(() => {
+    setWordList(words);
+    setActiveWord(undefined);
+    setInputValue('');
+
+    if (inputRef.current) {
+      inputRef.current.focus();
+      setStatus((prev) => ({ ...prev, isFocused: true }));
+    }
+  }, [words, setWordList, setActiveWord, setInputValue, setStatus, inputRef]);
 
   useEffect(() => {
     const activeWord = wordList.find((word) => word.status === 'active');
@@ -43,12 +59,18 @@ const TypingCore: FC = () => {
   const goToNextWord = useCallback(() => {
     if (!activeWord) throw new Error('No active word found');
 
-    const mistakes = activeWord.value
+    const { correct, mistakes, missed } = activeWord.value
       .split('')
-      .reduce<number[]>((acc, letter, letterIndex) => {
-        if (letter !== inputValue[letterIndex]) acc.push(letterIndex);
-        return acc;
-      }, []);
+      .reduce<{ mistakes: number[]; correct: number[]; missed: number[] }>(
+        (acc, letter, letterIndex) => {
+          if (!inputValue[letterIndex]) acc.missed.push(letterIndex);
+          else if (letter !== inputValue[letterIndex])
+            acc.mistakes.push(letterIndex);
+          else acc.correct.push(letterIndex);
+          return acc;
+        },
+        { mistakes: [], correct: [], missed: [] },
+      );
 
     const misspelled = mistakes.length > 0;
     const failed = misspelled || !!activeWord.overTyped;
@@ -61,7 +83,9 @@ const TypingCore: FC = () => {
         return {
           ...word,
           status: failed ? 'failed' : 'finished',
+          correct,
           mistakes,
+          missed,
           typed: inputValue,
         };
       if (index === activeWordIndex + 1) return { ...word, status: 'active' };
@@ -71,46 +95,61 @@ const TypingCore: FC = () => {
     if (failed)
       setStats((prev) => ({
         ...prev,
-        total: prev.total + 1,
-        incorrect: prev.incorrect + 1,
+        incorrectWords: prev.incorrectWords + 1,
+        totalWords: prev.totalWords + 1,
+        correctChars: prev.correctChars + correct.length,
+        incorrectChars: prev.incorrectChars + mistakes.length,
+        totalChars: prev.totalChars + correct.length + mistakes.length,
+        missedChars: prev.missedChars + missed.length,
       }));
     else
       setStats((prev) => ({
         ...prev,
-        total: prev.total + 1,
-        correct: prev.correct + 1,
+        correctWords: prev.correctWords + 1,
+        totalWords: prev.totalWords + 1,
+        correctChars: prev.correctChars + correct.length,
+        incorrectChars: prev.incorrectChars + mistakes.length,
+        totalChars: prev.totalChars + activeWord.value.length,
+        missedChars: prev.missedChars + missed.length,
       }));
 
     setWordList(newWordList);
     setInputValue('');
-  }, [wordList, setWordList, inputValue, setInputValue, activeWord]);
+  }, [wordList, setWordList, inputValue, setInputValue, activeWord, setStats]);
 
   const goToPrevWord = useCallback(() => {
-    if (inputValue.length > 0) return;
-    const prevWordIndex =
-      wordList.findIndex((word) => word.status === 'active') - 1;
-    if (prevWordIndex < 0 || wordList[prevWordIndex].status !== 'failed')
-      return;
+    if (inputValue.length > 0 || !activeWord) return;
+    const prevWord = wordList[activeWord.index - 1];
+    if (!prevWord || prevWord.status !== 'failed') return;
+
+    const correctLength = prevWord.correct?.length ?? 0;
+    const incorrectLength = prevWord.mistakes?.length ?? 0;
+    const missedLength = prevWord.missed?.length ?? 0;
 
     setIsWordTransition(true); // in order to prevent onChange event
     setStats((prev) => ({
       ...prev,
-      total: prev.total - 1,
-      incorrect: prev.incorrect - 1,
+      totalWords: prev.totalWords - 1,
+      incorrectWords: prev.incorrectWords - 1,
+      correctChars: prev.correctChars - correctLength,
+      incorrectChars: prev.incorrectChars - incorrectLength,
+      totalChars: prev.totalChars - correctLength - incorrectLength,
+      missedChars: prev.missedChars - missedLength,
     }));
 
-    setInputValue(wordList[prevWordIndex].typed ?? '');
+    setInputValue(prevWord.typed ?? '');
     setWordList((prev) =>
       prev.map((word, index) => {
-        if (index === prevWordIndex)
+        if (index === prevWord.index)
           return { ...word, status: 'active', mistakes: undefined };
-        if (index === prevWordIndex + 1) return { ...word, status: 'pending' };
+        if (index === prevWord.index) return { ...word, status: 'pending' };
         return word;
       }),
     );
   }, [
     inputValue,
     wordList,
+    activeWord,
     setInputValue,
     setWordList,
     setIsWordTransition,
@@ -191,6 +230,7 @@ const TypingCore: FC = () => {
       handleOverTyped,
       isWordTransition,
       setIsWordTransition,
+      setStatus,
     ],
   );
 
@@ -199,6 +239,7 @@ const TypingCore: FC = () => {
     setStatus,
     containerRef,
     inputRef,
+    wordList,
   );
 
   return (
@@ -225,7 +266,6 @@ const TypingCore: FC = () => {
         onBlur={onBlur}
         onChange={onChange}
         ref={inputRef}
-        autoFocus
         className="absolute z-50 -bottom-8 left-0 right-0 w-40 opacity-0 pointer-events-none"
       />
     </div>

@@ -18,8 +18,9 @@ export const formWord = (
   index: number,
   firstActive = true,
 ): Word => {
-  if (firstActive && index === 0) return { value: word, status: 'active' };
-  return { value: word, status: 'pending' };
+  if (firstActive && index === 0)
+    return { value: word, status: 'active', index };
+  return { value: word, status: 'pending', index };
 };
 
 export const formWords = (words: string[]): Word[] => {
@@ -93,9 +94,11 @@ export const getLetterStyle = (
   status: Word['status'],
   isOverTyped: boolean,
   wordMistakes?: number[],
+  missed?: number[],
 ) => {
   /* mistakes & over typed handle **/
-  if (wordMistakes?.includes(letterIndex)) return 'text-red-400';
+  if (wordMistakes?.includes(letterIndex) || missed?.includes(letterIndex))
+    return 'text-red-400';
   else if (isOverTyped) return 'text-red-300';
   else if (wordMistakes && wordMistakes.length > 0) return 'text-lavender';
 
@@ -124,6 +127,7 @@ export const useAreaFocus = (
   setStatus: Dispatch<SetStateAction<Status>>,
   areaRef: RefObject<HTMLDivElement>,
   inputRef: RefObject<HTMLInputElement>,
+  wordList: Word[],
 ) => {
   const [isClicking, setIsClicking] = useState(false);
   const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -144,11 +148,12 @@ export const useAreaFocus = (
     };
   }, [areaRef, setIsClicking]);
 
+  /* when word list updates - clear focus timeout **/
   useEffect(() => {
     return () => {
       if (focusTimeoutRef.current) clearTimeout(focusTimeoutRef.current);
     };
-  }, []);
+  }, [wordList]);
 
   const onFocus = useCallback(() => {
     const input = inputRef.current;
@@ -169,4 +174,30 @@ export const useAreaFocus = (
   }, [isClicking, setStatus, focusTimeoutRef]);
 
   return { onFocus, onBlur };
+};
+
+/*
+ * Calculate net words per minute
+ * @param totalTyped - number of total typed words
+ * @param incorrectTyped - number of incorrect typed words
+ * @param time - time in seconds
+ * @returns net words per minute
+ */
+export const calcNetWpm = (
+  totalTyped: number,
+  incorrectTyped: number,
+  time: number,
+) => {
+  const netWpm = (totalTyped / 5 - incorrectTyped) / (time / 60);
+  return Math.round(netWpm);
+};
+
+/*
+ * Calculate accuracy
+ * @param totalTyped - total typed words
+ * @param correctTyped - number of correct typed words
+ * @returns accuracy in percentage
+ */
+export const calcAccuracy = (totalTyped: number, correctTyped: number) => {
+  return Math.round((correctTyped / totalTyped) * 100);
 };

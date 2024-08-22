@@ -10,6 +10,7 @@ import {
 import ArrowLeftEndOnRectangle from '@assets/icons/common/arrow-left-end-on-rectangle.svg?react';
 import ArrowPath from '@assets/icons/common/arrow-path.svg?react';
 import ArrowRightStartOnRectangle from '@assets/icons/common/arrow-right-start-on-rectangle.svg?react';
+import Clock from '@assets/icons/common/clock.svg?react';
 import Cog6ToothSolid from '@assets/icons/common/cog-6-tooth-solid.svg?react';
 import Cog6Tooth from '@assets/icons/common/cog-6-tooth.svg?react';
 import CursorArrowMicro from '@assets/icons/common/cursor-arrow-micro.svg?react';
@@ -55,6 +56,7 @@ const iconSvgMap: Record<Icons, FC<SVGProps<SVGSVGElement>>> = {
   'exclamation-circle-outline': ExclamationCircleOutline,
   'arrow-path': ArrowPath,
   'cursor-arrow-micro': CursorArrowMicro,
+  clock: Clock,
 };
 
 type Props = {

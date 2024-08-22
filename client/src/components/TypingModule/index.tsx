@@ -1,22 +1,33 @@
 import type { SelectWordOptions } from '@/types/test-types.ts';
 import { Icon } from '@components/Icon';
 import { Spinner } from '@components/Spinner.tsx';
-import { wordsDictAtom } from '@components/TypingModule/generate-words.ts';
-import { statsAtom, statusAtom } from '@components/TypingModule/store.ts';
+import {
+  useGenerateWords,
+  wordsDictAtom,
+} from '@components/TypingModule/generate-words.ts';
+import { Results } from '@components/TypingModule/Results.tsx';
+import {
+  blankStats,
+  blankStatus,
+  statsAtom,
+  statusAtom,
+} from '@components/TypingModule/store.ts';
+import { Word } from '@components/TypingModule/types.ts';
 import { TypingCore } from '@components/TypingModule/TypingCore.tsx';
+import { calcAccuracy, calcNetWpm } from '@components/TypingModule/utils.ts';
 import { Typography } from '@components/Typography.tsx';
 import { Button } from '@components/ui/button.tsx';
 import { Skeleton } from '@components/ui/skeleton.tsx';
 import { useGetRandomWords } from '@queries/test-queries.ts';
 import { useAtom } from 'jotai';
-import { type FC, useCallback, useEffect, useState } from 'react';
+import { type FC, useCallback, useEffect, useRef, useState } from 'react';
+
+const TIMER_COUNT = 30;
 
 const TypingModule: FC = () => {
   const [wordOptions, setWordOptions] = useState<SelectWordOptions>({
     count: 50,
   });
-  const [timerCount, setTimerCount] = useState(0);
-
   const { data, isLoading, isError, refetch, isRefetching } =
     useGetRandomWords(wordOptions);
 
@@ -24,38 +35,75 @@ const TypingModule: FC = () => {
   const [stats, setStats] = useAtom(statsAtom);
   const [{ isFocused, isFinished, isTyping }, setStatus] = useAtom(statusAtom);
 
+  const { generateWords } = useGenerateWords();
+  const [generatedWords, setGeneratedWords] = useState<Word[]>([]);
+
+  const [timerCount, setTimerCount] = useState(TIMER_COUNT);
+
+  const reloadButtonRef = useRef<HTMLButtonElement>(null);
+
+  /* on dict data load **/
   useEffect(() => {
     if (!data) return;
     setWordsDict(data);
   }, [setWordsDict, data, isRefetching]);
 
+  /* on words dict load - generate words **/
+  useEffect(() => {
+    if (!wordsDict.length) return;
+    setGeneratedWords(generateWords());
+  }, [wordsDict, setGeneratedWords, generateWords]);
+
   useEffect(() => {
     if (isFinished || !isFocused || !isTyping) return;
-    if (timerCount >= 60)
-      return void setStatus((prev) => ({ ...prev, isFinished: true }));
+    /* on timer finish **/
+    if (timerCount <= 0) {
+      setStatus((prev) => ({ ...prev, isFinished: true }));
+      setStats((prev) => ({
+        ...prev,
+        wpm: calcNetWpm(prev.totalChars, prev.incorrectChars, TIMER_COUNT),
+        accuracy: calcAccuracy(prev.totalChars, prev.correctChars),
+      }));
+    }
 
     const timer = setInterval(() => {
-      setTimerCount((prev) => prev + 1);
+      setTimerCount((prev) => prev - 1);
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isFinished, isFocused, isTyping, timerCount, setStatus, setTimerCount]);
+  }, [
+    isFinished,
+    isFocused,
+    isTyping,
+    timerCount,
+    setStatus,
+    setTimerCount,
+    setStats,
+  ]);
 
   const onReload = useCallback(async () => {
-    setStats({ wpm: 0, accuracy: 0, correct: 0, incorrect: 0, total: 0 });
-    setTimerCount(0);
-    setStatus({
-      isTyping: false,
-      isFinished: false,
-      isFailed: false,
-      isFocused: true,
-    });
-    await refetch();
-  }, [setStats, setTimerCount, setStatus, refetch]);
+    setStats(blankStats);
+    setStatus(blankStatus);
+    setTimerCount(TIMER_COUNT);
+
+    if (reloadButtonRef.current) reloadButtonRef.current.blur();
+
+    if (wordsDict.length) setGeneratedWords(generateWords());
+    else await refetch();
+  }, [
+    setStats,
+    setTimerCount,
+    setStatus,
+    setGeneratedWords,
+    generateWords,
+    wordsDict,
+    refetch,
+    reloadButtonRef,
+  ]);
 
   const isReloading = isLoading || isRefetching;
   const isTypingCoreVisible =
-    wordsDict.length > 0 && !isReloading && !isFinished;
+    generatedWords.length > 0 && !isReloading && !isFinished;
 
   if (!data || isError) return null;
 
@@ -64,10 +112,13 @@ const TypingModule: FC = () => {
       <div className="px-24 pt-16 w-full">
         {isTypingCoreVisible && (
           <>
-            <div className="flex justify-end w-full">
-              <Typography className="text-lavender">{timerCount}</Typography>
+            <div className="flex justify-center items-center gap-0.5 w-full">
+              <Icon name="clock" size={20} strokeColor="lavender" />
+              <Typography size="large" className="text-lavender w-[21px]">
+                {timerCount}
+              </Typography>
             </div>
-            <TypingCore />
+            <TypingCore words={generatedWords} />
           </>
         )}
         {isReloading && (
@@ -77,21 +128,14 @@ const TypingModule: FC = () => {
             <Skeleton className="h-[16px]" />
           </div>
         )}
-        {isFinished && (
-          <div className="flex flex-col gap-4 bg-surface0 p-4 rounded-md">
-            <Typography size="h4" className="text-lavender">
-              Results
-            </Typography>
-            <Typography>Correct: {stats.correct}</Typography>
-            <Typography>Failed: {stats.incorrect}</Typography>
-          </div>
-        )}
+        {isFinished && <Results stats={stats} />}
       </div>
       <Button
         onClick={onReload}
         disabled={isReloading}
         variant="outline"
         className="w-[48px] h-[48px]"
+        ref={reloadButtonRef}
       >
         {isReloading ? (
           <Spinner size="xs" />

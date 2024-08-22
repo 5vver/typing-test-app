@@ -19,4 +19,5 @@ export type Icons =
   | 'github'
   | 'exclamation-circle-outline'
   | 'arrow-path'
-  | 'cursor-arrow-micro';
+  | 'cursor-arrow-micro'
+  | 'clock';

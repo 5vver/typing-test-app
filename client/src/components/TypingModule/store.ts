@@ -4,19 +4,25 @@ import { atom } from 'jotai';
 
 const wordsDictAtom = atom<WordData[]>([]);
 
-const statusAtom = atom<Status>({
+const blankStatus: Status = {
   isTyping: false,
   isFinished: false,
   isFailed: false,
   isFocused: false,
-});
+};
+const statusAtom = atom<Status>(blankStatus);
 
-const statsAtom = atom<Stats>({
+const blankStats: Stats = {
   wpm: 0,
   accuracy: 0,
-  correct: 0,
-  incorrect: 0,
-  total: 0,
-});
+  correctWords: 0,
+  incorrectWords: 0,
+  totalWords: 0,
+  correctChars: 0,
+  incorrectChars: 0,
+  totalChars: 0,
+  missedChars: 0,
+};
+const statsAtom = atom<Stats>(blankStats);
 
-export { statsAtom, statusAtom, wordsDictAtom };
+export { blankStats, blankStatus, statsAtom, statusAtom, wordsDictAtom };
