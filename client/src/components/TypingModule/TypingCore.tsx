@@ -119,6 +119,7 @@ const TypingCore: FC<Props> = ({ words }) => {
 
   const goToPrevWord = useCallback(() => {
     if (inputValue.length > 0 || !activeWord) return;
+
     const prevWord = wordList[activeWord.index - 1];
     if (!prevWord || prevWord.status !== 'failed') return;
 
@@ -141,8 +142,13 @@ const TypingCore: FC<Props> = ({ words }) => {
     setWordList((prev) =>
       prev.map((word, index) => {
         if (index === prevWord.index)
-          return { ...word, status: 'active', mistakes: undefined };
-        if (index === prevWord.index) return { ...word, status: 'pending' };
+          return {
+            ...word,
+            status: 'active',
+            mistakes: undefined,
+            missed: undefined,
+          };
+        if (index === activeWord.index) return { ...word, status: 'pending' };
         return word;
       }),
     );

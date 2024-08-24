@@ -189,7 +189,7 @@ export const calcNetWpm = (
   time: number,
 ) => {
   const netWpm = (totalTyped / 5 - incorrectTyped) / (time / 60);
-  return Math.round(netWpm);
+  return netWpm > 0 ? Math.round(netWpm) : 0;
 };
 
 /*

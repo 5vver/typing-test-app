@@ -12,7 +12,7 @@ import {
   statsAtom,
   statusAtom,
 } from '@components/TypingModule/store.ts';
-import { Word } from '@components/TypingModule/types.ts';
+import type { Word } from '@components/TypingModule/types.ts';
 import { TypingCore } from '@components/TypingModule/TypingCore.tsx';
 import { calcAccuracy, calcNetWpm } from '@components/TypingModule/utils.ts';
 import { Typography } from '@components/Typography.tsx';
