@@ -63,7 +63,7 @@
   .dark {
     --background: 240deg, 21%, 15%; /* --base color in hsl */
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --card: 237deg, 16%, 23%; /* --surface0 */
     --card-foreground: 210 40% 98%;
     --popover: 237deg, 16%, 23%; /* --surface0 */
     --popover-foreground: 232deg, 97%, 85%;  /* --lavender */

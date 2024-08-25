@@ -1,5 +1,7 @@
 import type {
+  ChartData,
   GenerateWords,
+  Stats,
   Status,
   Word,
 } from '@components/TypingModule/types.ts';
@@ -177,6 +179,17 @@ export const useAreaFocus = (
 };
 
 /*
+ * Calculate gross words per minute
+ * @param totalTyped - number of total typed words
+ * @param time - time in seconds
+ * @returns gross words per minute
+ */
+export const calcGrossWpm = (totalTyped: number, time: number) => {
+  const grossWpm = totalTyped / 5 / (time / 60);
+  return grossWpm > 0 ? Math.round(grossWpm) : 0;
+};
+
+/*
  * Calculate net words per minute
  * @param totalTyped - number of total typed words
  * @param incorrectTyped - number of incorrect typed words
@@ -199,5 +212,95 @@ export const calcNetWpm = (
  * @returns accuracy in percentage
  */
 export const calcAccuracy = (totalTyped: number, correctTyped: number) => {
-  return Math.round((correctTyped / totalTyped) * 100);
+  const acc = (correctTyped / totalTyped) * 100;
+  return parseFloat(acc.toFixed(2));
+};
+
+type TimerCountdownProps = {
+  status: Status;
+  setStatus: Dispatch<SetStateAction<Status>>;
+  stats: Stats;
+  setStats: Dispatch<SetStateAction<Stats>>;
+  setResultChart: Dispatch<SetStateAction<ChartData[]>>;
+  initialTimerCount?: number;
+};
+export const useTimerCountdown = ({
+  status,
+  setStatus,
+  stats,
+  setStats,
+  setResultChart,
+  initialTimerCount = 60,
+}: TimerCountdownProps) => {
+  const { isFinished, isFocused, isTyping } = status;
+
+  const [timerCount, setTimerCount] = useState(initialTimerCount);
+  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const prevTimerRef = useRef(timerCount);
+  const prevStatsRef = useRef(stats);
+
+  useEffect(() => {
+    const timer = timerIntervalRef.current;
+
+    if (isFinished || !isFocused || !isTyping) {
+      if (timer) {
+        clearInterval(timer);
+        timerIntervalRef.current = null;
+      }
+      return;
+    }
+    /* on timer finish **/
+    if (timerCount <= 0) {
+      setStatus((prev) => ({ ...prev, isFinished: true }));
+      setStats((prev) => ({
+        ...prev,
+        wpm: calcNetWpm(
+          prev.totalChars,
+          prev.incorrectChars,
+          initialTimerCount,
+        ),
+        accuracy: calcAccuracy(prev.totalChars, prev.correctChars),
+      }));
+    }
+
+    if (!timer)
+      timerIntervalRef.current = setInterval(() => {
+        const prevTimerCount = prevTimerRef.current;
+        const prevStats = prevStatsRef.current;
+        const timeElapsed = initialTimerCount - prevTimerCount;
+
+        setTimerCount((prev) => prev - 1);
+        setResultChart((prev) => [
+          ...prev,
+          {
+            timestamp: timeElapsed,
+            rawWpm: calcGrossWpm(prevStats.totalChars, timeElapsed),
+            netWpm: calcNetWpm(
+              prevStats.totalChars,
+              prevStats.incorrectChars,
+              timeElapsed,
+            ),
+          },
+        ]);
+      }, 1000);
+
+    prevTimerRef.current = timerCount;
+    prevStatsRef.current = stats;
+  }, [
+    isFinished,
+    isFocused,
+    isTyping,
+    timerCount,
+    setStatus,
+    setTimerCount,
+    stats,
+    setStats,
+    setResultChart,
+    timerIntervalRef,
+    prevTimerRef,
+    prevStatsRef,
+  ]);
+
+  return { timerCount, setTimerCount };
 };

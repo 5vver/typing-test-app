@@ -36,3 +36,9 @@ export type Stats = {
   missedChars: number;
   totalChars: number;
 };
+
+export type ChartData = {
+  timestamp: number;
+  rawWpm: number;
+  netWpm: number;
+};

@@ -1,5 +1,9 @@
 import type { WordData } from '@/types/test-types.ts';
-import type { Stats, Status } from '@components/TypingModule/types.ts';
+import type {
+  ChartData,
+  Stats,
+  Status,
+} from '@components/TypingModule/types.ts';
 import { atom } from 'jotai';
 
 const wordsDictAtom = atom<WordData[]>([]);
@@ -25,4 +29,13 @@ const blankStats: Stats = {
 };
 const statsAtom = atom<Stats>(blankStats);
 
-export { blankStats, blankStatus, statsAtom, statusAtom, wordsDictAtom };
+const resultChartAtom = atom<ChartData[]>([]);
+
+export {
+  blankStats,
+  blankStatus,
+  resultChartAtom,
+  statsAtom,
+  statusAtom,
+  wordsDictAtom,
+};

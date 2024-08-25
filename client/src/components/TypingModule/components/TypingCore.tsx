@@ -1,9 +1,9 @@
 import { Icon } from '@components/Icon';
+import { WordsGrid } from '@components/TypingModule/components/WordsGrid.tsx';
 import { useGenerateWords } from '@components/TypingModule/generate-words.ts';
 import { statsAtom, statusAtom } from '@components/TypingModule/store.ts';
 import type { Word } from '@components/TypingModule/types.ts';
 import { sliceWordList, useAreaFocus } from '@components/TypingModule/utils.ts';
-import { WordsGrid } from '@components/TypingModule/WordsGrid.tsx';
 import { Typography } from '@components/Typography.tsx';
 import { Input } from '@components/ui/input.tsx';
 import { useAtom, useSetAtom } from 'jotai';

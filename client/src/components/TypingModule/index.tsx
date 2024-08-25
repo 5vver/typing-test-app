@@ -1,25 +1,26 @@
 import type { SelectWordOptions } from '@/types/test-types.ts';
 import { Icon } from '@components/Icon';
 import { Spinner } from '@components/Spinner.tsx';
+import { Results } from '@components/TypingModule/components/Results.tsx';
+import { TypingCore } from '@components/TypingModule/components/TypingCore.tsx';
 import {
   useGenerateWords,
   wordsDictAtom,
 } from '@components/TypingModule/generate-words.ts';
-import { Results } from '@components/TypingModule/Results.tsx';
 import {
   blankStats,
   blankStatus,
+  resultChartAtom,
   statsAtom,
   statusAtom,
 } from '@components/TypingModule/store.ts';
 import type { Word } from '@components/TypingModule/types.ts';
-import { TypingCore } from '@components/TypingModule/TypingCore.tsx';
-import { calcAccuracy, calcNetWpm } from '@components/TypingModule/utils.ts';
+import { useTimerCountdown } from '@components/TypingModule/utils.ts';
 import { Typography } from '@components/Typography.tsx';
 import { Button } from '@components/ui/button.tsx';
 import { Skeleton } from '@components/ui/skeleton.tsx';
 import { useGetRandomWords } from '@queries/test-queries.ts';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 
 const TIMER_COUNT = 30;
@@ -33,12 +34,20 @@ const TypingModule: FC = () => {
 
   const [wordsDict, setWordsDict] = useAtom(wordsDictAtom);
   const [stats, setStats] = useAtom(statsAtom);
-  const [{ isFocused, isFinished, isTyping }, setStatus] = useAtom(statusAtom);
+  const [status, setStatus] = useAtom(statusAtom);
+  const setResultChart = useSetAtom(resultChartAtom);
+
+  const { timerCount, setTimerCount } = useTimerCountdown({
+    status,
+    setStatus,
+    stats,
+    setStats,
+    setResultChart,
+    initialTimerCount: TIMER_COUNT,
+  });
 
   const { generateWords } = useGenerateWords();
   const [generatedWords, setGeneratedWords] = useState<Word[]>([]);
-
-  const [timerCount, setTimerCount] = useState(TIMER_COUNT);
 
   const reloadButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -53,33 +62,6 @@ const TypingModule: FC = () => {
     if (!wordsDict.length) return;
     setGeneratedWords(generateWords());
   }, [wordsDict, setGeneratedWords, generateWords]);
-
-  useEffect(() => {
-    if (isFinished || !isFocused || !isTyping) return;
-    /* on timer finish **/
-    if (timerCount <= 0) {
-      setStatus((prev) => ({ ...prev, isFinished: true }));
-      setStats((prev) => ({
-        ...prev,
-        wpm: calcNetWpm(prev.totalChars, prev.incorrectChars, TIMER_COUNT),
-        accuracy: calcAccuracy(prev.totalChars, prev.correctChars),
-      }));
-    }
-
-    const timer = setInterval(() => {
-      setTimerCount((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [
-    isFinished,
-    isFocused,
-    isTyping,
-    timerCount,
-    setStatus,
-    setTimerCount,
-    setStats,
-  ]);
 
   const onReload = useCallback(async () => {
     setStats(blankStats);
@@ -103,7 +85,7 @@ const TypingModule: FC = () => {
 
   const isReloading = isLoading || isRefetching;
   const isTypingCoreVisible =
-    generatedWords.length > 0 && !isReloading && !isFinished;
+    generatedWords.length > 0 && !isReloading && !status.isFinished;
 
   if (!data || isError) return null;
 
@@ -128,7 +110,7 @@ const TypingModule: FC = () => {
             <Skeleton className="h-[16px]" />
           </div>
         )}
-        {isFinished && <Results stats={stats} />}
+        {status.isFinished && <Results stats={stats} />}
       </div>
       <Button
         onClick={onReload}
