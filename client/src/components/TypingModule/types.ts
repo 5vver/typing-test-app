@@ -2,7 +2,6 @@ import { SelectWordOptions } from '@/types/test-types.ts';
 
 export type Word = {
   value: string;
-  index: number;
   status: 'active' | 'finished' | 'failed' | 'pending';
   correct?: number[];
   mistakes?: number[];

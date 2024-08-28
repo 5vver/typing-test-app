@@ -24,7 +24,6 @@ const TypingCore: FC<Props> = ({ words }) => {
   const { generateWords } = useGenerateWords();
 
   const [wordList, setWordList] = useState(words);
-  const [activeWord, setActiveWord] = useState<Word | undefined>(undefined);
   const [inputValue, setInputValue] = useState('');
   const [isWordTransition, setIsWordTransition] = useState(false);
 
@@ -37,26 +36,30 @@ const TypingCore: FC<Props> = ({ words }) => {
   /* on props.words change - set new word list & clear states **/
   useEffect(() => {
     setWordList(words);
-    setActiveWord(undefined);
     setInputValue('');
 
     if (inputRef.current) {
       inputRef.current.focus();
       setStatus((prev) => ({ ...prev, isFocused: true }));
     }
-  }, [words, setWordList, setActiveWord, setInputValue, setStatus, inputRef]);
-
-  useEffect(() => {
-    const activeWord = wordList.find((word) => word.status === 'active');
-    setActiveWord(activeWord);
-  }, [wordList, setActiveWord]);
+  }, [words, setWordList, setInputValue, setStatus, inputRef]);
 
   useEffect(() => {
     if (!containerRef.current || wordList.length === 0) return;
     sliceWordList(setWordList, containerRef.current, generateWords);
   }, [wordList, setWordList, containerRef, generateWords]);
 
+  const getActiveWord = useCallback(() => {
+    const activeWordIndex = wordList.findIndex(
+      (word) => word.status === 'active',
+    );
+    const activeWord = wordList[activeWordIndex];
+
+    return { activeWord, activeWordIndex };
+  }, [wordList]);
+
   const goToNextWord = useCallback(() => {
+    const { activeWord, activeWordIndex } = getActiveWord();
     if (!activeWord) throw new Error('No active word found');
 
     const { correct, mistakes, missed } = activeWord.value
@@ -73,11 +76,9 @@ const TypingCore: FC<Props> = ({ words }) => {
       );
 
     const misspelled = mistakes.length > 0;
-    const failed = misspelled || !!activeWord.overTyped;
+    const wordsMissed = missed.length > 0;
+    const failed = misspelled || wordsMissed || !!activeWord.overTyped;
 
-    const activeWordIndex = wordList.findIndex(
-      (word) => word.status === 'active',
-    );
     const newWordList: Word[] = wordList.map((word, index) => {
       if (index === activeWordIndex)
         return {
@@ -115,12 +116,21 @@ const TypingCore: FC<Props> = ({ words }) => {
 
     setWordList(newWordList);
     setInputValue('');
-  }, [wordList, setWordList, inputValue, setInputValue, activeWord, setStats]);
+  }, [
+    wordList,
+    setWordList,
+    inputValue,
+    setInputValue,
+    getActiveWord,
+    setStats,
+  ]);
 
   const goToPrevWord = useCallback(() => {
+    const { activeWord, activeWordIndex } = getActiveWord();
     if (inputValue.length > 0 || !activeWord) return;
 
-    const prevWord = wordList[activeWord.index - 1];
+    const prevWordIndex = activeWordIndex - 1;
+    const prevWord = wordList[prevWordIndex];
     if (!prevWord || prevWord.status !== 'failed') return;
 
     const correctLength = prevWord.correct?.length ?? 0;
@@ -141,21 +151,21 @@ const TypingCore: FC<Props> = ({ words }) => {
     setInputValue(prevWord.typed ?? '');
     setWordList((prev) =>
       prev.map((word, index) => {
-        if (index === prevWord.index)
+        if (index === prevWordIndex)
           return {
             ...word,
             status: 'active',
             mistakes: undefined,
             missed: undefined,
           };
-        if (index === activeWord.index) return { ...word, status: 'pending' };
+        if (index === activeWordIndex) return { ...word, status: 'pending' };
         return word;
       }),
     );
   }, [
     inputValue,
     wordList,
-    activeWord,
+    getActiveWord,
     setInputValue,
     setWordList,
     setIsWordTransition,
@@ -164,6 +174,7 @@ const TypingCore: FC<Props> = ({ words }) => {
 
   const handleOverTyped = useCallback(
     (value: string) => {
+      const { activeWord } = getActiveWord();
       if (!activeWord) return;
 
       setWordList((prev) => {
@@ -183,7 +194,7 @@ const TypingCore: FC<Props> = ({ words }) => {
         return newWordList;
       });
     },
-    [activeWord, setWordList],
+    [getActiveWord, setWordList],
   );
 
   const inputListener = useCallback(
@@ -210,6 +221,7 @@ const TypingCore: FC<Props> = ({ words }) => {
 
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
+      const { activeWord } = getActiveWord();
       if (!activeWord) return;
       if (isWordTransition) return void setIsWordTransition(false);
 
@@ -230,7 +242,7 @@ const TypingCore: FC<Props> = ({ words }) => {
       if (value.length >= activeWord.value.length) handleOverTyped(value);
     },
     [
-      activeWord,
+      getActiveWord,
       setWordList,
       setInputValue,
       handleOverTyped,

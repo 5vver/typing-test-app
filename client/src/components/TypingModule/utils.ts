@@ -20,9 +20,8 @@ export const formWord = (
   index: number,
   firstActive = true,
 ): Word => {
-  if (firstActive && index === 0)
-    return { value: word, status: 'active', index };
-  return { value: word, status: 'pending', index };
+  if (firstActive && index === 0) return { value: word, status: 'active' };
+  return { value: word, status: 'pending' };
 };
 
 export const formWords = (words: string[]): Word[] => {
@@ -185,7 +184,8 @@ export const useAreaFocus = (
  * @returns gross words per minute
  */
 export const calcGrossWpm = (totalTyped: number, time: number) => {
-  const grossWpm = totalTyped / 5 / (time / 60);
+  const timeSeconds = time <= 0 ? 1 : time;
+  const grossWpm = totalTyped / 5 / (timeSeconds / 60);
   return grossWpm > 0 ? Math.round(grossWpm) : 0;
 };
 
@@ -201,7 +201,8 @@ export const calcNetWpm = (
   incorrectTyped: number,
   time: number,
 ) => {
-  const netWpm = (totalTyped / 5 - incorrectTyped) / (time / 60);
+  const timeSeconds = time <= 0 ? 1 : time;
+  const netWpm = (totalTyped / 5 - incorrectTyped) / (timeSeconds / 60);
   return netWpm > 0 ? Math.round(netWpm) : 0;
 };
 
@@ -240,6 +241,26 @@ export const useTimerCountdown = ({
   const prevTimerRef = useRef(timerCount);
   const prevStatsRef = useRef(stats);
 
+  const updateChartResult = useCallback(
+    (timeElapsed: number) => {
+      const prevStats = prevStatsRef.current;
+
+      setResultChart((prev) => [
+        ...prev,
+        {
+          timestamp: timeElapsed,
+          rawWpm: calcGrossWpm(prevStats.totalChars, timeElapsed),
+          netWpm: calcNetWpm(
+            prevStats.totalChars,
+            prevStats.incorrectChars,
+            timeElapsed,
+          ),
+        },
+      ]);
+    },
+    [setResultChart],
+  );
+
   useEffect(() => {
     const timer = timerIntervalRef.current;
 
@@ -262,27 +283,16 @@ export const useTimerCountdown = ({
         ),
         accuracy: calcAccuracy(prev.totalChars, prev.correctChars),
       }));
+      updateChartResult(initialTimerCount);
     }
 
     if (!timer)
       timerIntervalRef.current = setInterval(() => {
         const prevTimerCount = prevTimerRef.current;
-        const prevStats = prevStatsRef.current;
         const timeElapsed = initialTimerCount - prevTimerCount;
 
         setTimerCount((prev) => prev - 1);
-        setResultChart((prev) => [
-          ...prev,
-          {
-            timestamp: timeElapsed,
-            rawWpm: calcGrossWpm(prevStats.totalChars, timeElapsed),
-            netWpm: calcNetWpm(
-              prevStats.totalChars,
-              prevStats.incorrectChars,
-              timeElapsed,
-            ),
-          },
-        ]);
+        updateChartResult(timeElapsed);
       }, 1000);
 
     prevTimerRef.current = timerCount;
@@ -297,9 +307,8 @@ export const useTimerCountdown = ({
     stats,
     setStats,
     setResultChart,
-    timerIntervalRef,
-    prevTimerRef,
-    prevStatsRef,
+    initialTimerCount,
+    updateChartResult,
   ]);
 
   return { timerCount, setTimerCount };

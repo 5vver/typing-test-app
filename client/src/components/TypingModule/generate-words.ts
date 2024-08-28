@@ -1,4 +1,3 @@
-import { SelectWordOptions } from '@/types/test-types.ts';
 import { wordsDictAtom } from '@components/TypingModule/store.ts';
 import type { GenerateWords, Word } from '@components/TypingModule/types.ts';
 import { formWord } from '@components/TypingModule/utils.ts';
@@ -9,7 +8,7 @@ const useGenerateWords = (): GenerateWords => {
   const wordsDict = useAtomValue(wordsDictAtom);
 
   const generateWords = useCallback(
-    (options?: SelectWordOptions & { firstActive?: boolean }): Word[] => {
+    (options: Parameters<GenerateWords['generateWords']>[number]): Word[] => {
       if (!wordsDict.length) return [];
 
       const { count = wordsDict.length, firstActive = true } = options ?? {};

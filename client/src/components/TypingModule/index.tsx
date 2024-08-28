@@ -67,6 +67,7 @@ const TypingModule: FC = () => {
     setStats(blankStats);
     setStatus(blankStatus);
     setTimerCount(TIMER_COUNT);
+    setResultChart([]);
 
     if (reloadButtonRef.current) reloadButtonRef.current.blur();
 
@@ -80,7 +81,7 @@ const TypingModule: FC = () => {
     generateWords,
     wordsDict,
     refetch,
-    reloadButtonRef,
+    setResultChart,
   ]);
 
   const isReloading = isLoading || isRefetching;
