@@ -91,22 +91,22 @@ export const getLetterStyle = (
   letter: string,
   letterIndex: number,
   inputValue: string,
-  isLetterTyped: boolean,
+  wordValue: string,
   status: Word['status'],
-  isOverTyped: boolean,
   wordMistakes?: number[],
   missed?: number[],
+  typed?: string,
 ) => {
+  const isWordActive = status === 'active';
+  const isWordFinished = status === 'finished' || status === 'failed';
+  const isLetterTyped = isWordActive && letterIndex < inputValue.length;
+  const isOverTyped = letterIndex >= wordValue.length;
+
   /* mistakes & over typed handle **/
   if (wordMistakes?.includes(letterIndex) || missed?.includes(letterIndex))
     return 'text-red-400';
   else if (isOverTyped) return 'text-red-300';
   else if (wordMistakes && wordMistakes.length > 0) return 'text-lavender';
-
-  /* statuses handle **/
-  if (status === 'finished') return 'text-lavender';
-  if (status === 'failed') return 'text-red-400';
-  if (status === 'pending') return 'text-subtext0';
 
   // emphasize active latter
   //if (isLetterActive && !inputValue[letterIndex]) return 'text-blue';
@@ -115,10 +115,17 @@ export const getLetterStyle = (
   if (isLetterTyped && letter !== inputValue[letterIndex]) {
     return 'text-red-400';
   }
-  /* correct typed letter **/
-  if (letter === inputValue[letterIndex]) {
+  /* correct typed/finished letter **/
+  if (isLetterTyped && letter === inputValue[letterIndex])
     return 'text-lavender';
-  }
+  else if (isWordFinished && letter === typed?.[letterIndex])
+    return 'text-lavender';
+
+  /* statuses handle **/
+  if (status === 'finished') return 'text-lavender';
+  if (status === 'failed') return 'text-red-400';
+  if (status === 'pending') return 'text-subtext0';
+
   /* active pending letter **/
   return 'text-subtext0';
 };

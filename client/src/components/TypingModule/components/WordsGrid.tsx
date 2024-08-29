@@ -28,24 +28,24 @@ const WordsGrid: FC<Props> = ({
       ref={refWrapper}
     >
       {words.map(
-        ({ value, status, mistakes, missed, overTyped }, wordIndex) => {
+        ({ value, status, mistakes, missed, overTyped, typed }, wordIndex) => {
           const word = value + (overTyped || '');
-          //const word = value;
+          const failedEmphasis = status === 'failed' ? 'border-red-400' : '';
           return (
             <div
               id={`word_${status}`}
               key={`${word}_${wordIndex}`}
-              className="flex"
+              className={cn(
+                'flex border-b-2 border-transparent',
+                failedEmphasis,
+              )}
             >
               {word.split('').map((letter, index) => {
-                const isWordActive = status === 'active';
                 // TODO: come up with a better solution
                 const isLetterActive =
-                  isWordActive &&
+                  status === 'active' &&
                   ((!inputValue.length && index < 1) ||
                     index + 1 === inputValue.length);
-                const isLetterTyped = isWordActive && index < inputValue.length;
-                const isOverTyped = index >= value.length;
                 /* caret stops flickering **/
                 const isCaretIdle = wordIndex > 0 || inputValue.length > 0;
 
@@ -53,11 +53,11 @@ const WordsGrid: FC<Props> = ({
                   letter,
                   index,
                   inputValue,
-                  isLetterTyped,
+                  value,
                   status,
-                  isOverTyped,
                   mistakes,
                   missed,
+                  typed,
                 );
 
                 return (
