@@ -10,6 +10,7 @@ import {
 import ArrowLeftEndOnRectangle from '@assets/icons/common/arrow-left-end-on-rectangle.svg?react';
 import ArrowPath from '@assets/icons/common/arrow-path.svg?react';
 import ArrowRightStartOnRectangle from '@assets/icons/common/arrow-right-start-on-rectangle.svg?react';
+import CheckCircle from '@assets/icons/common/check-circle.svg?react';
 import Clock from '@assets/icons/common/clock.svg?react';
 import Cog6ToothSolid from '@assets/icons/common/cog-6-tooth-solid.svg?react';
 import Cog6Tooth from '@assets/icons/common/cog-6-tooth.svg?react';
@@ -25,6 +26,7 @@ import UserCircleMini from '@assets/icons/common/user-circle-mini.svg?react';
 import UserCircleOutline from '@assets/icons/common/user-circle-outline.svg?react';
 import UserCircleSolid from '@assets/icons/common/user-circle-solid.svg?react';
 import UserPlusMini from '@assets/icons/common/user-plus-mini.svg?react';
+import XCircle from '@assets/icons/common/x-circle.svg?react';
 import GitHub from '@assets/icons/github.svg?react';
 import KeyboardOutline from '@assets/icons/keyboard-outline.svg?react';
 import KeyboardSolid from '@assets/icons/keyboard-solid.svg?react';
@@ -57,6 +59,8 @@ const iconSvgMap: Record<Icons, FC<SVGProps<SVGSVGElement>>> = {
   'arrow-path': ArrowPath,
   'cursor-arrow-micro': CursorArrowMicro,
   clock: Clock,
+  'check-circle': CheckCircle,
+  'x-circle': XCircle,
 };
 
 type Props = {

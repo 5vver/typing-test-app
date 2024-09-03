@@ -20,4 +20,6 @@ export type Icons =
   | 'exclamation-circle-outline'
   | 'arrow-path'
   | 'cursor-arrow-micro'
-  | 'clock';
+  | 'clock'
+  | 'check-circle'
+  | 'x-circle';

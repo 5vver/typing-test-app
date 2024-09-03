@@ -221,6 +221,7 @@ export const calcNetWpm = (
  */
 export const calcAccuracy = (totalTyped: number, correctTyped: number) => {
   const acc = (correctTyped / totalTyped) * 100;
+  if (!acc) return 0;
   return parseFloat(acc.toFixed(2));
 };
 
@@ -247,21 +248,31 @@ export const useTimerCountdown = ({
 
   const prevTimerRef = useRef(timerCount);
   const prevStatsRef = useRef(stats);
+  const prevMistakesRef = useRef<number>(0);
 
   const updateChartResult = useCallback(
     (timeElapsed: number) => {
       const prevStats = prevStatsRef.current;
+      const prevMistakes = prevMistakesRef.current;
+
+      const diff = prevStats.incorrectChars - prevMistakes;
+      const isMistake = diff > 0;
+      if (isMistake) prevMistakesRef.current += diff;
+
+      const rawWpm = calcGrossWpm(prevStats.totalChars, timeElapsed);
+      const netWpm = calcNetWpm(
+        prevStats.totalChars,
+        prevStats.incorrectChars,
+        timeElapsed,
+      );
 
       setResultChart((prev) => [
         ...prev,
         {
           timestamp: timeElapsed,
-          rawWpm: calcGrossWpm(prevStats.totalChars, timeElapsed),
-          netWpm: calcNetWpm(
-            prevStats.totalChars,
-            prevStats.incorrectChars,
-            timeElapsed,
-          ),
+          rawWpm,
+          netWpm,
+          ...(isMistake ? { mistake: rawWpm, mistakeRate: diff } : {}),
         },
       ]);
     },

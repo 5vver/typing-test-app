@@ -40,4 +40,6 @@ export type ChartData = {
   timestamp: number;
   rawWpm: number;
   netWpm: number;
+  mistake?: number;
+  mistakeRate?: number;
 };
