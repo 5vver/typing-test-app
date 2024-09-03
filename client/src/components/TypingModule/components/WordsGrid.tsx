@@ -2,7 +2,9 @@ import { cn } from '@/lib/utils.ts';
 import type { Word } from '@components/TypingModule/types.ts';
 import { getLetterStyle } from '@components/TypingModule/utils.ts';
 import { Typography } from '@components/Typography.tsx';
-import { type FC, type RefObject } from 'react';
+import { type FC, type RefObject, useEffect, useState } from 'react';
+
+import { motion } from 'framer-motion';
 
 type Props = {
   words: Word[];
@@ -19,14 +21,54 @@ const WordsGrid: FC<Props> = ({
   refWrapper,
   className,
 }) => {
+  const [caretPosition, setCaretPosition] = useState({ top: 0, left: 0 });
+  const { top, left } = caretPosition;
+
+  useEffect(() => {
+    if (!isFocused) return;
+
+    const container = refWrapper?.current;
+    const activeWord = container?.querySelector('#word_active');
+    const activeLetter = activeWord?.querySelector('#letter_active');
+
+    if (container && activeWord) {
+      let top;
+      let left;
+
+      const containerRect = container.getBoundingClientRect();
+      const activeWordRect = activeWord.getBoundingClientRect();
+      const activeLetterRect = activeLetter?.getBoundingClientRect();
+
+      /* active letter presents **/
+      if (activeLetterRect) {
+        top = activeLetterRect.top - containerRect.top;
+        left = activeLetterRect.left - containerRect.left;
+        return void setCaretPosition({ top, left });
+      }
+
+      top = activeWordRect.top - containerRect.top;
+      left = activeWordRect.right - containerRect.left;
+      setCaretPosition({ top, left });
+    }
+  }, [isFocused, inputValue, refWrapper, words]);
+
+  const isCaretIdle = inputValue.length > 0;
+
   return (
     <div
       className={cn(
-        'flex flex-wrap gap-[16px] overflow-hidden select-none max-h-[calc(3*3rem)]',
+        'relative flex flex-wrap gap-[16px] overflow-hidden select-none max-h-[calc(3*3rem)]',
         className,
       )}
       ref={refWrapper}
     >
+      <motion.div
+        id="letter_caret"
+        className={`absolute h-[36px] w-[2px] bg-yellow ${isCaretIdle ? '' : 'animate-flicker'} ${isFocused ? 'block' : 'hidden'}`}
+        animate={{ top, left }}
+        transition={{ type: 'keyframes', duration: 0.16 }}
+      />
+
       {words.map(
         ({ value, status, mistakes, missed, overTyped, typed }, wordIndex) => {
           const word = value + (overTyped || '');
@@ -41,13 +83,10 @@ const WordsGrid: FC<Props> = ({
               )}
             >
               {word.split('').map((letter, index) => {
-                // TODO: come up with a better solution
                 const isLetterActive =
                   status === 'active' &&
                   ((!inputValue.length && index < 1) ||
-                    index + 1 === inputValue.length);
-                /* caret stops flickering **/
-                const isCaretIdle = wordIndex > 0 || inputValue.length > 0;
+                    index === inputValue.length);
 
                 const letterStyle = getLetterStyle(
                   letter,
@@ -61,13 +100,17 @@ const WordsGrid: FC<Props> = ({
                 );
 
                 return (
-                  <div id="letter" key={index} className="relative">
-                    {isFocused && isLetterActive && (
-                      <div
-                        id="letter-caret"
-                        className={`absolute h-full w-[2px] bg-yellow ${inputValue.length < 1 ? '' : 'right-0'} ${isCaretIdle ? '' : 'animate-flicker'}`}
-                      />
-                    )}
+                  <div
+                    id={`letter_${isLetterActive ? 'active' : 'idle'}`}
+                    key={index}
+                    className="relative"
+                  >
+                    {/*{isFocused && isLetterActive && (*/}
+                    {/*  <div*/}
+                    {/*    id="letter-caret"*/}
+                    {/*    className={`absolute h-full w-[2px] bg-yellow ${inputValue.length < 1 ? '' : 'right-0'} ${isCaretIdle ? '' : 'animate-flicker'}`}*/}
+                    {/*  />*/}
+                    {/*)}*/}
                     <Typography
                       size="type"
                       className={`${letterStyle} transition-colors ease-in-out delay-0 duration-75`}

@@ -37,7 +37,7 @@ const TypingModule: FC = () => {
   const [status, setStatus] = useAtom(statusAtom);
   const setResultChart = useSetAtom(resultChartAtom);
 
-  const { timerCount, setTimerCount } = useTimerCountdown({
+  const { timerCount, setTimerCount, resetTimer } = useTimerCountdown({
     status,
     setStatus,
     stats,
@@ -69,6 +69,8 @@ const TypingModule: FC = () => {
     setTimerCount(TIMER_COUNT);
     setResultChart([]);
 
+    resetTimer();
+
     if (reloadButtonRef.current) reloadButtonRef.current.blur();
 
     if (wordsDict.length) setGeneratedWords(generateWords());
@@ -82,6 +84,7 @@ const TypingModule: FC = () => {
     wordsDict,
     refetch,
     setResultChart,
+    resetTimer,
   ]);
 
   const isReloading = isLoading || isRefetching;

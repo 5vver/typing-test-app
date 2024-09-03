@@ -66,7 +66,7 @@ export const sliceWordList = (
       ? getWordWidth(wordElement) - WORD_GAP
       : getWordWidth(wordElement);
     const aWordWidth = isLast ? activeWordWidth : 0;
-    if (currentRowWidth + wordWidth + aWordWidth > containerWidth) {
+    if (currentRowWidth + wordWidth + aWordWidth > containerWidth * 2) {
       lastIndex = i;
       break;
     }
@@ -329,5 +329,17 @@ export const useTimerCountdown = ({
     updateChartResult,
   ]);
 
-  return { timerCount, setTimerCount };
+  const resetTimer = useCallback(() => {
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+      timerIntervalRef.current = null;
+    }
+    prevTimerRef.current = initialTimerCount;
+    prevStatsRef.current = stats;
+    prevMistakesRef.current = 0;
+
+    setTimerCount(initialTimerCount);
+  }, [initialTimerCount, setTimerCount, stats]);
+
+  return { timerCount, setTimerCount, resetTimer };
 };
