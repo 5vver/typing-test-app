@@ -30,61 +30,48 @@ export const formWords = (words: string[]): Word[] => {
 
 const WORD_GAP = 16; // 16px
 
-const getWordWidth = (wordElement: Element): number => {
-  const width = wordElement.clientWidth;
-  return width + WORD_GAP;
-};
-
 export const sliceWordList = (
   setWordList: Dispatch<SetStateAction<Word[]>>,
   wordListContainer: HTMLDivElement,
   generateWordsFn?: GenerateWords['generateWords'],
 ) => {
-  const fulfilledWordNodes = ['#word_finished', '#word_failed'].map((id) =>
-    wordListContainer.querySelectorAll(id),
+  const fulfilledWordElements = ['#word_finished', '#word_failed'].flatMap(
+    (id) => Array.from(wordListContainer.querySelectorAll(id)),
+  );
+  /* sort elements by dom position **/
+  fulfilledWordElements.sort((a, b) =>
+    a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
   );
 
-  const fulfilledWordElements = [
-    ...(fulfilledWordNodes[0] ? fulfilledWordNodes[0].values() : []),
-    ...(fulfilledWordNodes[1] ? fulfilledWordNodes[1].values() : []),
-  ];
   const activeWordElement = wordListContainer.querySelector('#word_active');
 
-  const activeWordWidth = activeWordElement
-    ? getWordWidth(activeWordElement)
-    : 0;
-  const containerWidth = wordListContainer.offsetWidth;
-  let currentRowWidth = 0;
-  let lastIndex = 0;
+  if (!activeWordElement || fulfilledWordElements.length === 0) return;
 
-  for (let i = 0; i < fulfilledWordElements.length; i++) {
-    const wordElement = fulfilledWordElements.at(i);
-    if (!wordElement) continue;
+  const fulfilledLength = fulfilledWordElements.length;
 
-    const isLast = i === fulfilledWordElements.length - 1;
-    const wordWidth = isLast
-      ? getWordWidth(wordElement) - WORD_GAP
-      : getWordWidth(wordElement);
-    const aWordWidth = isLast ? activeWordWidth : 0;
-    if (currentRowWidth + wordWidth + aWordWidth > containerWidth) {
-      lastIndex = i;
-      break;
-    }
-    currentRowWidth += wordWidth;
+  const containerRect = wordListContainer.getBoundingClientRect();
+  const lastFulfilledWordRect =
+    fulfilledWordElements[fulfilledLength - 1].getBoundingClientRect();
+
+  const offsetRight = containerRect.right - lastFulfilledWordRect.right;
+  const offsetTop = lastFulfilledWordRect.top - containerRect.top;
+
+  if (
+    offsetRight < activeWordElement.clientWidth + WORD_GAP &&
+    offsetTop > activeWordElement.clientHeight
+  ) {
+    setWordList((prev) => {
+      const newWordList = prev.slice(fulfilledLength);
+      if (generateWordsFn) {
+        const newWords = generateWordsFn({
+          count: fulfilledLength,
+          firstActive: false,
+        });
+        if (newWords.length > 0) newWordList.push(...newWords);
+      }
+      return newWordList;
+    });
   }
-
-  if (!lastIndex) return;
-  setWordList((prev) => {
-    const newWordList = prev.slice(lastIndex + 1);
-    if (generateWordsFn) {
-      const newWords = generateWordsFn({
-        count: lastIndex + 1,
-        firstActive: false,
-      });
-      if (newWords.length > 0) newWordList.push(...newWords);
-    }
-    return newWordList;
-  });
 };
 
 export const getLetterStyle = (

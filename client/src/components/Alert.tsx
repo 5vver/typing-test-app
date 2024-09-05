@@ -1,5 +1,4 @@
 import { Icon } from '@components/Icon';
-import { Typography } from '@components/Typography.tsx';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -46,11 +45,9 @@ const Alert: FC<Props> = ({
               size={24}
               strokeColor="red"
             />
-            <Typography>{title}</Typography>
+            {title}
           </AlertDialogTitle>
-          <AlertDialogDescription>
-            <Typography>{message}</Typography>
-          </AlertDialogDescription>
+          <AlertDialogDescription>{message}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <Button onClick={closeAlert}>Close</Button>
