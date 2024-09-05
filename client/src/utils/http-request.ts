@@ -10,7 +10,7 @@ export const httpRequest = async <T extends Record<keyof T, unknown>>(
   try {
     const { data } = await axios.request<T>({
       url: path,
-      baseURL: 'http://localhost:5000',
+      baseURL: import.meta.env.VITE_API_URL,
       ...options,
     });
     requestData = data;

@@ -25,7 +25,7 @@ const bootstrap = async () => {
 
     app.useStaticAssets(join(__dirname, '..', 'public'), { prefix: '/public' });
 
-    await app.listen(PORT, () => {
+    await app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server started on port: ${PORT}`);
     });
   } catch (e) {

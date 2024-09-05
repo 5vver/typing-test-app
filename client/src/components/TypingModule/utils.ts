@@ -66,7 +66,7 @@ export const sliceWordList = (
       ? getWordWidth(wordElement) - WORD_GAP
       : getWordWidth(wordElement);
     const aWordWidth = isLast ? activeWordWidth : 0;
-    if (currentRowWidth + wordWidth + aWordWidth > containerWidth * 2) {
+    if (currentRowWidth + wordWidth + aWordWidth > containerWidth) {
       lastIndex = i;
       break;
     }

@@ -103,14 +103,7 @@ const WordsGrid: FC<Props> = ({
                   <div
                     id={`letter_${isLetterActive ? 'active' : 'idle'}`}
                     key={index}
-                    className="relative"
                   >
-                    {/*{isFocused && isLetterActive && (*/}
-                    {/*  <div*/}
-                    {/*    id="letter-caret"*/}
-                    {/*    className={`absolute h-full w-[2px] bg-yellow ${inputValue.length < 1 ? '' : 'right-0'} ${isCaretIdle ? '' : 'animate-flicker'}`}*/}
-                    {/*  />*/}
-                    {/*)}*/}
                     <Typography
                       size="type"
                       className={`${letterStyle} transition-colors ease-in-out delay-0 duration-75`}
