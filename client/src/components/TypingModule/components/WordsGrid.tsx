@@ -2,9 +2,16 @@ import { cn } from '@/lib/utils.ts';
 import type { Word } from '@components/TypingModule/types.ts';
 import { getLetterStyle } from '@components/TypingModule/utils.ts';
 import { Typography } from '@components/Typography.tsx';
-import { type FC, type RefObject, useEffect, useState } from 'react';
+import {
+  type FC,
+  type RefObject,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 
 import { motion } from 'framer-motion';
+import { debounce } from 'lodash';
 
 type Props = {
   words: Word[];
@@ -21,6 +28,7 @@ const WordsGrid: FC<Props> = ({
   refWrapper,
   className,
 }) => {
+  const [isCaretIdle, setIsCaretIdle] = useState(true);
   const [caretPosition, setCaretPosition] = useState({ top: 0, left: 0 });
   const { top, left } = caretPosition;
 
@@ -52,7 +60,16 @@ const WordsGrid: FC<Props> = ({
     }
   }, [isFocused, inputValue, refWrapper, words]);
 
-  const isCaretIdle = inputValue.length > 0;
+  const debouncedSetCaretIdle = useCallback(() => {
+    debounce(() => setIsCaretIdle(true), 250)();
+  }, [setIsCaretIdle]);
+
+  useEffect(() => {
+    if (isFocused && inputValue.length > 0) {
+      return void setIsCaretIdle(false);
+    }
+    debouncedSetCaretIdle();
+  }, [isFocused, inputValue, debouncedSetCaretIdle, setIsCaretIdle]);
 
   return (
     <div
@@ -64,7 +81,7 @@ const WordsGrid: FC<Props> = ({
     >
       <motion.div
         id="letter_caret"
-        className={`absolute h-[36px] w-[2px] bg-yellow ${isCaretIdle ? '' : 'animate-flicker'} ${isFocused ? 'block' : 'hidden'}`}
+        className={`absolute h-[36px] w-[2px] bg-yellow ${isCaretIdle ? 'animate-flicker' : ''} ${isFocused ? 'block' : 'hidden'}`}
         animate={{ top, left }}
         transition={{ type: 'keyframes', duration: 0.16 }}
       />

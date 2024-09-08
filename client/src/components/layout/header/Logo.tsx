@@ -9,25 +9,34 @@ import {
 } from '@components/ui/dropdown-menu.tsx';
 import { type FC } from 'react';
 
-export const Logo: FC = () => {
+type Props = {
+  className?: string;
+};
+
+export const Logo: FC<Props> = ({ className }) => {
   const isScreenSmall = useIsScreenSmall();
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger disabled={!isScreenSmall}>
-        <div className="flex gap-x-1 p-1 items-center justify-center select-none">
-          <Icon name="keyboard-solid" size={36} color="mauve" />
-          <Typography size="h2" className="font-mono text-teal hidden md:block">
-            TypingTest
-          </Typography>
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="min-w-10">
-        <NavButtons
-          className="flex flex-col gap-y-2"
-          tooltipContentProps={{ side: 'right', sideOffset: 12 }}
-        />
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className={className}>
+      <DropdownMenu>
+        <DropdownMenuTrigger disabled={!isScreenSmall}>
+          <div className="flex gap-x-2 p-1 items-center justify-center select-none">
+            <Icon name="keyboard-solid" size={32} color="mauve" />
+            <Typography
+              size="h2"
+              className="font-mono text-teal hidden md:block"
+            >
+              TypingTest
+            </Typography>
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="min-w-10">
+          <NavButtons
+            className="flex flex-col gap-y-2"
+            tooltipContentProps={{ side: 'right', sideOffset: 12 }}
+          />
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 };

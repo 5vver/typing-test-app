@@ -13,9 +13,13 @@ import {
 } from '@components/ui/dropdown-menu.tsx';
 import { useNavigate } from '@tanstack/react-router';
 import { useAuth } from '@utils/auth.tsx';
-import { useCallback, useState } from 'react';
+import { type FC, useCallback, useState } from 'react';
 
-const AccountDropdown = () => {
+type Props = {
+  className?: string;
+};
+
+const AccountDropdown: FC<Props> = ({ className }) => {
   const { status, username, login, register, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -42,7 +46,7 @@ const AccountDropdown = () => {
   }, [logout, setMenuOpen, navigate]);
 
   return (
-    <>
+    <div className={className}>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         {dialogType === 'login' && (
           <LoginDialog login={login} setOpen={setDialogOpen} />
@@ -75,7 +79,7 @@ const AccountDropdown = () => {
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-    </>
+    </div>
   );
 };
 
