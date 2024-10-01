@@ -1,8 +1,9 @@
-import type { SelectWordOptions } from '@/types/test-types.ts';
 import { Icon } from '@components/Icon';
 import { Spinner } from '@components/Spinner.tsx';
 import { Results } from '@components/TypingModule/components/Results.tsx';
 import { TypingCore } from '@components/TypingModule/components/TypingCore.tsx';
+import { TypingCoreSkeleton } from '@components/TypingModule/components/TypingCoreSkeleton.tsx';
+import { TypingToolbar } from '@components/TypingModule/components/TypingToolbar';
 import {
   useGenerateWords,
   wordsDictAtom,
@@ -11,26 +12,25 @@ import {
   blankStats,
   blankStatus,
   resultChartAtom,
+  settingsAtom,
   statsAtom,
   statusAtom,
 } from '@components/TypingModule/store.ts';
 import type { Word } from '@components/TypingModule/types.ts';
 import { useTimerCountdown } from '@components/TypingModule/utils.ts';
-import { Typography } from '@components/Typography.tsx';
 import { Button } from '@components/ui/button.tsx';
-import { Skeleton } from '@components/ui/skeleton.tsx';
 import { useGetRandomWords } from '@queries/test-queries.ts';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 
 const TIMER_COUNT = 30;
 
 const TypingModule: FC = () => {
-  const [wordOptions, setWordOptions] = useState<SelectWordOptions>({
-    count: 50,
-  });
-  const { data, isLoading, isError, refetch, isRefetching } =
-    useGetRandomWords(wordOptions);
+  const settings = useAtomValue(settingsAtom);
+
+  const { data, isLoading, isError, refetch, isRefetching } = useGetRandomWords(
+    { count: settings.words, lang: settings.dictionary },
+  );
 
   const [wordsDict, setWordsDict] = useAtom(wordsDictAtom);
   const [stats, setStats] = useAtom(statsAtom);
@@ -43,7 +43,7 @@ const TypingModule: FC = () => {
     stats,
     setStats,
     setResultChart,
-    initialTimerCount: TIMER_COUNT,
+    initialTimerCount: settings.timerCount,
   });
 
   const { generateWords } = useGenerateWords();
@@ -95,25 +95,16 @@ const TypingModule: FC = () => {
 
   return (
     <div className="flex flex-col gap-2 items-center w-full h-full">
-      <div className="px-24 pt-32 w-full">
-        {isTypingCoreVisible && (
-          <>
-            <div className="flex justify-center items-center gap-0.5 w-full">
-              <Icon name="clock" size={20} strokeColor="lavender" />
-              <Typography size="large" className="text-lavender w-[21px]">
-                {timerCount}
-              </Typography>
-            </div>
-            <TypingCore words={generatedWords} />
-          </>
-        )}
-        {isReloading && (
-          <div className="flex flex-col gap-[16px] justify-center h-[144px]">
-            <Skeleton className="h-[16px]" />
-            <Skeleton className="h-[16px]" />
-            <Skeleton className="h-[16px]" />
-          </div>
-        )}
+      <div className="px-24 pt-32 w-full flex flex-col gap-4">
+        <TypingToolbar
+          timerCount={timerCount}
+          onSettingsApply={() => {
+            void onReload();
+          }}
+        />
+
+        {isTypingCoreVisible && <TypingCore words={generatedWords} />}
+        {isReloading && <TypingCoreSkeleton />}
         {status.isFinished && <Results stats={stats} />}
       </div>
       <Button

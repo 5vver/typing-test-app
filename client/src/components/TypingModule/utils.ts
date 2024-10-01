@@ -291,7 +291,7 @@ export const useTimerCountdown = ({
       updateChartResult(initialTimerCount);
     }
 
-    if (!timer)
+    if (!timer) {
       timerIntervalRef.current = setInterval(() => {
         const prevTimerCount = prevTimerRef.current;
         const timeElapsed = initialTimerCount - prevTimerCount;
@@ -299,6 +299,7 @@ export const useTimerCountdown = ({
         setTimerCount((prev) => prev - 1);
         updateChartResult(timeElapsed);
       }, 1000);
+    }
 
     prevTimerRef.current = timerCount;
     prevStatsRef.current = stats;
@@ -327,6 +328,10 @@ export const useTimerCountdown = ({
 
     setTimerCount(initialTimerCount);
   }, [initialTimerCount, setTimerCount, stats]);
+
+  useEffect(() => {
+    if (initialTimerCount) setTimerCount(initialTimerCount);
+  }, [initialTimerCount, setTimerCount]);
 
   return { timerCount, setTimerCount, resetTimer };
 };

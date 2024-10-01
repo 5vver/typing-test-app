@@ -1,6 +1,7 @@
 import type { WordData } from '@/types/test-types.ts';
 import type {
   ChartData,
+  Settings,
   Stats,
   Status,
 } from '@components/TypingModule/types.ts';
@@ -31,10 +32,17 @@ const statsAtom = atom<Stats>(blankStats);
 
 const resultChartAtom = atom<ChartData[]>([]);
 
+const settingsAtom = atom<Settings>({
+  timerCount: 30,
+  words: 50,
+  dictionary: 'ru',
+});
+
 export {
   blankStats,
   blankStatus,
   resultChartAtom,
+  settingsAtom,
   statsAtom,
   statusAtom,
   wordsDictAtom,

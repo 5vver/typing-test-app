@@ -22,4 +22,9 @@ export type Icons =
   | 'cursor-arrow-micro'
   | 'clock'
   | 'check-circle'
-  | 'x-circle';
+  | 'x-circle'
+  | 'chevron-up-down'
+  | 'word'
+  | 'language-mini'
+  | 'adjustments-horizontal'
+  | 'ellipsis-vertical';

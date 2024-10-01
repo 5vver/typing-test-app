@@ -7,17 +7,21 @@ import {
 } from 'react';
 
 /* import svg icons */
+import AdjustmentsHorizontal from '@assets/icons/common/adjustments-horizontal.svg?react';
 import ArrowLeftEndOnRectangle from '@assets/icons/common/arrow-left-end-on-rectangle.svg?react';
 import ArrowPath from '@assets/icons/common/arrow-path.svg?react';
 import ArrowRightStartOnRectangle from '@assets/icons/common/arrow-right-start-on-rectangle.svg?react';
 import CheckCircle from '@assets/icons/common/check-circle.svg?react';
+import ChevronUpDown from '@assets/icons/common/chevron-up-down.svg?react';
 import Clock from '@assets/icons/common/clock.svg?react';
 import Cog6ToothSolid from '@assets/icons/common/cog-6-tooth-solid.svg?react';
 import Cog6Tooth from '@assets/icons/common/cog-6-tooth.svg?react';
 import CursorArrowMicro from '@assets/icons/common/cursor-arrow-micro.svg?react';
+import EllipsisVertical from '@assets/icons/common/ellipsis-vertical.svg?react';
 import ExclamationCircleOutline from '@assets/icons/common/exclamation-circle-outline.svg?react';
 import InformationCircleSolid from '@assets/icons/common/information-circle-solid.svg?react';
 import InformationCircle from '@assets/icons/common/information-circle.svg?react';
+import LanguageMini from '@assets/icons/common/language-mini.svg?react';
 import RocketLaunchSolid from '@assets/icons/common/rocket-launch-solid.svg?react';
 import RocketLaunch from '@assets/icons/common/rocket-launch.svg?react';
 import StarSolid from '@assets/icons/common/star-solid.svg?react';
@@ -31,6 +35,7 @@ import GitHub from '@assets/icons/github.svg?react';
 import KeyboardOutline from '@assets/icons/keyboard-outline.svg?react';
 import KeyboardSolid from '@assets/icons/keyboard-solid.svg?react';
 import Telegram from '@assets/icons/telegram.svg?react';
+import Word from '@assets/icons/word.svg?react';
 
 /* other imports */
 import type { Color } from '@/types/tailwind.ts';
@@ -61,6 +66,11 @@ const iconSvgMap: Record<Icons, FC<SVGProps<SVGSVGElement>>> = {
   clock: Clock,
   'check-circle': CheckCircle,
   'x-circle': XCircle,
+  'chevron-up-down': ChevronUpDown,
+  word: Word,
+  'language-mini': LanguageMini,
+  'adjustments-horizontal': AdjustmentsHorizontal,
+  'ellipsis-vertical': EllipsisVertical,
 };
 
 type Props = {

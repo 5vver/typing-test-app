@@ -24,7 +24,7 @@ export const Logo: FC<Props> = ({ className }) => {
             <Icon name="keyboard-solid" size={32} color="mauve" />
             <Typography
               size="h2"
-              className="font-mono text-teal hidden md:block"
+              className="font-mono text-teal hidden lg:block"
             >
               TypingTest
             </Typography>

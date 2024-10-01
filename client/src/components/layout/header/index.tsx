@@ -12,7 +12,7 @@ const Header: FC = () => {
           className="flex items-center content-center justify-between p-6 lg:px-8"
         >
           <Logo className="flex-grow basis-0" />
-          <NavButtons className="flex-grow basis-0 flex justify-center" />
+          <NavButtons className="flex-grow basis-0 justify-center" />
           <AccountDropdown className="flex-grow basis-0 flex justify-end" />
         </nav>
       </header>

@@ -15,6 +15,7 @@ module.exports = {
     },
     // custom properties
     screens: {
+      xs: '480px',
       sm: '640px',
       md: '768px',
       lg: '1024px',
@@ -66,19 +67,19 @@ module.exports = {
       full: '9999px',
     },
     fontSize: {
-      xs: ['0.75rem', {lineHeight: '1rem'}],
-      sm: ['0.875rem', {lineHeight: '1.25rem'}],
-      base: ['1rem', {lineHeight: '1.5rem'}],
-      lg: ['1.125rem', {lineHeight: '1.75rem'}],
-      xl: ['1.25rem', {lineHeight: '1.75rem'}],
-      '2xl': ['1.5rem', {lineHeight: '2rem'}],
-      '3xl': ['1.875rem', {lineHeight: '2.25rem'}],
-      '4xl': ['2.25rem', {lineHeight: '2.5rem'}],
-      '5xl': ['3rem', {lineHeight: '1'}],
-      '6xl': ['3.75rem', {lineHeight: '1'}],
-      '7xl': ['4.5rem', {lineHeight: '1'}],
-      '8xl': ['6rem', {lineHeight: '1'}],
-      '9xl': ['8rem', {lineHeight: '1'}],
+      xs: ['0.75rem', { lineHeight: '1rem' }],
+      sm: ['0.875rem', { lineHeight: '1.25rem' }],
+      base: ['1rem', { lineHeight: '1.5rem' }],
+      lg: ['1.125rem', { lineHeight: '1.75rem' }],
+      xl: ['1.25rem', { lineHeight: '1.75rem' }],
+      '2xl': ['1.5rem', { lineHeight: '2rem' }],
+      '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
+      '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
+      '5xl': ['3rem', { lineHeight: '1' }],
+      '6xl': ['3.75rem', { lineHeight: '1' }],
+      '7xl': ['4.5rem', { lineHeight: '1' }],
+      '8xl': ['6rem', { lineHeight: '1' }],
+      '9xl': ['8rem', { lineHeight: '1' }],
     },
     extend: {
       colors: {
@@ -156,23 +157,23 @@ module.exports = {
       },
       keyframes: {
         'accordion-down': {
-          from: {height: '0'},
-          to: {height: 'var(--radix-accordion-content-height)'},
+          from: { height: '0' },
+          to: { height: 'var(--radix-accordion-content-height)' },
         },
         'accordion-up': {
-          from: {height: 'var(--radix-accordion-content-height)'},
-          to: {height: '0'},
+          from: { height: 'var(--radix-accordion-content-height)' },
+          to: { height: '0' },
         },
-        
+
         // custom keyframes
         rotate: {
-          '0%': {transform: 'rotate(0deg)'},
-          '100%': {transform: 'rotate(360deg)'},
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
         },
         rotate2: {
-          '0%': {transform: 'rotate(0deg) scale(0.8)'},
-          '50%': {transform: 'rotate(360deg) scale(1.2)'},
-          '100%': {transform: 'rotate(720deg) scale(0.8)'},
+          '0%': { transform: 'rotate(0deg) scale(0.8)' },
+          '50%': { transform: 'rotate(360deg) scale(1.2)' },
+          '100%': { transform: 'rotate(720deg) scale(0.8)' },
         },
         ball1: {
           '0%': {
@@ -203,7 +204,7 @@ module.exports = {
           },
         },
         prixClip: {
-          '0%': {clipPath: 'polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)'},
+          '0%': { clipPath: 'polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)' },
           '50%': {
             clipPath: 'polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)',
           },
@@ -213,9 +214,9 @@ module.exports = {
           },
         },
         flicker: {
-          '0%, 100%': {opacity: '1'},
-          '50%': {opacity: '0'},
-        }
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',

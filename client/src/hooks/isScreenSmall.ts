@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const MIN_WIDTH = 580;
+const MIN_WIDTH = 640;
 const MIN_HEIGHT = 350;
 
 const useIsScreenSmall = () => {

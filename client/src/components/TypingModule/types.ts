@@ -1,6 +1,6 @@
 import { SelectWordOptions } from '@/types/test-types.ts';
 
-export type Word = {
+type Word = {
   value: string;
   status: 'active' | 'finished' | 'failed' | 'pending';
   correct?: number[];
@@ -10,21 +10,21 @@ export type Word = {
   overTyped?: string;
 };
 
-export type GenerateWords = {
+type GenerateWords = {
   generateWords: (
     options?: SelectWordOptions & { firstActive?: boolean },
   ) => Word[];
   generateWord: () => Word | null;
 };
 
-export type Status = {
+type Status = {
   isTyping: boolean;
   isFinished: boolean;
   isFailed: boolean;
   isFocused: boolean;
 };
 
-export type Stats = {
+type Stats = {
   wpm: number;
   accuracy: number;
   correctWords: number;
@@ -36,10 +36,25 @@ export type Stats = {
   totalChars: number;
 };
 
-export type ChartData = {
+type ChartData = {
   timestamp: number;
   rawWpm: number;
   netWpm: number;
   mistake?: number;
   mistakeRate?: number;
+};
+
+type Settings = {
+  timerCount: number;
+  words: number;
+  dictionary: string;
+};
+
+export {
+  type ChartData,
+  type GenerateWords,
+  type Settings,
+  type Stats,
+  type Status,
+  type Word,
 };
