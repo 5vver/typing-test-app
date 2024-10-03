@@ -12,6 +12,9 @@ export class WordsEntity {
   @Column()
   lang: string;
 
+  @Column({ default: '' })
+  signature: string;
+
   @OneToMany(() => TestWordsEntity, (testWords) => testWords.word)
   test_words: TestWordsEntity[];
 }

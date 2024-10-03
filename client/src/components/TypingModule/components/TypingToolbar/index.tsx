@@ -1,6 +1,7 @@
 import { Combobox } from '@components/Combobox.tsx';
 import { Icon } from '@components/Icon';
 import InputGhost from '@components/InputGhost.tsx';
+import { DictSearchDialog } from '@components/TypingModule/components/TypingToolbar/DictSearchDialog.tsx';
 import { ToggleGroupDrawer } from '@components/TypingModule/components/TypingToolbar/ToggleGroupDrawer.tsx';
 import { settingsAtom, statusAtom } from '@components/TypingModule/store.ts';
 import { Typography } from '@components/Typography.tsx';
@@ -56,6 +57,8 @@ const TypingToolbar: FC<Props> = ({ timerCount, onSettingsApply }) => {
   const onWordsChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const value = parseInt(e.target.value, 10);
+
+      console.log(value);
 
       if (!value || value < 1 || value > 999) return;
 
@@ -159,6 +162,8 @@ const TypingToolbar: FC<Props> = ({ timerCount, onSettingsApply }) => {
                     options={timeSettings}
                     value={settingsTimer.toString()}
                     onValueChange={(value) => {
+                      const v = parseInt(value, 10);
+                      if (!v) return;
                       setSettingsTimer(parseInt(value, 10));
                     }}
                   />
@@ -198,6 +203,8 @@ const TypingToolbar: FC<Props> = ({ timerCount, onSettingsApply }) => {
                     options={wordsSettings}
                     value={settingsWords.toString()}
                     onValueChange={(value) => {
+                      const v = parseInt(value, 10);
+                      if (!v) return;
                       setSettingsWords(parseInt(value, 10));
                     }}
                   />
@@ -216,27 +223,27 @@ const TypingToolbar: FC<Props> = ({ timerCount, onSettingsApply }) => {
                       { label: 'russian', value: 'ru' },
                       { label: 'english', value: 'en' },
                     ]}
-                    initialValue={settingsDict}
+                    value={settingsDict}
                     onSelect={(value) => {
                       setSettingsDict(value);
                     }}
+                    className="text-mauve font-normal"
                     placeholder="..."
                     noFoundText="No dictionary found"
                     searchPlaceholder="Search dictionary..."
-                    className="text-mauve font-normal"
                     searchBy="label"
                   />
 
-                  <Button
-                    variant="ghost"
-                    className="bg-transparent hover:bg-transparent p-0 group w-10 h-10"
-                  >
-                    <Icon
-                      name="ellipsis-vertical"
-                      size={20}
-                      className="text-mauve group-hover:text-text"
-                    />
-                  </Button>
+                  <DictSearchDialog
+                    values={[
+                      { label: 'russian', value: 'ru' },
+                      { label: 'english', value: 'en' },
+                    ]}
+                    value={settingsDict}
+                    onSelect={(value) => {
+                      setSettingsDict(value);
+                    }}
+                  />
                 </div>
               </div>
 

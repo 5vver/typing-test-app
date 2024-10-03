@@ -13,8 +13,7 @@ export const databaseProviders = [
         password: 'postgres',
         database: 'TypingTestDB',
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        // change to false in production
-        synchronize: true,
+        synchronize: true, // change to false in production
       });
 
       return dataSource.initialize();

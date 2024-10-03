@@ -23,8 +23,6 @@ import { useGetRandomWords } from '@queries/test-queries.ts';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 
-const TIMER_COUNT = 30;
-
 const TypingModule: FC = () => {
   const settings = useAtomValue(settingsAtom);
 
@@ -37,7 +35,7 @@ const TypingModule: FC = () => {
   const [status, setStatus] = useAtom(statusAtom);
   const setResultChart = useSetAtom(resultChartAtom);
 
-  const { timerCount, setTimerCount, resetTimer } = useTimerCountdown({
+  const { timerCount, resetTimer } = useTimerCountdown({
     status,
     setStatus,
     stats,
@@ -66,7 +64,6 @@ const TypingModule: FC = () => {
   const onReload = useCallback(async () => {
     setStats(blankStats);
     setStatus(blankStatus);
-    setTimerCount(TIMER_COUNT);
     setResultChart([]);
 
     resetTimer();
@@ -77,7 +74,6 @@ const TypingModule: FC = () => {
     else await refetch();
   }, [
     setStats,
-    setTimerCount,
     setStatus,
     setGeneratedWords,
     generateWords,

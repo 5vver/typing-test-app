@@ -15,7 +15,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@components/ui/popover.tsx';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 type Props = {
   values: LabelValue<string | undefined>[];
@@ -23,6 +23,7 @@ type Props = {
   noFoundText?: string;
   placeholder?: string;
   searchPlaceholder?: string;
+  value?: string;
   initialValue?: string;
   className?: string;
   searchBy?: 'label' | 'value';
@@ -34,12 +35,19 @@ const Combobox: FC<Props> = ({
   noFoundText,
   placeholder,
   searchPlaceholder,
+  value,
   initialValue,
   className,
   searchBy,
 }) => {
   const [isOpened, setIsOpened] = useState(false);
-  const [value, setValue] = useState(initialValue ?? '');
+  const [selectedValue, setSelectedValue] = useState(
+    initialValue ?? value ?? '',
+  );
+
+  useEffect(() => {
+    setSelectedValue(value ?? '');
+  }, [value]);
 
   return (
     <Popover open={isOpened} onOpenChange={setIsOpened}>
@@ -50,8 +58,8 @@ const Combobox: FC<Props> = ({
           aria-expanded={isOpened}
           className="w-36 justify-between"
         >
-          {value
-            ? values.find((v) => v.value === value)?.label
+          {selectedValue
+            ? values.find((v) => v.value === selectedValue)?.label
             : (placeholder ?? 'Select value...')}
           <Icon
             name="chevron-up-down"
@@ -76,7 +84,7 @@ const Combobox: FC<Props> = ({
                             ?.value ?? '')
                         : currentValue;
 
-                    setValue(selected);
+                    setSelectedValue(selected);
                     onSelect?.(selected);
                     setIsOpened(false);
                   }}
@@ -85,7 +93,7 @@ const Combobox: FC<Props> = ({
                     name="check-circle"
                     className={cn(
                       'mr-2 w-4 h-4',
-                      value === v.value ? 'opacity-100' : 'opacity-0',
+                      selectedValue === v.value ? 'opacity-100' : 'opacity-0',
                     )}
                   />
                   {v.label}
