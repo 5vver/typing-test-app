@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
 import { TestsService } from './tests.service';
 import { SelectWordsOptionsDto } from './dto/select-words-options.dto';
 import { ProcessFormDictDto } from './dto/process-form-dict.dto';
@@ -14,6 +14,18 @@ export class TestsController {
 
   @Post('/processDict')
   async processDict(@Body() dto: ProcessFormDictDto) {
-    return await this.testsService.processFormDict(dto);
+    const success = await this.testsService.processFormDict(dto);
+
+    return { success };
+  }
+
+  @Get('/getDicts')
+  async getDicts() {
+    return await this.testsService.getDicts();
+  }
+
+  @Delete('/removeDict')
+  async removeDict(@Body() { id }: { id: string }) {
+    return await this.testsService.removeDict(id);
   }
 }

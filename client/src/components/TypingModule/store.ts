@@ -35,7 +35,7 @@ const resultChartAtom = atom<ChartData[]>([]);
 const settingsAtom = atom<Settings>({
   timerCount: 30,
   words: 50,
-  dictionary: 'ru',
+  dictionary: '',
 });
 
 export {

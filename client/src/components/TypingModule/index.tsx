@@ -19,15 +19,18 @@ import {
 import type { Word } from '@components/TypingModule/types.ts';
 import { useTimerCountdown } from '@components/TypingModule/utils.ts';
 import { Button } from '@components/ui/button.tsx';
-import { useGetRandomWords } from '@queries/test-queries.ts';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useGetDicts, useGetRandomWords } from '@queries/test-queries.ts';
+import { useAtom, useSetAtom } from 'jotai';
 import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 
 const TypingModule: FC = () => {
-  const settings = useAtomValue(settingsAtom);
+  const [settings, setSettings] = useAtom(settingsAtom);
 
-  const { data, isLoading, isError, refetch, isRefetching } = useGetRandomWords(
-    { count: settings.words, lang: settings.dictionary },
+  const { data: dictsData } = useGetDicts();
+
+  const { data, isLoading, isError, isRefetching } = useGetRandomWords(
+    { dictId: settings.dictionary },
+    !!settings.dictionary,
   );
 
   const [wordsDict, setWordsDict] = useAtom(wordsDictAtom);
@@ -49,15 +52,37 @@ const TypingModule: FC = () => {
 
   const reloadButtonRef = useRef<HTMLButtonElement>(null);
 
-  /* on dict data load **/
+  /* on dicts data load - set initial settings dict **/
   useEffect(() => {
-    if (!data) return;
+    if (!dictsData) return;
+
+    setSettings((prev) => {
+      if (prev.dictionary) {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        dictionary: dictsData.at(-1)?.id ?? '',
+      };
+    });
+  }, [dictsData, setSettings]);
+
+  /* on words data load **/
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+
     setWordsDict(data);
   }, [setWordsDict, data, isRefetching]);
 
   /* on words dict load - generate words **/
   useEffect(() => {
-    if (!wordsDict.length) return;
+    if (!wordsDict.length) {
+      return;
+    }
+
     setGeneratedWords(generateWords());
   }, [wordsDict, setGeneratedWords, generateWords]);
 
@@ -68,17 +93,19 @@ const TypingModule: FC = () => {
 
     resetTimer();
 
-    if (reloadButtonRef.current) reloadButtonRef.current.blur();
+    if (reloadButtonRef.current) {
+      reloadButtonRef.current.blur();
+    }
 
-    if (wordsDict.length) setGeneratedWords(generateWords());
-    else await refetch();
+    if (wordsDict.length) {
+      setGeneratedWords(generateWords());
+    }
   }, [
     setStats,
     setStatus,
     setGeneratedWords,
     generateWords,
     wordsDict,
-    refetch,
     setResultChart,
     resetTimer,
   ]);
@@ -87,13 +114,16 @@ const TypingModule: FC = () => {
   const isTypingCoreVisible =
     generatedWords.length > 0 && !isReloading && !status.isFinished;
 
-  if (!data || isError) return null;
+  if (!data || isError) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col gap-2 items-center w-full h-full">
       <div className="px-24 pt-32 w-full flex flex-col gap-4">
         <TypingToolbar
           timerCount={timerCount}
+          dicts={dictsData}
           onSettingsApply={() => {
             void onReload();
           }}

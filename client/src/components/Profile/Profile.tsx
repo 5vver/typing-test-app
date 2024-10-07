@@ -1,3 +1,4 @@
+import { DictJsonForm } from '@components/AdminPanel/DictJsonForm.tsx';
 import { Typography } from '@components/Typography.tsx';
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar.tsx';
 import { Separator } from '@components/ui/separator.tsx';
@@ -49,6 +50,9 @@ export const Profile: FC<Props> = ({ auth }) => {
           >
             Personal info
           </TabsTrigger>
+          <TabsTrigger value="admin" className="w-full justify-start text-md">
+            Dictionary Control Panel
+          </TabsTrigger>
         </TabsList>
       </div>
       <div className="flex-[2] flex flex-col p-4 bg-surface0 rounded-lg ">
@@ -69,6 +73,9 @@ export const Profile: FC<Props> = ({ auth }) => {
           </div>
         </TabsContent>
         <TabsContent value="personal">personal</TabsContent>
+        <TabsContent value="admin">
+          <DictJsonForm />
+        </TabsContent>
       </div>
     </Tabs>
   );

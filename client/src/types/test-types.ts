@@ -1,10 +1,17 @@
-export type WordData = {
+type WordData = {
   id: string;
   word: string;
   lang: string;
 };
 
-export type SelectWordOptions = {
-  count: number;
+type SelectDictWords = {
+  dictId: string;
   lang?: string;
 };
+
+type DictData = {
+  id: string;
+  title: string;
+};
+
+export type { DictData, SelectDictWords, WordData };

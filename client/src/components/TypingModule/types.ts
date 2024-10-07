@@ -1,5 +1,3 @@
-import { SelectWordOptions } from '@/types/test-types.ts';
-
 type Word = {
   value: string;
   status: 'active' | 'finished' | 'failed' | 'pending';
@@ -11,9 +9,7 @@ type Word = {
 };
 
 type GenerateWords = {
-  generateWords: (
-    options?: SelectWordOptions & { firstActive?: boolean },
-  ) => Word[];
+  generateWords: (options?: { firstActive?: boolean }) => Word[];
   generateWord: () => Word | null;
 };
 

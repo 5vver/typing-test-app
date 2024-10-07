@@ -28,17 +28,26 @@ export class TestsService {
   }
 
   async getRandomWords(options: SelectWordsOptionsDto) {
-    const { count, lang = 'ru' } = options;
+    const { dictId, lang = 'ru' } = options;
 
-    const wordsLength = await this.wordsRepository.count();
-    const amount = count > wordsLength ? wordsLength : count;
-
-    return this.wordsRepository
-      .createQueryBuilder('words')
-      .where('words.lang = :lang', { lang })
-      .orderBy('RANDOM()')
-      .limit(amount)
+    const testWords = await this.testsWordsRepository
+      .createQueryBuilder('testWords')
+      .innerJoinAndSelect('testWords.word', 'word')
+      .where('testWords.test_id = :dictId', { dictId })
+      // .andWhere('word.lang = :lang', { lang })
       .getMany();
+
+    return testWords.map(({ word }) => word);
+  }
+
+  getDicts() {
+    return this.testsRepository.find();
+  }
+
+  async removeDict(id: string) {
+    await this.testsWordsRepository.delete({ test: { id } });
+
+    return await this.testsRepository.delete({ id });
   }
 
   async processFormDict({ title, words, lang }: ProcessFormDictDto) {
@@ -53,10 +62,9 @@ export class TestsService {
 
       if (!dict) {
         dict = new TestEntity();
+        dict.title = title;
+        await queryRunner.manager.save(dict);
       }
-
-      dict.title = title;
-      await queryRunner.manager.save(dict);
 
       for (const word of words) {
         let wordEntity = await queryRunner.manager.findOne(WordsEntity, {
@@ -70,17 +78,25 @@ export class TestsService {
           await queryRunner.manager.save(wordEntity);
         }
 
-        // maybe check if testWord already exists
-        const testWord = new TestWordsEntity();
+        let testWord = await queryRunner.manager.findOne(TestWordsEntity, {
+          where: { test: dict, word: wordEntity },
+        });
+
+        if (testWord) {
+          continue;
+        }
+
+        testWord = new TestWordsEntity();
         testWord.test = dict;
         testWord.word = wordEntity;
         await queryRunner.manager.save(testWord);
       }
 
       await queryRunner.commitTransaction();
+      return true;
     } catch (err) {
       await queryRunner.rollbackTransaction();
-      throw err;
+      return false;
     } finally {
       await queryRunner.release();
     }

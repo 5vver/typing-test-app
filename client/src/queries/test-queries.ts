@@ -1,9 +1,9 @@
-import { SelectWordOptions, WordData } from '@/types/test-types.ts';
+import { DictData, SelectDictWords, WordData } from '@/types/test-types.ts';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 import { httpRequest } from '@utils/http-request.ts';
 
-export const getRandomWords = async (selectWordOptions: SelectWordOptions) => {
+const getRandomWords = async (selectWordOptions: SelectDictWords) => {
   const { data, error } = await httpRequest<WordData[]>(
     '/tests/getRandomWords',
     {
@@ -18,13 +18,33 @@ export const getRandomWords = async (selectWordOptions: SelectWordOptions) => {
   return data;
 };
 
-export const useGetRandomWords = (
-  options: SelectWordOptions,
+const useGetRandomWords = (
+  options: SelectDictWords,
+  enabled: boolean = true,
 ): UseQueryResult<WordData[]> => {
   return useQuery({
     queryKey: ['randomWords', options],
     queryFn: () => getRandomWords(options),
     refetchOnWindowFocus: false,
-    //placeholderData: keepPreviousData,
+    enabled,
   });
 };
+
+const getDictsQuery = async () => {
+  const { data, error } = await httpRequest<DictData[]>('/tests/getDicts');
+
+  if (error) throw error;
+  if (!data) return null;
+
+  return data;
+};
+
+const useGetDicts = (): UseQueryResult<DictData[]> => {
+  return useQuery({
+    queryKey: ['dictsData'],
+    queryFn: getDictsQuery,
+    refetchOnWindowFocus: false,
+  });
+};
+
+export { getRandomWords, useGetDicts, useGetRandomWords };

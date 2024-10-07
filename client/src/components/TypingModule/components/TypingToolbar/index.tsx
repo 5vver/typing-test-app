@@ -1,3 +1,4 @@
+import { DictData } from '@/types/test-types.ts';
 import { Combobox } from '@components/Combobox.tsx';
 import { Icon } from '@components/Icon';
 import InputGhost from '@components/InputGhost.tsx';
@@ -14,17 +15,25 @@ import {
 import { Separator } from '@components/ui/separator.tsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAtom, useAtomValue } from 'jotai';
-import { ChangeEvent, FC, useCallback, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 const timeSettings = ['60', '90', '120'];
 const wordsSettings = ['50', '100', '150'];
 
 type Props = {
   timerCount: number;
+  dicts?: DictData[];
   onSettingsApply?: () => void;
 };
 
-const TypingToolbar: FC<Props> = ({ timerCount, onSettingsApply }) => {
+const TypingToolbar: FC<Props> = ({ timerCount, dicts, onSettingsApply }) => {
   const [settings, setSettings] = useAtom(settingsAtom);
 
   const [isOpened, setIsOpened] = useState(false);
@@ -84,6 +93,15 @@ const TypingToolbar: FC<Props> = ({ timerCount, onSettingsApply }) => {
     setIsOpened,
     onSettingsApply,
   ]);
+
+  const dictsValues = useMemo(
+    () =>
+      dicts?.map(({ id, title }) => ({
+        label: title,
+        value: id,
+      })) ?? [],
+    [dicts],
+  );
 
   return (
     <Collapsible
@@ -219,10 +237,7 @@ const TypingToolbar: FC<Props> = ({ timerCount, onSettingsApply }) => {
                   </Typography>
 
                   <Combobox
-                    values={[
-                      { label: 'russian', value: 'ru' },
-                      { label: 'english', value: 'en' },
-                    ]}
+                    values={dictsValues}
                     value={settingsDict}
                     onSelect={(value) => {
                       setSettingsDict(value);
@@ -235,10 +250,7 @@ const TypingToolbar: FC<Props> = ({ timerCount, onSettingsApply }) => {
                   />
 
                   <DictSearchDialog
-                    values={[
-                      { label: 'russian', value: 'ru' },
-                      { label: 'english', value: 'en' },
-                    ]}
+                    values={dictsValues}
                     value={settingsDict}
                     onSelect={(value) => {
                       setSettingsDict(value);

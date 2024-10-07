@@ -64,7 +64,6 @@ export const sliceWordList = (
       const newWordList = prev.slice(fulfilledLength);
       if (generateWordsFn) {
         const newWords = generateWordsFn({
-          count: fulfilledLength,
           firstActive: false,
         });
         if (newWords.length > 0) newWordList.push(...newWords);

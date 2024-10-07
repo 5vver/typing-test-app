@@ -1,4 +1,4 @@
 export class SelectWordsOptionsDto {
-  count: number;
+  dictId: string;
   lang?: string;
 }
