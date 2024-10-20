@@ -61,7 +61,7 @@ const WordsGrid: FC<Props> = ({
   }, [isFocused, inputValue, refWrapper, words]);
 
   const debouncedSetCaretIdle = useCallback(() => {
-    debounce(() => setIsCaretIdle(true), 250)();
+    debounce(() => setIsCaretIdle(true), 350)();
   }, [setIsCaretIdle]);
 
   useEffect(() => {
@@ -90,6 +90,7 @@ const WordsGrid: FC<Props> = ({
         ({ value, status, mistakes, missed, overTyped, typed }, wordIndex) => {
           const word = value + (overTyped || '');
           const failedEmphasis = status === 'failed' ? 'border-red-400' : '';
+
           return (
             <div
               id={`word_${status}`}

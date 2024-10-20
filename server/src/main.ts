@@ -11,6 +11,7 @@ const bootstrap = async () => {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
     const configService = app.get(ConfigService);
 
+    const HOST = configService.get<string>('HOST') || 'localhost';
     const PORT = configService.get<number>('PORT') || 5000;
     const CLIENT_URLS = configService.get<string>('CLIENT_URLS').split(',');
 
@@ -25,7 +26,7 @@ const bootstrap = async () => {
 
     app.useStaticAssets(join(__dirname, '..', 'public'), { prefix: '/public' });
 
-    await app.listen(PORT, '192.168.0.101', () => {
+    await app.listen(PORT, HOST, () => {
       console.log(`Server started on port: ${PORT}`);
     });
   } catch (e) {

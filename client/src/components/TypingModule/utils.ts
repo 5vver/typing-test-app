@@ -1,3 +1,4 @@
+import { WORD_GAP } from '@components/TypingModule/constants.ts';
 import type {
   ChartData,
   GenerateWords,
@@ -20,15 +21,16 @@ export const formWord = (
   index: number,
   firstActive = true,
 ): Word => {
-  if (firstActive && index === 0) return { value: word, status: 'active' };
+  if (firstActive && index === 0) {
+    return { value: word, status: 'active' };
+  }
+
   return { value: word, status: 'pending' };
 };
 
 export const formWords = (words: string[]): Word[] => {
   return words.map((word, index) => formWord(word, index));
 };
-
-const WORD_GAP = 16; // 16px
 
 export const sliceWordList = (
   setWordList: Dispatch<SetStateAction<Word[]>>,
@@ -64,10 +66,12 @@ export const sliceWordList = (
       const newWordList = prev.slice(fulfilledLength);
       if (generateWordsFn) {
         const newWords = generateWordsFn({
+          length: fulfilledLength,
           firstActive: false,
         });
         if (newWords.length > 0) newWordList.push(...newWords);
       }
+
       return newWordList;
     });
   }

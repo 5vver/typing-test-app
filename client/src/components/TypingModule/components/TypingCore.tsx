@@ -45,7 +45,10 @@ const TypingCore: FC<Props> = ({ words }) => {
   }, [words, setWordList, setInputValue, setStatus, inputRef]);
 
   useEffect(() => {
-    if (!containerRef.current || wordList.length === 0) return;
+    if (!containerRef.current || wordList.length === 0) {
+      return;
+    }
+
     sliceWordList(setWordList, containerRef.current, generateWords);
   }, [wordList, setWordList, containerRef, generateWords]);
 
@@ -70,6 +73,7 @@ const TypingCore: FC<Props> = ({ words }) => {
           else if (letter !== inputValue[letterIndex])
             acc.mistakes.push(letterIndex);
           else acc.correct.push(letterIndex);
+
           return acc;
         },
         { mistakes: [], correct: [], missed: [] },
@@ -90,6 +94,7 @@ const TypingCore: FC<Props> = ({ words }) => {
           typed: inputValue,
         };
       if (index === activeWordIndex + 1) return { ...word, status: 'active' };
+
       return word;
     });
 

@@ -9,7 +9,10 @@ type Word = {
 };
 
 type GenerateWords = {
-  generateWords: (options?: { firstActive?: boolean }) => Word[];
+  generateWords: (options?: {
+    length: number;
+    firstActive?: boolean;
+  }) => Word[];
   generateWord: () => Word | null;
 };
 

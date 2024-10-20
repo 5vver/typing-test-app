@@ -4,6 +4,7 @@ import { Results } from '@components/TypingModule/components/Results.tsx';
 import { TypingCore } from '@components/TypingModule/components/TypingCore.tsx';
 import { TypingCoreSkeleton } from '@components/TypingModule/components/TypingCoreSkeleton.tsx';
 import { TypingToolbar } from '@components/TypingModule/components/TypingToolbar';
+import { INITIAL_GENERATE_WORDS_LENGTH } from '@components/TypingModule/constants.ts';
 import {
   useGenerateWords,
   wordsDictAtom,
@@ -26,12 +27,12 @@ import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 const TypingModule: FC = () => {
   const [settings, setSettings] = useAtom(settingsAtom);
 
-  const { data: dictsData } = useGetDicts();
-
   const { data, isLoading, isError, isRefetching } = useGetRandomWords(
     { dictId: settings.dictionary },
     !!settings.dictionary,
   );
+
+  const { data: dictsData } = useGetDicts();
 
   const [wordsDict, setWordsDict] = useAtom(wordsDictAtom);
   const [stats, setStats] = useAtom(statsAtom);
@@ -83,7 +84,7 @@ const TypingModule: FC = () => {
       return;
     }
 
-    setGeneratedWords(generateWords());
+    setGeneratedWords(generateWords({ length: INITIAL_GENERATE_WORDS_LENGTH }));
   }, [wordsDict, setGeneratedWords, generateWords]);
 
   const onReload = useCallback(async () => {
@@ -98,7 +99,9 @@ const TypingModule: FC = () => {
     }
 
     if (wordsDict.length) {
-      setGeneratedWords(generateWords());
+      setGeneratedWords(
+        generateWords({ length: INITIAL_GENERATE_WORDS_LENGTH }),
+      );
     }
   }, [
     setStats,

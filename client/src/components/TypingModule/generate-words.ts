@@ -11,10 +11,10 @@ const useGenerateWords = (): GenerateWords => {
     (options: Parameters<GenerateWords['generateWords']>[number]): Word[] => {
       if (!wordsDict.length) return [];
 
-      const { firstActive = true } = options ?? {};
+      const { length = 50, firstActive = true } = options ?? {};
       const words: Word[] = [];
 
-      for (let i = 0; i < wordsDict.length; i++) {
+      for (let i = 0; i < length; i++) {
         const randomNumber = Math.ceil(Math.random() * (wordsDict.length - 1));
         const word = wordsDict[randomNumber].word;
         words.push(formWord(word, i, firstActive));

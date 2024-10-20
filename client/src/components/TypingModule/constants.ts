@@ -1,0 +1,5 @@
+const INITIAL_GENERATE_WORDS_LENGTH = 50 as const;
+
+const WORD_GAP = 16 as const; // 16px
+
+export { INITIAL_GENERATE_WORDS_LENGTH, WORD_GAP };
