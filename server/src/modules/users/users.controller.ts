@@ -1,9 +1,11 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Request,
   UseGuards,
@@ -33,6 +35,7 @@ export class UsersController {
     const { userId } = req.user;
     const { id, username, email, role } =
       await this.usersService.findOne(userId);
+
     return { id, username, email, role };
   }
 
@@ -44,5 +47,28 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('/password/update')
+  async updatePassword(
+    @Request() req: AuthenticatedRequest,
+    @Body()
+    { password, newPassword }: { password: string; newPassword: string },
+  ) {
+    const { userId } = req.user;
+
+    if (!password || !newPassword) {
+      return {
+        success: false,
+        message: 'Password is not provided.',
+      };
+    }
+
+    return await this.usersService.updatePassword(
+      userId,
+      password,
+      newPassword,
+    );
   }
 }

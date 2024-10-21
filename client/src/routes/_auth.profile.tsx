@@ -7,5 +7,6 @@ export const Route = createFileRoute('/_auth/profile')({
 
 function ProfileComponent() {
   const { auth } = Route.useRouteContext();
+
   return <Profile auth={auth} />;
 }

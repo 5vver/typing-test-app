@@ -20,7 +20,7 @@ type Props = {
 };
 
 const AccountDropdown: FC<Props> = ({ className }) => {
-  const { status, username, login, register, logout } = useAuth();
+  const { status, profile, login, register, logout } = useAuth();
   const navigate = useNavigate();
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -66,7 +66,7 @@ const AccountDropdown: FC<Props> = ({ className }) => {
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-52">
-          <ProfileMini status={status} username={username} />
+          <ProfileMini status={status} profile={profile} />
           <DropdownMenuSeparator />
           {status === 'loggedOut' && (
             <LoggedOutGroup

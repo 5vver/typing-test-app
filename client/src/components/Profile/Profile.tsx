@@ -1,6 +1,7 @@
 import { DictJsonForm } from '@components/AdminPanel/DictJsonForm.tsx';
+import { AccountTab } from '@components/Profile/tabs/AccountTab.tsx';
+import { GeneralTab } from '@components/Profile/tabs/GeneralTab.tsx';
 import { Typography } from '@components/Typography.tsx';
-import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar.tsx';
 import { Separator } from '@components/ui/separator.tsx';
 import {
   Tabs,
@@ -17,15 +18,6 @@ type Props = {
 
 export const Profile: FC<Props> = ({ auth }) => {
   // need to useQuery getProfile here to get all the user's info
-  const { username, role } = auth;
-
-  const fallback = username
-    ? username
-        .split(' ')
-        .map((s) => s[0])
-        .join('')
-        .toUpperCase()
-    : '';
 
   return (
     <Tabs
@@ -35,7 +27,7 @@ export const Profile: FC<Props> = ({ auth }) => {
     >
       <div className="flex-1 flex flex-col p-4 bg-surface0 rounded-lg">
         <Typography size="h3" className="mb-4 ml-4">
-          Profile menu
+          Settings
         </Typography>
 
         <Separator orientation="horizontal" className="bg-surface1" />
@@ -44,11 +36,8 @@ export const Profile: FC<Props> = ({ auth }) => {
           <TabsTrigger value="general" className="w-full justify-start text-md">
             General
           </TabsTrigger>
-          <TabsTrigger
-            value="personal"
-            className="w-full justify-start text-md"
-          >
-            Personal info
+          <TabsTrigger value="account" className="w-full justify-start text-md">
+            Account
           </TabsTrigger>
           <TabsTrigger value="admin" className="w-full justify-start text-md">
             Dictionary Control Panel
@@ -57,22 +46,11 @@ export const Profile: FC<Props> = ({ auth }) => {
       </div>
       <div className="flex-[2] flex flex-col p-4 bg-surface0 rounded-lg ">
         <TabsContent value="general" className="mt-0 flex flex-col gap-2">
-          <div className="flex gap-2">
-            <Avatar className="w-32 h-32">
-              <AvatarImage
-                src="http://localhost:5000/public/a.jpg"
-                alt="profile-pic-mini"
-              />
-              <AvatarFallback>{fallback}</AvatarFallback>
-            </Avatar>
-
-            <div className="flex flex-col">
-              <Typography size="large">{username}</Typography>
-              <Typography size="muted">{role}</Typography>
-            </div>
-          </div>
+          <GeneralTab auth={auth} />
         </TabsContent>
-        <TabsContent value="personal">personal</TabsContent>
+        <TabsContent value="account">
+          <AccountTab auth={auth} />
+        </TabsContent>
         <TabsContent value="admin">
           <DictJsonForm />
         </TabsContent>

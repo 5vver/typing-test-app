@@ -9,8 +9,8 @@ export class WordsEntity {
   @Column()
   word: string;
 
-  @Column()
-  lang: string;
+  // @Column()
+  // lang: string;
 
   @Column({ default: '' })
   signature: string;

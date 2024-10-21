@@ -1,6 +1,6 @@
 import axios, { type AxiosError, type AxiosRequestConfig } from 'axios';
 
-export const httpRequest = async <T extends Record<keyof T, unknown>>(
+export const httpRequest = async <T extends Partial<Record<keyof T, unknown>>>(
   path: string,
   options?: AxiosRequestConfig,
 ) => {

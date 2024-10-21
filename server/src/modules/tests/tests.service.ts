@@ -74,7 +74,7 @@ export class TestsService {
         if (!wordEntity) {
           wordEntity = new WordsEntity();
           wordEntity.word = word;
-          wordEntity.lang = lang;
+          // wordEntity.lang = lang;
           await queryRunner.manager.save(wordEntity);
         }
 

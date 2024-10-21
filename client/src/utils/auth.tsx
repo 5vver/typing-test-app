@@ -1,4 +1,5 @@
-import { getUserProfile } from '@/queries/user-queries.ts';
+import { useGetUserProfile } from '@/queries/user-queries.ts';
+import { UserProfile } from '@/types/user-types.ts';
 import { httpRequest } from '@/utils/http-request.ts';
 import {
   createContext,
@@ -18,8 +19,7 @@ export type Auth = {
     email: string,
   ) => Promise<boolean>;
   status: 'loggedIn' | 'loggedOut';
-  username?: string;
-  role?: string;
+  profile?: UserProfile;
 };
 
 const authInstance: Auth = {
@@ -27,8 +27,6 @@ const authInstance: Auth = {
   logout: async () => false,
   register: async () => false,
   status: 'loggedOut',
-  username: undefined,
-  role: undefined,
 };
 
 export const AuthContext = createContext<Auth | null>(null);
@@ -40,19 +38,19 @@ type AuthProviderProps = {
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [auth, setAuth] = useState<Auth>(authInstance);
 
+  const { data: profile } = useGetUserProfile(auth.status);
+
   useEffect(() => {
-    (async () => {
-      // maybe auth status check instead? (/auth/status)
-      const profile = await getUserProfile();
-      if (!profile) return;
-      setAuth((prev) => ({
-        ...prev,
-        status: 'loggedIn',
-        username: profile.username,
-        role: profile.role,
-      }));
-    })();
-  }, []);
+    if (!profile) {
+      return;
+    }
+
+    setAuth((prev) => ({
+      ...prev,
+      status: 'loggedIn',
+      profile,
+    }));
+  }, [profile]);
 
   const login: Auth['login'] = async (username, password) => {
     const { data, error } = await httpRequest<string>('auth/login', {
@@ -64,26 +62,29 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     if (error) throw error;
     if (data !== 'Logged in successfully') return false;
 
-    setAuth((prev) => ({ ...prev, status: 'loggedIn', username }));
+    setAuth((prev) => ({ ...prev, status: 'loggedIn' }));
 
     return true;
   };
 
   const logout: Auth['logout'] = async () => {
-    if (auth.status === 'loggedOut') return false;
+    if (auth.status === 'loggedOut') {
+      return false;
+    }
 
     const { data, error } = await httpRequest<string>('auth/logout', {
-      method: 'POST',
+      method: 'GET',
       withCredentials: true,
     });
 
-    if (error || data !== 'Logged out successfully') return false;
+    if (error || data !== 'Logged out successfully') {
+      return false;
+    }
 
     setAuth((prev) => ({
       ...prev,
       status: 'loggedOut',
-      username: undefined,
-      role: undefined,
+      profile: undefined,
     }));
 
     return true;
@@ -96,8 +97,12 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       withCredentials: true,
     });
 
-    if (error) throw error;
-    if (data !== 'User created successfully') return false;
+    if (error) {
+      throw error;
+    }
+    if (data !== 'User created successfully') {
+      return false;
+    }
 
     console.log(`Registered successfully: ${username}`);
     return true;

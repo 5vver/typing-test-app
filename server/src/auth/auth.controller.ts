@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   ForbiddenException,
+  Get,
   Post,
   Request,
   Res,
@@ -41,7 +42,7 @@ export class AuthController {
     return res.send('Logged in successfully');
   }
 
-  @Post('logout')
+  @Get('logout')
   async logout(@Res() res: Response) {
     res.clearCookie('jwt-access-token');
     res.clearCookie('jwt-refresh-token');
@@ -52,8 +53,11 @@ export class AuthController {
   @Post('register')
   async register(@Body() registerDto: CreateUserDto) {
     const { username } = registerDto;
-    if (await this.usersService.findByUsername(username))
+
+    if (await this.usersService.findByUsername(username)) {
       throw new ForbiddenException('User with this username already exists.');
+    }
+
     return await this.usersService.create(registerDto);
   }
 }

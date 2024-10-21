@@ -26,6 +26,7 @@ export class AuthService {
     if (isValid) {
       //eslint-disable-next-line @typescript-eslint/no-unused-vars -- take out password from user object
       const { password, ...result } = user;
+
       return result;
     }
 
@@ -68,6 +69,7 @@ export class AuthService {
       username: user.username,
       sub: user.id,
     };
+
     return {
       access_token: this.jwtService.sign(payload, {
         expiresIn: '15 minutes',

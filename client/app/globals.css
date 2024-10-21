@@ -70,7 +70,7 @@
     --popover-foreground: 232deg, 97%, 85%;  /* --lavender */
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 234deg, 13%, 31%; /* --surface1 */
     --secondary-foreground: 210 40% 98%;
     --muted: 234deg, 13%, 31%;
     --muted-foreground: 215 20.2% 65.1%;

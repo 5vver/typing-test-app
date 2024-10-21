@@ -7,10 +7,12 @@ import { type FC } from 'react';
 
 type Props = {
   status: Auth['status'];
-  username?: Auth['username'];
+  profile: Auth['profile'];
 };
 
-export const ProfileMini: FC<Props> = ({ status, username }) => {
+export const ProfileMini: FC<Props> = ({ status, profile }) => {
+  const { username } = profile ?? {};
+
   const fallback = username
     ? username
         .split(' ')
