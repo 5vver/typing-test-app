@@ -110,7 +110,7 @@ const TypingToolbar: FC<Props> = ({ timerCount, dicts, onSettingsApply }) => {
       className="flex flex-col gap-2"
     >
       <div className="flex justify-between items-center w-full relative">
-        <div className="flex-1 flex gap-0.5 items-center justify-center">
+        <div className="flex-1 flex gap-1 items-center justify-center">
           <Icon name="clock" size={20} strokeColor="lavender" />
           <Typography size="large" className="text-lavender w-[21px]">
             {timerCount}

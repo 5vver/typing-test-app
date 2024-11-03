@@ -9,7 +9,7 @@ const Layout: FC<Props> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <div className="flex-grow p-6 lg:p-8">{children}</div>
+      <div className="flex flex-col flex-grow p-6 lg:p-8">{children}</div>
       <Footer />
     </div>
   );

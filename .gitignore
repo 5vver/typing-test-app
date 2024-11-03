@@ -365,7 +365,7 @@ OpenCover/
 coverage/
 
 ### macOS template
-# GeneralTab
+# Index
 .DS_Store
 .AppleDouble
 .LSOverride

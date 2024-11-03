@@ -1,4 +1,4 @@
-const INITIAL_GENERATE_WORDS_LENGTH = 50 as const;
+const INITIAL_GENERATE_WORDS_LENGTH = 80 as const;
 
 const WORD_GAP = 16 as const; // 16px
 

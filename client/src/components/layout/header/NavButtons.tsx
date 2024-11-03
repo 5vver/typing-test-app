@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils.ts';
 import type { Color } from '@/types/tailwind.ts';
 import { Icon } from '@components/Icon';
-import type { Icons } from '@components/Icon/types.ts';
+import { IconName } from '@components/Icon/types.ts';
 import { Typography } from '@components/Typography.tsx';
 import {
   Tooltip,
@@ -15,7 +15,7 @@ import { type ComponentProps, type FC } from 'react';
 type Nav = {
   label: string;
   link: string;
-  icon: Icons;
+  icon: IconName;
   color: Color;
 };
 

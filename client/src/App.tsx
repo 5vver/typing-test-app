@@ -1,5 +1,6 @@
 import { AuthProvider, useAuth } from '@/utils/auth.tsx';
 import { ThemeProvider } from '@components/theme-provider.tsx';
+import { Toaster } from '@components/ui/toaster.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import { type FC } from 'react';
@@ -31,6 +32,7 @@ const App: FC = () => {
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <InnerApp />
+          <Toaster />
         </AuthProvider>
       </QueryClientProvider>
     </ThemeProvider>

@@ -61,7 +61,7 @@ export class UsersService {
     if (!user) {
       return {
         success: false,
-        message: 'User not found.',
+        message: 'User is not found.',
       };
     }
 
@@ -76,5 +76,24 @@ export class UsersService {
     await this.usersRepository.save(user);
 
     return { success: true, message: 'Password changed successfully.' };
+  }
+
+  async updateNickname(
+    userId: string,
+    nickname: string,
+  ): Promise<{ success: boolean; message?: string }> {
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      return {
+        success: false,
+        message: 'User is not found.',
+      };
+    }
+
+    user.nickname = nickname;
+    await this.usersRepository.save(user);
+
+    return { success: true, message: 'Nickname changed successfully.' };
   }
 }

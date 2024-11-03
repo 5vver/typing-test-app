@@ -1,6 +1,6 @@
 import { DictJsonForm } from '@components/AdminPanel/DictJsonForm.tsx';
 import { AccountTab } from '@components/Profile/tabs/AccountTab.tsx';
-import { GeneralTab } from '@components/Profile/tabs/GeneralTab.tsx';
+import { GeneralTab } from '@components/Profile/tabs/General';
 import { Typography } from '@components/Typography.tsx';
 import { Separator } from '@components/ui/separator.tsx';
 import {
@@ -23,7 +23,7 @@ export const Profile: FC<Props> = ({ auth }) => {
     <Tabs
       defaultValue="general"
       orientation="vertical"
-      className="flex h-full gap-2"
+      className="flex h-full gap-2 flex-1"
     >
       <div className="flex-1 flex flex-col p-4 bg-surface0 rounded-lg">
         <Typography size="h3" className="mb-4 ml-4">
@@ -34,7 +34,7 @@ export const Profile: FC<Props> = ({ auth }) => {
 
         <TabsList className="flex flex-col flex-1 p-4 bg-surface0 rounded-lg justify-start">
           <TabsTrigger value="general" className="w-full justify-start text-md">
-            General
+            Profile
           </TabsTrigger>
           <TabsTrigger value="account" className="w-full justify-start text-md">
             Account

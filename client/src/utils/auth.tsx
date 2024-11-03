@@ -1,6 +1,7 @@
 import { useGetUserProfile } from '@/queries/user-queries.ts';
 import { UserProfile } from '@/types/user-types.ts';
 import { httpRequest } from '@/utils/http-request.ts';
+import { type RefetchOptions } from '@tanstack/react-query';
 import {
   createContext,
   type FC,
@@ -18,6 +19,7 @@ export type Auth = {
     password: string,
     email: string,
   ) => Promise<boolean>;
+  refetch: (options?: RefetchOptions) => void;
   status: 'loggedIn' | 'loggedOut';
   profile?: UserProfile;
 };
@@ -26,6 +28,7 @@ const authInstance: Auth = {
   login: async () => false,
   logout: async () => false,
   register: async () => false,
+  refetch: () => {},
   status: 'loggedOut',
 };
 
@@ -38,7 +41,7 @@ type AuthProviderProps = {
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [auth, setAuth] = useState<Auth>(authInstance);
 
-  const { data: profile } = useGetUserProfile(auth.status);
+  const { data: profile, refetch } = useGetUserProfile(auth.status);
 
   useEffect(() => {
     if (!profile) {
@@ -109,7 +112,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ ...auth, login, logout, register }}>
+    <AuthContext.Provider value={{ ...auth, login, logout, register, refetch }}>
       {children}
     </AuthContext.Provider>
   );

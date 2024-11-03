@@ -3,4 +3,9 @@ type LabelValue<T = string | number> = {
   value: T;
 };
 
-export type { LabelValue };
+type BasicResponse = {
+  success: boolean;
+  message?: string;
+};
+
+export type { BasicResponse, LabelValue };

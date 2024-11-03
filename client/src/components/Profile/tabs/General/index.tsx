@@ -1,17 +1,16 @@
+import { UserNameEdit } from '@components/Profile/tabs/General/UserNameEdit.tsx';
 import { Typography } from '@components/Typography.tsx';
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar.tsx';
-import { Auth } from '@utils/auth.tsx';
-import { FC } from 'react';
+import { useAuth } from '@utils/auth.tsx';
+import { type FC } from 'react';
 
-type Props = {
-  auth: Auth;
-};
+const GeneralTab: FC = () => {
+  const { profile: { username, email, nickname } = {}, refetch } = useAuth();
 
-const GeneralTab: FC<Props> = ({ auth }) => {
-  const { profile: { username, role, email } = {} } = auth;
+  const name = nickname || username || '';
 
-  const fallback = username
-    ? username
+  const fallback = name
+    ? name
         .split(' ')
         .map((s) => s[0])
         .join('')
@@ -19,7 +18,7 @@ const GeneralTab: FC<Props> = ({ auth }) => {
     : '';
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 overflow-x-hidden">
       <Avatar className="w-32 h-32">
         <AvatarImage
           src="http://192.168.0.105:5000/public/a.jpg"
@@ -29,7 +28,7 @@ const GeneralTab: FC<Props> = ({ auth }) => {
       </Avatar>
 
       <div className="flex flex-col w-full">
-        <Typography size="large">{username}</Typography>
+        <UserNameEdit name={name} refetch={refetch} />
         <Typography size="muted">{email}</Typography>
       </div>
     </div>

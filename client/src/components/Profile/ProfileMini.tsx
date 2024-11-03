@@ -11,10 +11,12 @@ type Props = {
 };
 
 export const ProfileMini: FC<Props> = ({ status, profile }) => {
-  const { username } = profile ?? {};
+  const { username, nickname } = profile ?? {};
 
-  const fallback = username
-    ? username
+  const name = nickname || username;
+
+  const fallback = name
+    ? name
         .split(' ')
         .map((s) => s[0])
         .join('')
@@ -39,7 +41,7 @@ export const ProfileMini: FC<Props> = ({ status, profile }) => {
           </Link>
 
           <Typography size="small" className="font-medium text-center">
-            {username}
+            {name}
           </Typography>
         </div>
       )}

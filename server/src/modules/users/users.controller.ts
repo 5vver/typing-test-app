@@ -33,10 +33,10 @@ export class UsersController {
   @Get('profile')
   async getProfile(@Request() req: AuthenticatedRequest) {
     const { userId } = req.user;
-    const { id, username, email, role } =
+    const { id, username, email, role, nickname } =
       await this.usersService.findOne(userId);
 
-    return { id, username, email, role };
+    return { id, username, email, role, nickname };
   }
 
   @Get(':id')
@@ -70,5 +70,20 @@ export class UsersController {
       password,
       newPassword,
     );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('/nickname/update')
+  async updateNickname(
+    @Request() req: AuthenticatedRequest,
+    @Body() { nickname }: { nickname: string },
+  ) {
+    const { userId } = req.user;
+
+    if (!nickname) {
+      throw new BadRequestException('Nickname is not provided.');
+    }
+
+    return await this.usersService.updateNickname(userId, nickname);
   }
 }

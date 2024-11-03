@@ -1,4 +1,4 @@
-export type Icons =
+export type IconName =
   | 'user-circle-mini'
   | 'user-circle-outline'
   | 'user-circle-solid'
@@ -27,4 +27,7 @@ export type Icons =
   | 'word'
   | 'language-mini'
   | 'adjustments-horizontal'
-  | 'ellipsis-vertical';
+  | 'ellipsis-vertical'
+  | 'pencil-micro'
+  | 'check'
+  | 'x-mark';

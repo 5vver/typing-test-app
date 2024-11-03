@@ -30,7 +30,7 @@ type Props = {
 };
 
 const AccountTab: FC<Props> = ({ auth }) => {
-  const { profile: { email } = {} } = auth;
+  const { profile: { email, username } = {} } = auth;
 
   const [isPasswordChanging, setIsPasswordChanging] = useState(false);
 
@@ -64,6 +64,12 @@ const AccountTab: FC<Props> = ({ auth }) => {
 
   return (
     <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1.5">
+        <Typography size="muted">Username</Typography>
+        <Separator orientation="horizontal" className="bg-surface1" />
+        <Typography size="small">{username}</Typography>
+      </div>
+
       <div className="flex flex-col gap-1.5">
         <Typography size="muted">Email address</Typography>
         <Separator orientation="horizontal" className="bg-surface1" />

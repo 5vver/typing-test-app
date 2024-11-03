@@ -1,7 +1,5 @@
-import type {
-  ChangePasswordPayload,
-  ChangePasswordResponse,
-} from '@components/Profile/types.ts';
+import type { BasicResponse } from '@/types';
+import type { ChangePasswordPayload } from '@components/Profile/types.ts';
 import { useMutation, type UseMutationResult } from '@tanstack/react-query';
 import { httpRequest } from '@utils/http-request.ts';
 
@@ -9,7 +7,7 @@ const changePasswordQuery = async ({
   password,
   newPassword,
 }: ChangePasswordPayload) => {
-  const { data, error } = await httpRequest<ChangePasswordResponse>(
+  const { data, error } = await httpRequest<BasicResponse>(
     '/users/password/update',
     {
       method: 'PATCH',
@@ -26,7 +24,7 @@ const changePasswordQuery = async ({
 };
 
 const useChangePasswordQuery = (): UseMutationResult<
-  ChangePasswordResponse,
+  BasicResponse,
   unknown,
   ChangePasswordPayload,
   unknown

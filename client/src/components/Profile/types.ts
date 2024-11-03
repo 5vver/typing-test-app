@@ -3,9 +3,4 @@ type ChangePasswordPayload = {
   newPassword: string;
 };
 
-type ChangePasswordResponse = {
-  success: boolean;
-  message?: string;
-};
-
-export type { ChangePasswordPayload, ChangePasswordResponse };
+export type { ChangePasswordPayload };

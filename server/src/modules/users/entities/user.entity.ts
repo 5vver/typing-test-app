@@ -1,4 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserStatisticsEntity } from './user_statistics.entity';
 
 @Entity()
@@ -8,6 +14,9 @@ export class UserEntity {
 
   @Column()
   username: string;
+
+  @Column({ nullable: true })
+  nickname: string;
 
   @Column()
   email: string;
@@ -20,4 +29,11 @@ export class UserEntity {
 
   @OneToMany(() => UserStatisticsEntity, (stats) => stats.user)
   statistics_records: UserStatisticsEntity[];
+
+  @BeforeInsert()
+  setNickname() {
+    if (!this.nickname) {
+      this.nickname = this.username;
+    }
+  }
 }
