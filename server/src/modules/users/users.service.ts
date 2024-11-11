@@ -1,9 +1,4 @@
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { UserStatisticsEntity } from './entities/user_statistics.entity';
@@ -11,6 +6,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { saltRounds, usersRepositoriesConstants } from './constants';
 
 import * as bcrypt from 'bcrypt';
+import { UserPicturesEntity } from './entities/user_pictures.entity';
+import { join } from 'path';
+import { promises as fs } from 'fs';
 
 @Injectable()
 export class UsersService {
@@ -19,6 +17,8 @@ export class UsersService {
     private readonly usersRepository: Repository<UserEntity>,
     @Inject(usersRepositoriesConstants.usersStatistics)
     private readonly usersStatisticsRepository: Repository<UserStatisticsEntity>,
+    @Inject(usersRepositoriesConstants.usersPictures)
+    private readonly usersPicturesRepository: Repository<UserPicturesEntity>,
   ) {}
 
   async create(dto: CreateUserDto): Promise<string> {
@@ -95,5 +95,60 @@ export class UsersService {
     await this.usersRepository.save(user);
 
     return { success: true, message: 'Nickname changed successfully.' };
+  }
+
+  async setProfilePicture(userId: string, picUrl: string) {
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException('User is not found');
+    }
+
+    try {
+      const userPicture = await this.usersPicturesRepository.findOne({
+        where: { user },
+      });
+
+      if (userPicture) {
+        const oldPicturePath = join(
+          __dirname,
+          '..',
+          '..',
+          '..',
+          'public',
+          'images',
+          userPicture.url,
+        );
+        await fs.unlink(oldPicturePath).catch((err) => {
+          console.error(err);
+        });
+
+        userPicture.url = picUrl;
+        userPicture.timestamp = new Date().toISOString();
+
+        await this.usersPicturesRepository.save(userPicture);
+
+        return {
+          success: true,
+          message: 'Profile picture updated successfully',
+        };
+      }
+
+      await this.usersPicturesRepository.insert({
+        user,
+        url: picUrl,
+        timestamp: new Date().toISOString(),
+      });
+
+      return { success: true, message: 'Profile picture updated successfully' };
+    } catch (e) {
+      return { success: false, message: 'Failed to update profile picture' };
+    }
+  }
+
+  async getProfilePicture(userId: string) {
+    return await this.usersPicturesRepository.findOne({
+      where: { user: { id: userId } },
+    });
   }
 }

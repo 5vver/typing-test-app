@@ -1,11 +1,13 @@
-import { UserNameEdit } from '@components/Profile/tabs/General/UserNameEdit.tsx';
+import { IMAGE_URL } from '@/constants.ts';
+import { AvatarUploader } from '@components/Profile/tabs/General/components/AvatarUploader.tsx';
+import { UserNameEdit } from '@components/Profile/tabs/General/components/UserNameEdit.tsx';
 import { Typography } from '@components/Typography.tsx';
-import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar.tsx';
 import { useAuth } from '@utils/auth.tsx';
 import { type FC } from 'react';
 
 const GeneralTab: FC = () => {
-  const { profile: { username, email, nickname } = {}, refetch } = useAuth();
+  const { profile: { username, email, nickname, avatar } = {}, refetch } =
+    useAuth();
 
   const name = nickname || username || '';
 
@@ -19,13 +21,11 @@ const GeneralTab: FC = () => {
 
   return (
     <div className="flex gap-2 overflow-x-hidden">
-      <Avatar className="w-32 h-32">
-        <AvatarImage
-          src="http://192.168.0.105:5000/public/a.jpg"
-          alt="profile-pic-mini"
-        />
-        <AvatarFallback>{fallback}</AvatarFallback>
-      </Avatar>
+      <AvatarUploader
+        pictureUrl={`${IMAGE_URL}/${avatar}`}
+        fallback={fallback}
+        refetch={refetch}
+      />
 
       <div className="flex flex-col w-full">
         <UserNameEdit name={name} refetch={refetch} />

@@ -2,6 +2,7 @@ import type { BasicResponse } from '@/types';
 import type {
   ChangeNicknameMutationProps,
   NicknameChangePayload,
+  UploadAvatarMutationProps,
 } from '@components/Profile/tabs/General/types.ts';
 import { useMutation, type UseMutationResult } from '@tanstack/react-query';
 import { httpRequest } from '@utils/http-request.ts';
@@ -49,4 +50,49 @@ const useChangeNicknameMutation = ({
     },
   });
 
-export { useChangeNicknameMutation };
+const uploadAvatarQuery = async (file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const { data, error } = await httpRequest<BasicResponse>(
+    'users/avatar/upload',
+    {
+      method: 'POST',
+      data: formData,
+      withCredentials: true,
+      timeout: 7500,
+    },
+  );
+
+  if (!data?.success || error) {
+    throw new Error(
+      data?.message || error?.message || 'An unknown error occurred',
+    );
+  }
+
+  return data;
+};
+
+const useUploadAvatarMutation = ({
+  refetch,
+  inputRef,
+}: UploadAvatarMutationProps) =>
+  useMutation({
+    mutationKey: ['uploadAvatar'],
+    mutationFn: uploadAvatarQuery,
+    onSuccess: () => {
+      refetch?.();
+      const input = inputRef?.current;
+      if (input) {
+        input.value = '';
+      }
+    },
+    onError: () => {
+      const input = inputRef?.current;
+      if (input) {
+        input.value = '';
+      }
+    },
+  });
+
+export { useChangeNicknameMutation, useUploadAvatarMutation };

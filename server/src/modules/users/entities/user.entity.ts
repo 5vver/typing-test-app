@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserStatisticsEntity } from './user_statistics.entity';
+import { UserPicturesEntity } from './user_pictures.entity';
 
 @Entity()
 export class UserEntity {
@@ -29,6 +30,9 @@ export class UserEntity {
 
   @OneToMany(() => UserStatisticsEntity, (stats) => stats.user)
   statistics_records: UserStatisticsEntity[];
+
+  @OneToMany(() => UserPicturesEntity, (picture) => picture.user)
+  pictures: UserPicturesEntity[];
 
   @BeforeInsert()
   setNickname() {

@@ -67,6 +67,7 @@ const AccountDropdown: FC<Props> = ({ className }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-52">
           <ProfileMini status={status} profile={profile} />
+
           <DropdownMenuSeparator />
           {status === 'loggedOut' && (
             <LoggedOutGroup

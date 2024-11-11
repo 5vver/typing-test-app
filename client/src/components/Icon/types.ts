@@ -30,4 +30,5 @@ export type IconName =
   | 'ellipsis-vertical'
   | 'pencil-micro'
   | 'check'
-  | 'x-mark';
+  | 'x-mark'
+  | 'camera-micro';

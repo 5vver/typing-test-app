@@ -1,5 +1,6 @@
 import type { ToastEmitter } from '@hooks/use-toast.ts';
 import { Auth } from '@utils/auth.tsx';
+import { type RefObject } from 'react';
 
 type NicknameChangePayload = {
   nickname: string;
@@ -10,4 +11,13 @@ type ChangeNicknameMutationProps = {
   refetch?: Auth['refetch'];
 };
 
-export type { ChangeNicknameMutationProps, NicknameChangePayload };
+type UploadAvatarMutationProps = {
+  refetch?: Auth['refetch'];
+  inputRef?: RefObject<HTMLInputElement>;
+};
+
+export type {
+  ChangeNicknameMutationProps,
+  NicknameChangePayload,
+  UploadAvatarMutationProps,
+};

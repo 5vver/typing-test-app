@@ -24,7 +24,9 @@ const bootstrap = async () => {
     });
     app.use(cookieParser());
 
-    app.useStaticAssets(join(__dirname, '..', 'public'), { prefix: '/public' });
+    app.useStaticAssets(join(__dirname, '..', 'public', 'images'), {
+      prefix: '/public/images',
+    });
 
     await app.listen(PORT, HOST, () => {
       console.log(`Server started on port: ${PORT}`);
