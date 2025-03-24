@@ -1,11 +1,10 @@
 import { WORD_GAP } from '@components/TypingModule/constants.ts';
 import type {
-  ChartData,
   GenerateWords,
-  Stats,
   Status,
   Word,
 } from '@components/TypingModule/types.ts';
+import { useAtom, useSetAtom } from 'jotai';
 import {
   type Dispatch,
   type RefObject,
@@ -15,6 +14,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { resultChartAtom, statsAtom, statusAtom } from './store';
 
 export const formWord = (
   word: string,
@@ -215,23 +215,10 @@ export const calcAccuracy = (totalTyped: number, correctTyped: number) => {
   return parseFloat(acc.toFixed(2));
 };
 
-type TimerCountdownProps = {
-  status: Status;
-  setStatus: Dispatch<SetStateAction<Status>>;
-  stats: Stats;
-  setStats: Dispatch<SetStateAction<Stats>>;
-  setResultChart: Dispatch<SetStateAction<ChartData[]>>;
-  initialTimerCount?: number;
-};
-export const useTimerCountdown = ({
-  status,
-  setStatus,
-  stats,
-  setStats,
-  setResultChart,
-  initialTimerCount = 60,
-}: TimerCountdownProps) => {
-  const { isFinished, isFocused, isTyping } = status;
+export const useTimerCountdown = (initialTimerCount = 60) => {
+  const [stats, setStats] = useAtom(statsAtom);
+  const [status, setStatus] = useAtom(statusAtom);
+  const setResultChart = useSetAtom(resultChartAtom);
 
   const [timerCount, setTimerCount] = useState(initialTimerCount);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -272,7 +259,7 @@ export const useTimerCountdown = ({
   useEffect(() => {
     const timer = timerIntervalRef.current;
 
-    if (isFinished || !isFocused || !isTyping) {
+    if (status.isFinished || !status.isFocused || !status.isTyping) {
       if (timer) {
         clearInterval(timer);
         timerIntervalRef.current = null;
@@ -307,9 +294,7 @@ export const useTimerCountdown = ({
     prevTimerRef.current = timerCount;
     prevStatsRef.current = stats;
   }, [
-    isFinished,
-    isFocused,
-    isTyping,
+    status,
     timerCount,
     setStatus,
     setTimerCount,

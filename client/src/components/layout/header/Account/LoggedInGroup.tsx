@@ -12,7 +12,9 @@ import {
 import {
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuSeparator,
 } from '@components/ui/dropdown-menu.tsx';
+import { Link } from '@tanstack/react-router';
 import { type FC, type MouseEvent, useCallback, useState } from 'react';
 
 type Props = {
@@ -54,6 +56,17 @@ export const LoggedInGroup: FC<Props> = ({ onLogoutClick }) => {
       </AlertDialog>
 
       <DropdownMenuGroup>
+        <Link to="/profile" preload="intent">
+          <DropdownMenuItem>
+            <div className="flex gap-x-1">
+              <Icon name="cog-6-tooth-solid" size={20} />
+              <span>Settings</span>
+            </div>
+          </DropdownMenuItem>
+        </Link>
+
+        <DropdownMenuSeparator />
+
         <DropdownMenuItem onClick={onInnerLogout}>
           <div className="flex gap-x-1">
             <Icon name="arrow-right-start-on-rectangle" size={20} />

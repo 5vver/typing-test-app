@@ -31,4 +31,5 @@ export type IconName =
   | 'pencil-micro'
   | 'check'
   | 'x-mark'
-  | 'camera-micro';
+  | 'camera-micro'
+  | 'bookmark-micro';

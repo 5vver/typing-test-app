@@ -16,6 +16,30 @@ export class UserStatisticsEntity {
   @Column({ default: 0 })
   wpm: number;
 
+  @Column({ default: 0 })
+  accuracy: number;
+
+  @Column({ default: 0 })
+  correct_words: number;
+
+  @Column({ default: 0 })
+  incorrect_words: number;
+
+  @Column({ default: 0 })
+  total_words: number;
+
+  @Column({ default: 0 })
+  correct_characters: number;
+
+  @Column({ default: 0 })
+  missed_characters: number;
+
+  @Column({ default: 0 })
+  total_characters: number;
+
+  @Column()
+  timestamp: Date;
+
   @ManyToOne(() => UserEntity, (user) => user.statistics_records)
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;

@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { UserPicturesEntity } from './entities/user_pictures.entity';
 import { join } from 'path';
 import { promises as fs } from 'fs';
+import { CreateUserStatisticsDto } from './dto/create-user-statistics.dto';
 
 @Injectable()
 export class UsersService {
@@ -149,6 +150,19 @@ export class UsersService {
   async getProfilePicture(userId: string) {
     return await this.usersPicturesRepository.findOne({
       where: { user: { id: userId } },
+    });
+  }
+
+  async saveResults(userId: string, stats: CreateUserStatisticsDto) {
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException('User is not found');
+    }
+
+    return await this.usersStatisticsRepository.insert({
+      ...stats,
+      user,
     });
   }
 }

@@ -32,13 +32,13 @@ const authInstance: Auth = {
   status: 'loggedOut',
 };
 
-export const AuthContext = createContext<Auth | null>(null);
+const AuthContext = createContext<Auth | null>(null);
 
 type AuthProviderProps = {
   children: ReactNode;
 };
 
-export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
+const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [auth, setAuth] = useState<Auth>(authInstance);
 
   const { data: profile, refetch } = useGetUserProfile(auth.status);
@@ -118,8 +118,13 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
+const useAuth = () => {
   const auth = useContext(AuthContext);
-  if (!auth) throw new Error('useAuth must be used within an AuthProvider');
+  if (!auth) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+
   return auth;
 };
+
+export { AuthContext, AuthProvider, useAuth };

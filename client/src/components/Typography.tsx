@@ -121,11 +121,9 @@ const Typography: FC<Props> = ({ children, size = 'p', className }) => {
       );
     case 'type':
       return (
-        <div className={cn('text-3xl font-normal', className)}>
-          {children}
-        </div>
+        <div className={cn('text-3xl font-normal', className)}>{children}</div>
       );
   }
 };
 
-export {Typography};
+export { Typography };

@@ -29,8 +29,9 @@ export const ProfileMini: FC<Props> = ({ status, profile }) => {
       {status === 'loggedOut' && (
         <DropdownMenuLabel>Authorization</DropdownMenuLabel>
       )}
+
       {status === 'loggedIn' && (
-        <div className="flex flex-col gap-2 items-center">
+        <div className="flex flex-col gap-2 items-center mb-1.5">
           <Link to="/profile" preload="intent">
             <Avatar className="w-[50px] h-[50px]">
               <AvatarImage

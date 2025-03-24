@@ -4,4 +4,4 @@ export const usersRepositoriesConstants = {
   users: 'USERS_REPOSITORY',
   usersStatistics: 'USERS_STATISTICS_REPOSITORY',
   usersPictures: 'USERS_PICTURES_REPOSITORY',
-};
+} as const;

@@ -20,6 +20,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { AuthenticatedRequest } from '../../auth/types';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { CreateUserStatisticsDto } from './dto/create-user-statistics.dto';
 
 @Controller('/users')
 export class UsersController {
@@ -121,5 +122,23 @@ export class UsersController {
         message: error.message,
       };
     }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/result/save')
+  async saveTestResult(
+    @Request() req: AuthenticatedRequest,
+    @Body() createUserStatistics: CreateUserStatisticsDto,
+  ) {
+    const res = await this.usersService.saveResults(
+      req.user.userId,
+      createUserStatistics,
+    );
+    const isInserted = res.identifiers.length > 0;
+
+    return {
+      success: isInserted,
+      message: 'Test results saved successfully',
+    };
   }
 }

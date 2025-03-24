@@ -13,9 +13,10 @@ import { type FC } from 'react';
 
 type Props = {
   stats: Stats;
+  isFinished: boolean;
 };
 
-const Results: FC<Props> = ({ stats }) => {
+const Results: FC<Props> = ({ stats, isFinished }) => {
   const {
     wpm,
     accuracy,
@@ -25,6 +26,10 @@ const Results: FC<Props> = ({ stats }) => {
     incorrectChars,
     totalChars,
   } = stats;
+
+  if (!isFinished) {
+    return null;
+  }
 
   return (
     <Card className="w-full h-full">

@@ -18,16 +18,17 @@ import {
 
 type Props = {
   words: Word[];
+  isHidden?: boolean;
 };
 
-const TypingCore: FC<Props> = ({ words }) => {
+const TypingCore: FC<Props> = ({ words, isHidden }) => {
   const { generateWords } = useGenerateWords();
 
   const [wordList, setWordList] = useState(words);
   const [inputValue, setInputValue] = useState('');
   const [isWordTransition, setIsWordTransition] = useState(false);
 
-  const [{ isFocused }, setStatus] = useAtom(statusAtom);
+  const [status, setStatus] = useAtom(statusAtom);
   const setStats = useSetAtom(statsAtom);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -204,13 +205,13 @@ const TypingCore: FC<Props> = ({ words }) => {
 
   const inputListener = useCallback(
     (e: globalThis.KeyboardEvent) => {
-      if (!isFocused) return;
+      if (!status.isFocused) return;
 
       if (e.key === 'Backspace') goToPrevWord();
       if (e.key === ' ' && inputValue.length > 0) goToNextWord();
       //if (e.ctrlKey && e.key === 'a') e.preventDefault();
     },
-    [isFocused, goToPrevWord, goToNextWord, inputValue],
+    [status, goToPrevWord, goToNextWord, inputValue],
   );
 
   useEffect(() => {
@@ -258,16 +259,20 @@ const TypingCore: FC<Props> = ({ words }) => {
   );
 
   const { onFocus, onBlur } = useAreaFocus(
-    isFocused,
+    status.isFocused,
     setStatus,
     containerRef,
     inputRef,
     wordList,
   );
 
+  if (isHidden) {
+    return null;
+  }
+
   return (
     <div className={`w-full h-full relative`} onClick={onFocus}>
-      {!isFocused && (
+      {!status.isFocused && (
         <div className="absolute text-center top-[50px] w-full z-40 pointer-events-none">
           <Icon name="cursor-arrow-micro" size={20} className="w-full" />
           <Typography size="large" className="font-normal">
@@ -279,10 +284,11 @@ const TypingCore: FC<Props> = ({ words }) => {
       <WordsGrid
         words={wordList}
         inputValue={inputValue}
-        isFocused={isFocused}
+        isFocused={status.isFocused}
         refWrapper={containerRef}
-        className={`transition duration-500 ease-in-out ${isFocused ? '' : 'blur-sm'}`}
+        className={`transition duration-500 ease-in-out ${status.isFocused ? '' : 'blur-sm'}`}
       />
+
       <Input
         type="text"
         value={inputValue}

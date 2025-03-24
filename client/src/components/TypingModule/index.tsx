@@ -1,5 +1,3 @@
-import { Icon } from '@components/Icon';
-import { Spinner } from '@components/Spinner.tsx';
 import { Results } from '@components/TypingModule/components/Results.tsx';
 import { TypingCore } from '@components/TypingModule/components/TypingCore.tsx';
 import { TypingCoreSkeleton } from '@components/TypingModule/components/TypingCoreSkeleton.tsx';
@@ -19,10 +17,10 @@ import {
 } from '@components/TypingModule/store.ts';
 import type { Word } from '@components/TypingModule/types.ts';
 import { useTimerCountdown } from '@components/TypingModule/utils.ts';
-import { Button } from '@components/ui/button.tsx';
 import { useGetDicts, useGetRandomWords } from '@queries/test-queries.ts';
 import { useAtom, useSetAtom } from 'jotai';
-import { type FC, useCallback, useEffect, useRef, useState } from 'react';
+import { type FC, useCallback, useEffect, useState } from 'react';
+import { FinishButtons } from './components/FinishButtons';
 
 const TypingModule: FC = () => {
   const [settings, setSettings] = useAtom(settingsAtom);
@@ -39,23 +37,16 @@ const TypingModule: FC = () => {
   const [status, setStatus] = useAtom(statusAtom);
   const setResultChart = useSetAtom(resultChartAtom);
 
-  const { timerCount, resetTimer } = useTimerCountdown({
-    status,
-    setStatus,
-    stats,
-    setStats,
-    setResultChart,
-    initialTimerCount: settings.timerCount,
-  });
+  const { timerCount, resetTimer } = useTimerCountdown(settings.timerCount);
 
   const { generateWords } = useGenerateWords();
   const [generatedWords, setGeneratedWords] = useState<Word[]>([]);
 
-  const reloadButtonRef = useRef<HTMLButtonElement>(null);
-
   /* on dicts data load - set initial settings dict **/
   useEffect(() => {
-    if (!dictsData) return;
+    if (!dictsData) {
+      return;
+    }
 
     setSettings((prev) => {
       if (prev.dictionary) {
@@ -94,10 +85,6 @@ const TypingModule: FC = () => {
 
     resetTimer();
 
-    if (reloadButtonRef.current) {
-      reloadButtonRef.current.blur();
-    }
-
     if (wordsDict.length) {
       setGeneratedWords(
         generateWords({ length: INITIAL_GENERATE_WORDS_LENGTH }),
@@ -112,6 +99,10 @@ const TypingModule: FC = () => {
     setResultChart,
     resetTimer,
   ]);
+
+  const onSave = useCallback(() => {
+    void onReload();
+  }, [onReload]);
 
   const isReloading = isLoading || isRefetching;
   const isTypingCoreVisible =
@@ -132,23 +123,16 @@ const TypingModule: FC = () => {
           }}
         />
 
-        {isTypingCoreVisible && <TypingCore words={generatedWords} />}
-        {isReloading && <TypingCoreSkeleton />}
-        {status.isFinished && <Results stats={stats} />}
+        <TypingCore words={generatedWords} isHidden={!isTypingCoreVisible} />
+        <TypingCoreSkeleton isLoading={isReloading} />
+        <Results stats={stats} isFinished={status.isFinished} />
       </div>
-      <Button
-        onClick={onReload}
-        disabled={isReloading}
-        variant="outline"
-        className="w-[48px] h-[48px]"
-        ref={reloadButtonRef}
-      >
-        {isReloading ? (
-          <Spinner size="xs" />
-        ) : (
-          <Icon name="arrow-path" size={24} />
-        )}
-      </Button>
+
+      <FinishButtons
+        onReload={onReload}
+        onSave={onSave}
+        isLoading={isReloading}
+      />
     </div>
   );
 };
