@@ -1,3 +1,4 @@
+import tailwindcss from '@tailwindcss/vite';
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
 import react from '@vitejs/plugin-react';
 import * as path from 'path';
@@ -6,7 +7,7 @@ import vitePluginSvgr from 'vite-plugin-svgr';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [TanStackRouterVite(), react(), vitePluginSvgr()],
+  plugins: [TanStackRouterVite(), react(), vitePluginSvgr(), tailwindcss()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

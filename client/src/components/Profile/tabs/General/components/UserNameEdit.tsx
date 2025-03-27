@@ -60,12 +60,12 @@ const UserNameEdit: FC<Props> = ({ name, refetch }) => {
       submitButtonDownRef.current = false;
     };
 
-    input.addEventListener('blur', onInputBlur);
+    input.addEventListener('blur-sm', onInputBlur);
     submitButton.addEventListener('mousedown', onMouseDown);
     submitButton.addEventListener('mouseup', onMouseUp);
 
     return () => {
-      input.removeEventListener('blur', onInputBlur);
+      input.removeEventListener('blur-sm', onInputBlur);
       submitButton.removeEventListener('mousedown', onMouseDown);
       submitButton.removeEventListener('mouseup', onMouseUp);
     };

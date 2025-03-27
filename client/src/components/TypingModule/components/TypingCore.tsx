@@ -286,7 +286,7 @@ const TypingCore: FC<Props> = ({ words, isHidden }) => {
         inputValue={inputValue}
         isFocused={status.isFocused}
         refWrapper={containerRef}
-        className={`transition duration-500 ease-in-out ${status.isFocused ? '' : 'blur-sm'}`}
+        className={`transition duration-500 ease-in-out ${status.isFocused ? '' : 'blur-xs'}`}
       />
 
       <Input

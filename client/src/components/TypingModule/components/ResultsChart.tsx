@@ -43,7 +43,7 @@ const TooltipFormatter: TooltipFormatter = (value, name, item) => {
   return (
     <>
       <div
-        className="shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg] h-2.5 w-2.5"
+        className="shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg) h-2.5 w-2.5"
         style={
           {
             '--color-bg': indicatorColor,

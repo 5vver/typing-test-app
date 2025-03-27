@@ -44,7 +44,7 @@ export const Profile: FC<Props> = ({ auth }) => {
           </TabsTrigger>
         </TabsList>
       </div>
-      <div className="flex-[2] flex flex-col p-4 bg-surface0 rounded-lg ">
+      <div className="flex-2 flex flex-col p-4 bg-surface0 rounded-lg ">
         <TabsContent value="general" className="mt-0 flex flex-col gap-2">
           <GeneralTab auth={auth} />
         </TabsContent>
