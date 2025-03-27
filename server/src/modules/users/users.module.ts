@@ -8,6 +8,7 @@ import {
   usersStatisticsProviders,
 } from './users.providers';
 import { MulterModule } from '../multer.module';
+import { testsProviders } from '../tests/tests.providers';
 
 @Module({
   imports: [DatabaseModule, MulterModule],
@@ -15,6 +16,7 @@ import { MulterModule } from '../multer.module';
     ...usersProviders,
     ...usersStatisticsProviders,
     ...usersPicturesProviders,
+    ...testsProviders,
     UsersService,
   ],
   controllers: [UsersController],

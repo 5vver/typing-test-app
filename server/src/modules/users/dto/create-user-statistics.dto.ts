@@ -7,4 +7,5 @@ export class CreateUserStatisticsDto {
   readonly correct_characters: number;
   readonly missed_characters: number;
   readonly total_characters: number;
+  readonly testId: string;
 }

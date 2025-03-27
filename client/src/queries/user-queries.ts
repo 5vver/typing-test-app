@@ -1,5 +1,6 @@
 import { Stats } from '@/components/TypingModule/types';
-import type { UserProfile } from '@/types/user-types.ts';
+import { useToast } from '@/hooks/use-toast';
+import type { UserProfile, UserResultPayload } from '@/types/user-types.ts';
 import { httpRequest } from '@/utils/http-request.ts';
 import {
   useMutation,
@@ -30,8 +31,10 @@ const useGetUserProfile = (
     gcTime: 0,
   });
 
-const saveResults = async (stats: Stats) => {
-  const { data, error } = await httpRequest<Stats>('/users/saveResults', {
+const saveResults = async (payload: UserResultPayload) => {
+  const { stats, testId } = payload;
+
+  const { data, error } = await httpRequest<Stats>('/users/result/save', {
     method: 'POST',
     data: {
       wpm: stats.wpm,
@@ -42,6 +45,7 @@ const saveResults = async (stats: Stats) => {
       correct_characters: stats.correctChars,
       missed_characters: stats.missedChars,
       total_characters: stats.totalChars,
+      testId,
     },
     withCredentials: true,
   });
@@ -53,10 +57,19 @@ const saveResults = async (stats: Stats) => {
   return data;
 };
 
-const useSaveResults = (stats: Stats) =>
-  useMutation({
+const useSaveResults = () => {
+  const { toast } = useToast();
+
+  return useMutation({
     mutationKey: ['saveResults'],
-    mutationFn: () => saveResults(stats),
+    mutationFn: (payload: UserResultPayload) => saveResults(payload),
+    onSuccess: () => {
+      toast({ description: 'Result saved successfully' });
+    },
+    onError: () => {
+      toast({ description: 'Error occured while saving result' });
+    },
   });
+};
 
 export { getUserProfile, useGetUserProfile, useSaveResults };

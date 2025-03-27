@@ -16,7 +16,7 @@ export class UserStatisticsEntity {
   @Column({ default: 0 })
   wpm: number;
 
-  @Column({ default: 0 })
+  @Column({ default: 0, type: 'float' })
   accuracy: number;
 
   @Column({ default: 0 })
@@ -38,7 +38,7 @@ export class UserStatisticsEntity {
   total_characters: number;
 
   @Column()
-  timestamp: Date;
+  timestamp: string;
 
   @ManyToOne(() => UserEntity, (user) => user.statistics_records)
   @JoinColumn({ name: 'user_id' })

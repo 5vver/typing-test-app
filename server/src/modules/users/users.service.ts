@@ -10,6 +10,8 @@ import { UserPicturesEntity } from './entities/user_pictures.entity';
 import { join } from 'path';
 import { promises as fs } from 'fs';
 import { CreateUserStatisticsDto } from './dto/create-user-statistics.dto';
+import { testsRepositoriesConstants } from '../tests/constants';
+import { TestEntity } from '../tests/entities/test.entity';
 
 @Injectable()
 export class UsersService {
@@ -20,6 +22,8 @@ export class UsersService {
     private readonly usersStatisticsRepository: Repository<UserStatisticsEntity>,
     @Inject(usersRepositoriesConstants.usersPictures)
     private readonly usersPicturesRepository: Repository<UserPicturesEntity>,
+    @Inject(testsRepositoriesConstants.tests)
+    private readonly testsRepository: Repository<TestEntity>,
   ) {}
 
   async create(dto: CreateUserDto): Promise<string> {
@@ -155,14 +159,23 @@ export class UsersService {
 
   async saveResults(userId: string, stats: CreateUserStatisticsDto) {
     const user = await this.usersRepository.findOne({ where: { id: userId } });
+    const test = await this.testsRepository.findOne({
+      where: { id: stats.testId },
+    });
 
     if (!user) {
       throw new NotFoundException('User is not found');
     }
 
+    if (!test) {
+      throw new NotFoundException('Test is not found');
+    }
+
     return await this.usersStatisticsRepository.insert({
       ...stats,
       user,
+      test,
+      timestamp: new Date().toISOString(),
     });
   }
 }
