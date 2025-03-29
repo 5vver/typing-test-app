@@ -17,7 +17,7 @@ type Props = {
   words: Word[];
   inputValue: string;
   isFocused: boolean;
-  refWrapper?: RefObject<HTMLDivElement>;
+  refWrapper?: RefObject<HTMLDivElement | null>;
   className?: string;
 };
 

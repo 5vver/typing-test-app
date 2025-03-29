@@ -258,13 +258,13 @@ const TypingCore: FC<Props> = ({ words, isHidden }) => {
     ],
   );
 
-  const { onFocus, onBlur } = useAreaFocus(
-    status.isFocused,
+  const { onFocus, onBlur } = useAreaFocus({
+    isFocused: status.isFocused,
     setStatus,
-    containerRef,
+    areaRef: containerRef,
     inputRef,
     wordList,
-  );
+  });
 
   if (isHidden) {
     return null;

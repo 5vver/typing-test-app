@@ -1,3 +1,5 @@
+import { type Dispatch, type RefObject, type SetStateAction } from 'react';
+
 type Word = {
   value: string;
   status: 'active' | 'finished' | 'failed' | 'pending';
@@ -49,7 +51,16 @@ type Settings = {
   dictionary: string;
 };
 
+type AreaFocusData = {
+  isFocused: boolean;
+  setStatus: Dispatch<SetStateAction<Status>>;
+  areaRef: RefObject<HTMLDivElement | null>;
+  inputRef: RefObject<HTMLInputElement | null>;
+  wordList: Word[];
+};
+
 export {
+  type AreaFocusData,
   type ChartData,
   type GenerateWords,
   type Settings,

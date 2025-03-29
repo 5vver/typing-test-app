@@ -1,13 +1,12 @@
 import { WORD_GAP } from '@components/TypingModule/constants.ts';
 import type {
+  AreaFocusData,
   GenerateWords,
-  Status,
   Word,
 } from '@components/TypingModule/types.ts';
 import { useAtom, useSetAtom } from 'jotai';
 import {
   type Dispatch,
-  type RefObject,
   type SetStateAction,
   useCallback,
   useEffect,
@@ -120,22 +119,28 @@ export const getLetterStyle = (
   return 'text-subtext0';
 };
 
-export const useAreaFocus = (
-  isFocused: boolean,
-  setStatus: Dispatch<SetStateAction<Status>>,
-  areaRef: RefObject<HTMLDivElement>,
-  inputRef: RefObject<HTMLInputElement>,
-  wordList: Word[],
-) => {
-  const [isClicking, setIsClicking] = useState(false);
+export const useAreaFocus = ({
+  isFocused,
+  setStatus,
+  areaRef,
+  inputRef,
+  wordList,
+}: AreaFocusData) => {
+  const isClickingRef = useRef(false);
   const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const container = areaRef.current;
-    if (!container) return;
+    if (!container) {
+      return;
+    }
 
-    const handleMouseDown = () => void setIsClicking(true);
-    const handleMouseUp = () => void setIsClicking(false);
+    const handleMouseDown = () => {
+      isClickingRef.current = true;
+    };
+    const handleMouseUp = () => {
+      isClickingRef.current = false;
+    };
 
     container.addEventListener('mousedown', handleMouseDown);
     container.addEventListener('mouseup', handleMouseUp);
@@ -144,7 +149,7 @@ export const useAreaFocus = (
       container.removeEventListener('mousedown', handleMouseDown);
       container.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [areaRef, setIsClicking]);
+  }, [areaRef.current]);
 
   /* when word list updates - clear focus timeout **/
   useEffect(() => {
@@ -164,12 +169,14 @@ export const useAreaFocus = (
   }, [isFocused, inputRef, setStatus]);
 
   const onBlur = useCallback(() => {
-    if (isClicking) return;
+    if (isClickingRef.current) {
+      return;
+    }
 
     focusTimeoutRef.current = setTimeout(() => {
       setStatus((prev) => ({ ...prev, isFocused: false }));
     }, 500);
-  }, [isClicking, setStatus, focusTimeoutRef]);
+  }, [setStatus]);
 
   return { onFocus, onBlur };
 };
