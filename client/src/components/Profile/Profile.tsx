@@ -1,6 +1,6 @@
+import { GeneralTab } from '@/components/Profile/tabs/GeneralTab';
 import { DictJsonForm } from '@components/AdminPanel/DictJsonForm.tsx';
 import { AccountTab } from '@components/Profile/tabs/AccountTab.tsx';
-import { GeneralTab } from '@components/Profile/tabs/General';
 import { Typography } from '@components/Typography.tsx';
 import { Separator } from '@components/ui/separator.tsx';
 import {

@@ -1,9 +1,9 @@
-import type { BasicResponse } from '@/types';
 import type {
   ChangeNicknameMutationProps,
   NicknameChangePayload,
   UploadAvatarMutationProps,
-} from '@components/Profile/tabs/General/types.ts';
+} from '@/components/Profile/tabs/GeneralTab/types';
+import type { BasicResponse } from '@/types';
 import { useMutation, type UseMutationResult } from '@tanstack/react-query';
 import { httpRequest } from '@utils/http-request.ts';
 

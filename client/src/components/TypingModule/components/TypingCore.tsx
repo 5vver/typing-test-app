@@ -271,7 +271,11 @@ const TypingCore: FC<Props> = ({ words, isHidden }) => {
   }
 
   return (
-    <div className={`w-full h-full relative`} onClick={onFocus}>
+    <div
+      id="words-container"
+      className={`w-full h-full relative`}
+      onClick={onFocus}
+    >
       {!status.isFocused && (
         <div className="absolute text-center top-[50px] w-full z-40 pointer-events-none">
           <Icon name="cursor-arrow-micro" size={20} className="w-full" />

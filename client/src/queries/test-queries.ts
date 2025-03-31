@@ -47,4 +47,19 @@ const useGetDicts = (): UseQueryResult<DictData[]> => {
   });
 };
 
+const getResultsListQuery = async () => {
+  const { data, error } = await httpRequest<DictData[]>(
+    '/tests/getResultsList',
+  );
+
+  if (!data || error) {
+    return null;
+  }
+
+  return data;
+};
+
+const useGetResultsList = (): UseQueryResult<DictData[]> =>
+  useQuery({ queryKey: ['resultsList'], queryFn: () => getResultsListQuery() });
+
 export { getRandomWords, useGetDicts, useGetRandomWords };

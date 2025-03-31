@@ -10,7 +10,7 @@
 
 ## NEEDS TO BE FIXED:
 
-- Click here to start typing blur bug
+- [x] Click here to start typing blur bug
 
 ## UI fixes:
 

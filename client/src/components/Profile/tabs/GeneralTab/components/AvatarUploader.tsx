@@ -1,9 +1,9 @@
+import { useUploadAvatarMutation } from '@/components/Profile/tabs/GeneralTab/queries';
+import { Button } from '@/components/ui/button';
 import { Icon } from '@components/Icon';
-import { useUploadAvatarMutation } from '@components/Profile/tabs/General/queries.ts';
 import { Spinner } from '@components/Spinner.tsx';
 import { Typography } from '@components/Typography.tsx';
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar.tsx';
-import { Button } from '@components/ui/button.tsx';
 import { useToast } from '@hooks/use-toast.ts';
 import type { Auth } from '@utils/auth.tsx';
 import { ChangeEvent, type FC, useCallback, useRef } from 'react';
@@ -59,11 +59,8 @@ const AvatarUploader: FC<Props> = ({ pictureUrl, fallback, refetch }) => {
       <AvatarFallback>{fallback}</AvatarFallback>
 
       {!isUploading && (
-        <div className="absolute hidden w-full h-auto bottom-5 m-auto z-10 group-hover:flex justify-center">
-          <Button
-            onClick={onAvatarClick}
-            className="p-0 h-auto w-auto bg-transparent text-transparent hover:bg-transparent hover:text-transparent"
-          >
+        <div className="absolute hidden w-full h-0 bottom-8 m-auto z-10 group-hover:flex justify-center">
+          <Button onClick={onAvatarClick} variant="wrapper">
             <div className="flex items-center bg-background p-0.5 rounded-sm text-center">
               <Icon name="camera-micro" size={16} className="text-lavender" />
               <Typography size="muted" className="text-xs">

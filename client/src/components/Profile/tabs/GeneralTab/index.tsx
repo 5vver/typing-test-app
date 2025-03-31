@@ -1,6 +1,6 @@
+import { AvatarUploader } from '@/components/Profile/tabs/GeneralTab/components/AvatarUploader';
+import { UserNameEdit } from '@/components/Profile/tabs/GeneralTab/components/UserNameEdit';
 import { IMAGE_URL } from '@/constants.ts';
-import { AvatarUploader } from '@components/Profile/tabs/General/components/AvatarUploader.tsx';
-import { UserNameEdit } from '@components/Profile/tabs/General/components/UserNameEdit.tsx';
 import { Typography } from '@components/Typography.tsx';
 import { useAuth } from '@utils/auth.tsx';
 import { type FC } from 'react';

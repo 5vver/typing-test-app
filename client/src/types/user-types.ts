@@ -1,3 +1,5 @@
+import { Stats } from '@/components/TypingModule/types';
+
 export type UserProfile = {
   id: string;
   username: string;
@@ -5,4 +7,9 @@ export type UserProfile = {
   role: string;
   nickname?: string;
   avatar?: string;
+};
+
+export type UserResultPayload = {
+  stats: Stats;
+  testId: string;
 };

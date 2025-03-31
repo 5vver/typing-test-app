@@ -1,6 +1,6 @@
+import { useChangeNicknameMutation } from '@/components/Profile/tabs/GeneralTab/queries';
 import { Icon } from '@components/Icon';
 import InputGhost from '@components/InputGhost.tsx';
-import { useChangeNicknameMutation } from '@components/Profile/tabs/General/queries.ts';
 import { Button } from '@components/ui/button.tsx';
 import { useToast } from '@hooks/use-toast.ts';
 import { type Auth } from '@utils/auth.tsx';
