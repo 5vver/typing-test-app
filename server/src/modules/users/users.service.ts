@@ -12,6 +12,8 @@ import { promises as fs } from 'fs';
 import { CreateUserStatisticsDto } from './dto/create-user-statistics.dto';
 import { testsRepositoriesConstants } from '../tests/constants';
 import { TestEntity } from '../tests/entities/test.entity';
+import { GetUserStatisticsDto } from './dto/get-user-statistics.dto';
+import { GetUserStatisticsDataDto } from './dto/get-user-statistics-data.dto';
 
 @Injectable()
 export class UsersService {
@@ -146,7 +148,7 @@ export class UsersService {
       });
 
       return { success: true, message: 'Profile picture updated successfully' };
-    } catch (e) {
+    } catch {
       return { success: false, message: 'Failed to update profile picture' };
     }
   }
@@ -177,5 +179,32 @@ export class UsersService {
       test,
       timestamp: new Date().toISOString(),
     });
+  }
+
+  async getUserResults(userId: string, payload: GetUserStatisticsDto) {
+    const { page, pageSize } = payload;
+
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+    const statistics = await this.usersStatisticsRepository.find({
+      where: { user },
+      skip: page * pageSize,
+      take: pageSize,
+    });
+
+    return statistics.map(
+      (stat) =>
+        ({
+          id: stat.id,
+          wpm: stat.wpm,
+          correctWords: stat.correct_words,
+          incorrectWords: stat.incorrect_words,
+          totalWords: stat.total_words,
+          correctCharacters: stat.correct_characters,
+          incorrectCharacters: stat.missed_characters,
+          totalCharacters: stat.total_characters,
+          accuracy: stat.accuracy,
+          timestamp: stat.timestamp,
+        }) as GetUserStatisticsDataDto,
+    );
   }
 }

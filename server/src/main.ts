@@ -5,6 +5,8 @@ import { ConfigService } from '@nestjs/config';
 import * as cookieParser from 'cookie-parser';
 import { type NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import { ValidationPipe } from '@nestjs/common';
+import { isDev } from './constants';
 
 const bootstrap = async () => {
   try {
@@ -27,6 +29,15 @@ const bootstrap = async () => {
     app.useStaticAssets(join(__dirname, '..', 'public', 'images'), {
       prefix: '/public/images',
     });
+
+    // Validate requests body data
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        enableDebugMessages: isDev,
+      }),
+    );
 
     await app.listen(PORT, HOST, () => {
       console.log(`Server started on port: ${PORT}`);

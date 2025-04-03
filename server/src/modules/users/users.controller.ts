@@ -21,6 +21,7 @@ import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { AuthenticatedRequest } from '../../auth/types';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateUserStatisticsDto } from './dto/create-user-statistics.dto';
+import { GetUserStatisticsDto } from './dto/get-user-statistics.dto';
 
 @Controller('/users')
 export class UsersController {
@@ -31,6 +32,7 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  // TODO: Remove this endpoint
   @Get()
   getAll() {
     return this.usersService.findAll();
@@ -140,5 +142,19 @@ export class UsersController {
       success: isInserted,
       message: 'Test results saved successfully',
     };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/result/get')
+  async getTestResults(
+    @Request() req: AuthenticatedRequest,
+    @Body() payload: GetUserStatisticsDto,
+  ) {
+    const res = await this.usersService.getUserResults(
+      req.user.userId,
+      payload,
+    );
+
+    return { success: res.length > 0, data: res };
   }
 }
