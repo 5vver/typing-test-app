@@ -132,7 +132,7 @@ const UserNameEdit: FC<Props> = ({ name, refetch }) => {
       />
 
       {!isNameEditing && (
-        <Button variant="link" className="p-0 h-full" onClick={onEditToggle}>
+        <Button variant="wrapper" className="p-0 h-full" onClick={onEditToggle}>
           <Icon name="pencil-micro" size={16} className="text-subtext0" />
         </Button>
       )}
@@ -141,7 +141,7 @@ const UserNameEdit: FC<Props> = ({ name, refetch }) => {
         className={`gap-1 items-center ${isNameEditing ? 'flex' : 'hidden'}`}
       >
         <Button
-          variant="link"
+          variant="wrapper"
           className="p-0 h-full"
           onClick={onEditSubmit}
           ref={submitButtonRef}
@@ -151,7 +151,7 @@ const UserNameEdit: FC<Props> = ({ name, refetch }) => {
         </Button>
 
         <Button
-          variant="link"
+          variant="wrapper"
           className="p-0 h-full"
           onClick={onEditToggle}
           disabled={isPending}

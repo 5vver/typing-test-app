@@ -1,4 +1,4 @@
-import { useIsScreenSmall } from '@/hooks/isScreenSmall.ts';
+import { useIsScreenSmall } from '@/hooks/is-screen-small';
 import { Icon } from '@components/Icon';
 import { NavButtons } from '@components/layout/header/NavButtons.tsx';
 import { Typography } from '@components/Typography.tsx';

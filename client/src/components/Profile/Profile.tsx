@@ -1,6 +1,6 @@
+import { AccountTab } from '@/components/Profile/tabs/AccountTab/AccountTab';
 import { GeneralTab } from '@/components/Profile/tabs/GeneralTab';
 import { DictJsonForm } from '@components/AdminPanel/DictJsonForm.tsx';
-import { AccountTab } from '@components/Profile/tabs/AccountTab.tsx';
 import { Typography } from '@components/Typography.tsx';
 import { Separator } from '@components/ui/separator.tsx';
 import {
@@ -11,6 +11,7 @@ import {
 } from '@components/ui/tabs.tsx';
 import { type Auth } from '@utils/auth.tsx';
 import { type FC } from 'react';
+import { RecordsTab } from './tabs/RecordsTab';
 
 type Props = {
   auth: Auth;
@@ -33,23 +34,44 @@ export const Profile: FC<Props> = ({ auth }) => {
         <Separator orientation="horizontal" className="bg-surface1" />
 
         <TabsList className="flex flex-col flex-1 p-4 bg-surface0 rounded-lg justify-start">
-          <TabsTrigger value="general" className="w-full justify-start text-md">
+          <TabsTrigger
+            value="general"
+            className="w-full justify-start text-md cursor-pointer"
+          >
             Profile
           </TabsTrigger>
-          <TabsTrigger value="account" className="w-full justify-start text-md">
+          <TabsTrigger
+            value="account"
+            className="w-full justify-start text-md cursor-pointer"
+          >
             Account
           </TabsTrigger>
-          <TabsTrigger value="admin" className="w-full justify-start text-md">
+          <TabsTrigger
+            value="records"
+            className="w-full justify-start text-md cursor-pointer"
+          >
+            Records
+          </TabsTrigger>
+
+          <Separator orientation="horizontal" className="bg-surface1" />
+          <TabsTrigger
+            value="admin"
+            className="w-full justify-start text-md cursor-pointer"
+          >
             Dictionary Control Panel
           </TabsTrigger>
         </TabsList>
       </div>
+
       <div className="flex-2 flex flex-col p-4 bg-surface0 rounded-lg ">
         <TabsContent value="general" className="mt-0 flex flex-col gap-2">
-          <GeneralTab auth={auth} />
+          <GeneralTab />
         </TabsContent>
         <TabsContent value="account">
           <AccountTab auth={auth} />
+        </TabsContent>
+        <TabsContent value="records">
+          <RecordsTab />
         </TabsContent>
         <TabsContent value="admin">
           <DictJsonForm />

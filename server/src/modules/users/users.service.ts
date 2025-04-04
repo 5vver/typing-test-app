@@ -198,26 +198,31 @@ export class UsersService {
     const { page, pageSize } = payload;
 
     const user = await this.usersRepository.findOne({ where: { id: userId } });
-    const statistics = await this.usersStatisticsRepository.find({
-      where: { user },
-      skip: page * pageSize,
-      take: pageSize,
-    });
+    const [statistics, total] =
+      await this.usersStatisticsRepository.findAndCount({
+        where: { user },
+        skip: page * pageSize,
+        take: pageSize,
+        relations: { test: true },
+      });
 
-    return statistics.map(
+    const processedStats = statistics.map(
       (stat) =>
         ({
           id: stat.id,
+          name: stat.test.title,
           wpm: stat.wpm,
           correctWords: stat.correct_words,
           incorrectWords: stat.incorrect_words,
           totalWords: stat.total_words,
-          correctCharacters: stat.correct_characters,
-          incorrectCharacters: stat.missed_characters,
-          totalCharacters: stat.total_characters,
+          correctChars: stat.correct_characters,
+          incorrectChars: stat.missed_characters,
+          totalChars: stat.total_characters,
           accuracy: stat.accuracy,
           timestamp: stat.timestamp,
-        }) as GetUserStatisticsDataDto,
+        }) as GetUserStatisticsDataDto['stats'][0],
     );
+
+    return { stats: processedStats, total } as GetUserStatisticsDataDto;
   }
 }

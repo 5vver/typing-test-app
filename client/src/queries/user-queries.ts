@@ -1,8 +1,14 @@
-import { Stats } from '@/components/TypingModule/types';
 import { useToast } from '@/hooks/use-toast';
-import type { UserProfile, UserResultPayload } from '@/types/user-types.ts';
+import { BasicResponse } from '@/types';
+import type {
+  GetUserResultsPayload,
+  UserProfile,
+  UserResultPayload,
+  UserStats,
+} from '@/types/user-types.ts';
 import { httpRequest } from '@/utils/http-request.ts';
 import {
+  useInfiniteQuery,
   useMutation,
   useQuery,
   type UseQueryResult,
@@ -34,7 +40,7 @@ const useGetUserProfile = (
 const saveResults = async (payload: UserResultPayload) => {
   const { stats, testId } = payload;
 
-  const { data, error } = await httpRequest<Stats>('/users/result/save', {
+  const { data, error } = await httpRequest<UserStats>('/users/result/save', {
     method: 'POST',
     data: {
       wpm: stats.wpm,
@@ -72,4 +78,34 @@ const useSaveResults = () => {
   });
 };
 
-export { getUserProfile, useGetUserProfile, useSaveResults };
+const getUserResults = async (payload: GetUserResultsPayload) => {
+  const { data, error } = await httpRequest<
+    BasicResponse<{ stats: UserStats[]; total: number }>
+  >('/users/result/get', {
+    method: 'POST',
+    data: payload,
+    withCredentials: true,
+  });
+
+  if (!data?.success || error) {
+    throw new Error(data?.message || 'UNKNOWN_ERROR');
+  }
+
+  return { ...data.data, page: payload.page };
+};
+
+const useGetUserResults = (pageSize: number) =>
+  useInfiniteQuery({
+    queryKey: ['getUserResults', pageSize],
+    queryFn: ({ pageParam }) => getUserResults({ page: pageParam, pageSize }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      const total = lastPage.total;
+
+      return total && total > lastPage.page * pageSize
+        ? lastPage.page + 1
+        : undefined;
+    },
+  });
+
+export { getUserProfile, useGetUserProfile, useGetUserResults, useSaveResults };

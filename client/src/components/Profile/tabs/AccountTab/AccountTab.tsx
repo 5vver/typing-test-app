@@ -1,8 +1,4 @@
 import { useChangePasswordQuery } from '@components/Profile/queries.ts';
-import {
-  passwordChangeSchema,
-  PasswordChangeValues,
-} from '@components/Profile/tabs/form-schema.ts';
 import { Spinner } from '@components/Spinner.tsx';
 import { Typography } from '@components/Typography.tsx';
 import { Button } from '@components/ui/button.tsx';
@@ -24,6 +20,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { type Auth } from '@utils/auth.tsx';
 import { type FC, useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { PasswordChangeValues, passwordChangeSchema } from './form-schema';
 
 type Props = {
   auth: Auth;

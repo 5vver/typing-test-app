@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
 import { TestsService } from './tests.service';
 import { SelectWordsOptionsDto } from './dto/select-words-options.dto';
 import { ProcessFormDictDto } from './dto/process-form-dict.dto';
+import { GenericResponse } from 'src/types';
 
 @Controller('/tests')
 export class TestsController {
@@ -16,7 +17,7 @@ export class TestsController {
   async processDict(@Body() dto: ProcessFormDictDto) {
     const success = await this.testsService.processFormDict(dto);
 
-    return { success };
+    return { success } as GenericResponse;
   }
 
   @Get('/getDicts')

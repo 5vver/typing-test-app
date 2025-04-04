@@ -156,6 +156,6 @@ export class UsersController {
       payload,
     );
 
-    return { success: res.length > 0, data: res } as GenericResponse;
+    return { success: res.total > 0, data: res } as GenericResponse;
   }
 }

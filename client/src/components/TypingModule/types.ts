@@ -1,3 +1,4 @@
+import { UserStats } from '@/types/user-types';
 import { type Dispatch, type RefObject, type SetStateAction } from 'react';
 
 type Word = {
@@ -25,17 +26,7 @@ type Status = {
   isFocused: boolean;
 };
 
-type Stats = {
-  wpm: number;
-  accuracy: number;
-  correctWords: number;
-  incorrectWords: number;
-  totalWords: number;
-  correctChars: number;
-  incorrectChars: number;
-  missedChars: number;
-  totalChars: number;
-};
+type Stats = Omit<UserStats, 'id'>;
 
 type ChartData = {
   timestamp: number;

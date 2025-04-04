@@ -3,9 +3,12 @@ type LabelValue<T = string | number> = {
   value: T;
 };
 
-type BasicResponse = {
+type BasicResponse<T = unknown> = {
   success: boolean;
+  data?: T;
   message?: string;
+  statusCode?: number;
+  status?: number;
 };
 
 export type { BasicResponse, LabelValue };

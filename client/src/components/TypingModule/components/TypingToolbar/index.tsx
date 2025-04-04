@@ -130,7 +130,12 @@ const TypingToolbar: FC<Props> = ({ timerCount, dicts, onSettingsApply }) => {
             style={{ overflow: 'hidden' }}
           >
             <Button variant="wrapper" className="w-[20px] h-[20px]">
-              <Icon name="adjustments-horizontal" size={20} color="lavender" />
+              <Icon
+                name="adjustments-horizontal"
+                size={20}
+                color="lavender"
+                hover
+              />
             </Button>
           </motion.div>
         </CollapsibleTrigger>
