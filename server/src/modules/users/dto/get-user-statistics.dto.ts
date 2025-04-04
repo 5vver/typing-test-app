@@ -1,10 +1,11 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsObject } from 'class-validator';
 
 export class GetUserStatisticsDto {
   @IsNotEmpty()
   page: number;
   @IsNotEmpty()
   pageSize: number;
+  @IsObject()
   filter?: {
     name?: string;
     dateFrom?: string;

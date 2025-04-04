@@ -129,7 +129,7 @@ const TypingToolbar: FC<Props> = ({ timerCount, dicts, onSettingsApply }) => {
             transition={{ duration: 0.2 }}
             style={{ overflow: 'hidden' }}
           >
-            <Button variant="link" className="w-[20px] h-[20px] p-0">
+            <Button variant="wrapper" className="w-[20px] h-[20px]">
               <Icon name="adjustments-horizontal" size={20} color="lavender" />
             </Button>
           </motion.div>
