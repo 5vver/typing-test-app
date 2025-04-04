@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm';
 import { dataSourceRepository } from './constants';
+import { isDev } from 'src/constants';
 
 export const databaseProviders = [
   {
@@ -13,7 +14,7 @@ export const databaseProviders = [
         password: 'postgres',
         database: 'TypingTestDB',
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        synchronize: true, // change to false in production
+        synchronize: isDev, // change to false in production
       });
 
       return dataSource.initialize();

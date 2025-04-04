@@ -22,6 +22,7 @@ import { AuthenticatedRequest } from '../../auth/types';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateUserStatisticsDto } from './dto/create-user-statistics.dto';
 import { GetUserStatisticsDto } from './dto/get-user-statistics.dto';
+import { GenericResponse } from 'src/types';
 
 @Controller('/users')
 export class UsersController {
@@ -121,8 +122,8 @@ export class UsersController {
     } catch (error) {
       return {
         success: false,
-        message: error.message,
-      };
+        message: error.message as string,
+      } as GenericResponse;
     }
   }
 
@@ -141,7 +142,7 @@ export class UsersController {
     return {
       success: isInserted,
       message: 'Test results saved successfully',
-    };
+    } as GenericResponse;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -155,6 +156,6 @@ export class UsersController {
       payload,
     );
 
-    return { success: res.length > 0, data: res };
+    return { success: res.length > 0, data: res } as GenericResponse;
   }
 }

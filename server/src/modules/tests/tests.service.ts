@@ -94,7 +94,7 @@ export class TestsService {
 
       await queryRunner.commitTransaction();
       return true;
-    } catch (err) {
+    } catch {
       await queryRunner.rollbackTransaction();
       return false;
     } finally {

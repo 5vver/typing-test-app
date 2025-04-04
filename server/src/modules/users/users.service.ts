@@ -14,6 +14,7 @@ import { testsRepositoriesConstants } from '../tests/constants';
 import { TestEntity } from '../tests/entities/test.entity';
 import { GetUserStatisticsDto } from './dto/get-user-statistics.dto';
 import { GetUserStatisticsDataDto } from './dto/get-user-statistics-data.dto';
+import { GenericResponse } from 'src/types';
 
 @Injectable()
 export class UsersService {
@@ -62,33 +63,36 @@ export class UsersService {
     userId: string,
     password: string,
     newPassword: string,
-  ): Promise<{ success: boolean; message?: string }> {
+  ): Promise<GenericResponse> {
     const user = await this.usersRepository.findOne({ where: { id: userId } });
 
     if (!user) {
       return {
         success: false,
         message: 'User is not found.',
-      };
+      } as GenericResponse;
     }
 
     if (!(await bcrypt.compare(password, user.password))) {
       return {
         success: false,
         message: 'Password is incorrect.',
-      };
+      } as GenericResponse;
     }
 
     user.password = await bcrypt.hash(newPassword, saltRounds);
     await this.usersRepository.save(user);
 
-    return { success: true, message: 'Password changed successfully.' };
+    return {
+      success: true,
+      message: 'Password changed successfully.',
+    } as GenericResponse;
   }
 
   async updateNickname(
     userId: string,
     nickname: string,
-  ): Promise<{ success: boolean; message?: string }> {
+  ): Promise<GenericResponse> {
     const user = await this.usersRepository.findOne({ where: { id: userId } });
 
     if (!user) {
@@ -101,7 +105,10 @@ export class UsersService {
     user.nickname = nickname;
     await this.usersRepository.save(user);
 
-    return { success: true, message: 'Nickname changed successfully.' };
+    return {
+      success: true,
+      message: 'Nickname changed successfully.',
+    } as GenericResponse;
   }
 
   async setProfilePicture(userId: string, picUrl: string) {
@@ -138,7 +145,7 @@ export class UsersService {
         return {
           success: true,
           message: 'Profile picture updated successfully',
-        };
+        } as GenericResponse;
       }
 
       await this.usersPicturesRepository.insert({
@@ -147,9 +154,15 @@ export class UsersService {
         timestamp: new Date().toISOString(),
       });
 
-      return { success: true, message: 'Profile picture updated successfully' };
+      return {
+        success: true,
+        message: 'Profile picture updated successfully',
+      } as GenericResponse;
     } catch {
-      return { success: false, message: 'Failed to update profile picture' };
+      return {
+        success: false,
+        message: 'Failed to update profile picture',
+      } as GenericResponse;
     }
   }
 
