@@ -2,7 +2,7 @@ import { IsNotEmpty, IsObject, IsOptional } from 'class-validator';
 
 export class GetUserStatisticsDto {
   @IsNotEmpty()
-  page: number;
+  pageIndex: number;
   @IsNotEmpty()
   pageSize: number;
   @IsObject()

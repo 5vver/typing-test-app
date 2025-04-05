@@ -1,21 +1,43 @@
 import { useGetUserResults } from '@/queries/user-queries';
-import { FC } from 'react';
-import { BaseDataTable } from '../BaseDataTable';
+import { UserStats } from '@/types/user-types';
+import {
+  getSortedRowModel,
+  PaginationState,
+  SortingState,
+  TableOptions,
+} from '@tanstack/react-table';
+import { FC, useMemo, useState } from 'react';
+import { PaginationDataTable } from '../PaginationDataTable';
 import { columns } from './columns';
 
 const ResultsDataTable: FC = () => {
-  const {
-    data,
-    isFetching,
-    isFetchingNextPage,
-    hasNextPage,
-    fetchNextPage,
-    isError,
-  } = useGetUserResults(2);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 2,
+  });
 
-  const statsData = data?.pages.at(-1)?.stats;
-  console.log(statsData);
-  const isLoading = isFetching || isFetchingNextPage;
+  const { data, isFetching, isLoading, isError } =
+    useGetUserResults(pagination);
+
+  const tableOptions = useMemo(
+    () =>
+      ({
+        state: {
+          sorting,
+          pagination,
+        },
+        getSortedRowModel: getSortedRowModel(),
+        onSortingChange: setSorting,
+        onPaginationChange: setPagination,
+        rowCount: data?.total ?? 0,
+        manualPagination: true,
+        debugTable: true,
+      }) as TableOptions<UserStats>,
+    [data, sorting, setSorting],
+  );
+
+  const statsData = useMemo(() => data?.stats ?? [], [data]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -25,7 +47,13 @@ const ResultsDataTable: FC = () => {
     return null;
   }
 
-  return <BaseDataTable data={statsData} columns={columns} />;
+  return (
+    <PaginationDataTable
+      data={statsData}
+      columns={columns}
+      tableOptions={tableOptions}
+    />
+  );
 };
 
 export { ResultsDataTable };

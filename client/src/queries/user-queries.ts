@@ -1,18 +1,18 @@
 import { useToast } from '@/hooks/use-toast';
 import { BasicResponse } from '@/types';
 import type {
-  GetUserResultsPayload,
   UserProfile,
   UserResultPayload,
   UserStats,
 } from '@/types/user-types.ts';
 import { httpRequest } from '@/utils/http-request.ts';
 import {
-  useInfiniteQuery,
+  keepPreviousData,
   useMutation,
   useQuery,
   type UseQueryResult,
 } from '@tanstack/react-query';
+import { PaginationState } from '@tanstack/react-table';
 import { Auth } from '@utils/auth.tsx';
 
 const getUserProfile = async () => {
@@ -78,7 +78,7 @@ const useSaveResults = () => {
   });
 };
 
-const getUserResults = async (payload: GetUserResultsPayload) => {
+const getUserResults = async (payload: PaginationState) => {
   const { data, error } = await httpRequest<
     BasicResponse<{ stats: UserStats[]; total: number }>
   >('/users/result/get', {
@@ -91,21 +91,14 @@ const getUserResults = async (payload: GetUserResultsPayload) => {
     throw new Error(data?.message || 'UNKNOWN_ERROR');
   }
 
-  return { ...data.data, page: payload.page };
+  return data.data;
 };
 
-const useGetUserResults = (pageSize: number) =>
-  useInfiniteQuery({
-    queryKey: ['getUserResults', pageSize],
-    queryFn: ({ pageParam }) => getUserResults({ page: pageParam, pageSize }),
-    initialPageParam: 0,
-    getNextPageParam: (lastPage) => {
-      const total = lastPage.total;
-
-      return total && total > lastPage.page * pageSize
-        ? lastPage.page + 1
-        : undefined;
-    },
+const useGetUserResults = (pagination: PaginationState) =>
+  useQuery({
+    queryKey: ['getUserResults', pagination],
+    queryFn: () => getUserResults(pagination),
+    placeholderData: keepPreviousData,
   });
 
 export { getUserProfile, useGetUserProfile, useGetUserResults, useSaveResults };

@@ -1,11 +1,5 @@
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  SortingState,
-  useReactTable,
-} from '@tanstack/react-table';
-import { useCallback, useState } from 'react';
+import { flexRender, Table as TableInstanse } from '@tanstack/react-table';
+import { useCallback } from 'react';
 import {
   Table,
   TableBody,
@@ -15,35 +9,23 @@ import {
   TableRow,
 } from '../ui/table';
 
-type DataTableProps<TData, TValue> = {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+type BaseTableProps<TData> = {
+  table: TableInstanse<TData>;
 };
 
-const BaseDataTable = <TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) => {
-  const [sorting, setSorting] = useState<SortingState>([]);
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    // getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getCoreRowModel(),
-    state: {
-      sorting,
-    },
-  });
+const BaseDataTable = <TData = unknown,>({ table }: BaseTableProps<TData>) => {
+  const columns = table.getAllColumns();
 
   const getTableBody = useCallback(() => {
     const tableRowModel = table.getRowModel();
 
     if (tableRowModel.rows.length > 0) {
       return table.getRowModel().rows.map((row) => (
-        <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+        <TableRow
+          key={row.id}
+          data-state={row.getIsSelected() && 'selected'}
+          className="border-surface2"
+        >
           {row.getVisibleCells().map((cell) => (
             <TableCell key={cell.id}>
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -54,7 +36,7 @@ const BaseDataTable = <TData, TValue>({
     }
 
     return (
-      <TableRow>
+      <TableRow className="border-surface2">
         <TableCell colSpan={columns.length} className="h-24 text-center">
           No results.
         </TableCell>
@@ -63,11 +45,11 @@ const BaseDataTable = <TData, TValue>({
   }, [table]);
 
   return (
-    <div className="rounded-md border">
+    <div className="rounded-md border-1 border-surface2">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="border-surface2">
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id}>

@@ -24,6 +24,8 @@ export type IconName =
   | 'check-circle'
   | 'x-circle'
   | 'chevron-up-down'
+  | 'chevron-left'
+  | 'chevron-right'
   | 'word'
   | 'language-mini'
   | 'adjustments-horizontal'
@@ -32,4 +34,7 @@ export type IconName =
   | 'check'
   | 'x-mark'
   | 'camera-micro'
-  | 'bookmark-micro';
+  | 'bookmark-micro'
+  | 'arrows-up-down-micro'
+  | 'arrow-up-micro'
+  | 'arrow-down-micro';

@@ -1,23 +1,18 @@
-import { Icon } from '@/components/Icon';
 import { Typography } from '@/components/Typography';
-import { Button } from '@/components/ui/button';
 import { UserStats } from '@/types/user-types';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
+import { DataTableColumnHeader } from '../DataTableColumnHeader';
 
 export const columns: ColumnDef<UserStats>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => {
-          column.toggleSorting(column.getIsSorted() === 'asc');
-        }}
-      >
-        <Typography size="small">Name</Typography>
-        <Icon name="chevron-up-down" size={4} />
-      </Button>
+      <DataTableColumnHeader
+        column={column}
+        title="Name"
+        className="text-left"
+      />
     ),
     cell: ({ row }) => (
       <Typography size="small">{row.getValue('name')}</Typography>
@@ -26,15 +21,11 @@ export const columns: ColumnDef<UserStats>[] = [
   {
     accessorKey: 'wpm',
     header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => {
-          column.toggleSorting(column.getIsSorted() === 'asc');
-        }}
-      >
-        <Typography size="small">WPM</Typography>
-        <Icon name="chevron-up-down" size={4} />
-      </Button>
+      <DataTableColumnHeader
+        column={column}
+        title="WPM"
+        className="text-left"
+      />
     ),
     cell: ({ row }) => (
       <Typography size="small">{row.getValue('wpm')}</Typography>
@@ -43,15 +34,11 @@ export const columns: ColumnDef<UserStats>[] = [
   {
     accessorKey: 'accuracy',
     header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => {
-          column.toggleSorting(column.getIsSorted() === 'asc');
-        }}
-      >
-        <Typography size="small">Accuracy</Typography>
-        <Icon name="chevron-up-down" size={16} />
-      </Button>
+      <DataTableColumnHeader
+        column={column}
+        title="Accuracy"
+        className="text-left"
+      />
     ),
     cell: ({ row }) => (
       <Typography size="small">{row.getValue('accuracy')}</Typography>
@@ -60,15 +47,11 @@ export const columns: ColumnDef<UserStats>[] = [
   {
     accessorKey: 'timestamp',
     header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => {
-          column.toggleSorting(column.getIsSorted() === 'asc');
-        }}
-      >
-        <Typography size="small">Date</Typography>
-        <Icon name="chevron-up-down" size={4} />
-      </Button>
+      <DataTableColumnHeader
+        column={column}
+        title="Date"
+        className="text-left"
+      />
     ),
     cell: ({ row }) => (
       <Typography size="small">
