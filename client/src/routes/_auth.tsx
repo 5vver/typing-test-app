@@ -9,6 +9,6 @@ export const Route = createFileRoute('/_auth')({
       });
     }
 
-    return { username: context.auth.username };
+    return { username: context.auth.profile?.username };
   },
 });

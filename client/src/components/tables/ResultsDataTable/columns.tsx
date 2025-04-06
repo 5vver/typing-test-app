@@ -19,6 +19,21 @@ export const columns: ColumnDef<UserStats>[] = [
     ),
   },
   {
+    accessorKey: 'timestamp',
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Date"
+        className="text-left"
+      />
+    ),
+    cell: ({ row }) => (
+      <Typography size="small">
+        {dayjs(row.getValue('timestamp')).format('DD.MM.YYYY HH:mm:ss')}
+      </Typography>
+    ),
+  },
+  {
     accessorKey: 'wpm',
     header: ({ column }) => (
       <DataTableColumnHeader
@@ -28,7 +43,9 @@ export const columns: ColumnDef<UserStats>[] = [
       />
     ),
     cell: ({ row }) => (
-      <Typography size="small">{row.getValue('wpm')}</Typography>
+      <div className="flex justify-center w-full">
+        <Typography size="small">{row.getValue('wpm')}</Typography>
+      </div>
     ),
   },
   {
@@ -41,22 +58,99 @@ export const columns: ColumnDef<UserStats>[] = [
       />
     ),
     cell: ({ row }) => (
-      <Typography size="small">{row.getValue('accuracy')}</Typography>
+      <div className="flex justify-center w-full">
+        <Typography size="small">{row.getValue('accuracy')}</Typography>
+      </div>
     ),
   },
   {
-    accessorKey: 'timestamp',
+    accessorKey: 'totalWords',
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Date"
+        title="Total Words"
         className="text-left"
       />
     ),
     cell: ({ row }) => (
-      <Typography size="small">
-        {dayjs(row.getValue('timestamp')).format('DD.MM.YYYY')}
-      </Typography>
+      <div className="flex justify-center w-full">
+        <Typography size="small">{row.getValue('totalWords')}</Typography>
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'correctWords',
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Correct Words"
+        className="text-left"
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="flex justify-center w-full">
+        <Typography size="small">{row.getValue('correctWords')}</Typography>
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'incorrectWords',
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Incorrect Words"
+        className="text-left"
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="flex justify-center w-full">
+        <Typography size="small">{row.getValue('incorrectWords')}</Typography>
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'totalChars',
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Total Characters"
+        className="text-left"
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="flex justify-center w-full">
+        <Typography size="small">{row.getValue('totalChars')}</Typography>
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'correctChars',
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Correct Characters"
+        className="text-left"
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="flex justify-center w-full">
+        <Typography size="small">{row.getValue('correctChars')}</Typography>
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'incorrectChars',
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Incorrect Characters"
+        className="text-left"
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="flex justify-end w-full">
+        <Typography size="small">{row.getValue('incorrectChars')}</Typography>
+      </div>
     ),
   },
 ];

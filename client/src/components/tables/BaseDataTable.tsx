@@ -24,7 +24,7 @@ const BaseDataTable = <TData = unknown,>({ table }: BaseTableProps<TData>) => {
         <TableRow
           key={row.id}
           data-state={row.getIsSelected() && 'selected'}
-          className="border-surface2"
+          className="border-surface1"
         >
           {row.getVisibleCells().map((cell) => (
             <TableCell key={cell.id}>
@@ -36,7 +36,7 @@ const BaseDataTable = <TData = unknown,>({ table }: BaseTableProps<TData>) => {
     }
 
     return (
-      <TableRow className="border-surface2">
+      <TableRow className="border-surface1">
         <TableCell colSpan={columns.length} className="h-24 text-center">
           No results.
         </TableCell>
@@ -45,11 +45,11 @@ const BaseDataTable = <TData = unknown,>({ table }: BaseTableProps<TData>) => {
   }, [table]);
 
   return (
-    <div className="rounded-md border-1 border-surface2">
+    <div className="rounded-md border-1 border-surface1">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="border-surface2">
+            <TableRow key={headerGroup.id} className="border-surface1">
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id}>

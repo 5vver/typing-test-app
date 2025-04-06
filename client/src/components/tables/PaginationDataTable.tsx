@@ -18,7 +18,7 @@ const PaginationDataTable = <TData, TValue>({
   });
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 w-full">
       <BaseDataTable table={table} />
 
       <div className="flex justify-end lg:justify-between items-center w-full">

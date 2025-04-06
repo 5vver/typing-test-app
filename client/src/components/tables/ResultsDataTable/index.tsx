@@ -14,7 +14,7 @@ const ResultsDataTable: FC = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 2,
+    pageSize: 15,
   });
 
   const { data, isFetching, isLoading, isError } =

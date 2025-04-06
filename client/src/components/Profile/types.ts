@@ -3,4 +3,6 @@ type ChangePasswordPayload = {
   newPassword: string;
 };
 
-export type { ChangePasswordPayload };
+type ProfileTabs = 'general' | 'account' | 'records' | 'admin';
+
+export type { ChangePasswordPayload, ProfileTabs };

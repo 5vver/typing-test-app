@@ -9,20 +9,47 @@ import {
   TabsList,
   TabsTrigger,
 } from '@components/ui/tabs.tsx';
+import { useNavigate } from '@tanstack/react-router';
 import { type Auth } from '@utils/auth.tsx';
-import { type FC } from 'react';
+import { useCallback, useEffect, useState, type FC } from 'react';
 import { RecordsTab } from './tabs/RecordsTab';
+import { ProfileTabs } from './types';
 
 type Props = {
   auth: Auth;
 };
 
 export const Profile: FC<Props> = ({ auth }) => {
-  // need to useQuery getProfile here to get all the user's info
+  const [tab, setTab] = useState<ProfileTabs>('general');
+  const navigate = useNavigate();
+
+  const setTabValue = useCallback(
+    (value: string) => {
+      setTab(value as ProfileTabs);
+      navigate({ search: (prev) => ({ ...prev, tab: value }) });
+    },
+    [setTab],
+  );
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const tabParam = searchParams.get('tab');
+
+    setTabValue(tabParam ?? 'general');
+  }, []);
+
+  const onTabValueChange = useCallback(
+    (value: string) => {
+      setTabValue(value);
+    },
+    [setTab],
+  );
 
   return (
     <Tabs
-      defaultValue="general"
+      value={tab}
+      onValueChange={onTabValueChange}
+      activationMode="manual"
       orientation="vertical"
       className="flex h-full gap-2 flex-1"
     >
@@ -63,7 +90,7 @@ export const Profile: FC<Props> = ({ auth }) => {
         </TabsList>
       </div>
 
-      <div className="flex-2 flex flex-col p-4 bg-surface0 rounded-lg ">
+      <div className="flex-2 flex flex-col p-4 bg-surface0 rounded-lg w-full overflow-auto">
         <TabsContent value="general" className="mt-0 flex flex-col gap-2">
           <GeneralTab />
         </TabsContent>
