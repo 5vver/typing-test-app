@@ -15,7 +15,9 @@ export const columns: ColumnDef<UserStats>[] = [
       />
     ),
     cell: ({ row }) => (
-      <Typography size="small">{row.getValue('name')}</Typography>
+      <div className="flex justify-center w-full">
+        <Typography size="small">{row.getValue('name')}</Typography>
+      </div>
     ),
   },
   {
@@ -28,9 +30,11 @@ export const columns: ColumnDef<UserStats>[] = [
       />
     ),
     cell: ({ row }) => (
-      <Typography size="small">
-        {dayjs(row.getValue('timestamp')).format('DD.MM.YYYY HH:mm:ss')}
-      </Typography>
+      <div className="flex justify-center w-full">
+        <Typography size="small">
+          {dayjs(row.getValue('timestamp')).format('DD.MM.YYYY HH:mm:ss')}
+        </Typography>
+      </div>
     ),
   },
   {
@@ -148,7 +152,7 @@ export const columns: ColumnDef<UserStats>[] = [
       />
     ),
     cell: ({ row }) => (
-      <div className="flex justify-end w-full">
+      <div className="flex justify-center w-full">
         <Typography size="small">{row.getValue('incorrectChars')}</Typography>
       </div>
     ),

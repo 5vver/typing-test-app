@@ -37,4 +37,6 @@ export type IconName =
   | 'bookmark-micro'
   | 'arrows-up-down-micro'
   | 'arrow-up-micro'
-  | 'arrow-down-micro';
+  | 'arrow-down-micro'
+  | 'trophy-micro'
+  | 'trophy-solid';

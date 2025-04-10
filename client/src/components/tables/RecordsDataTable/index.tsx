@@ -1,3 +1,4 @@
+import { Alert } from '@/components/Alert';
 import { useGetUserResults } from '@/queries/user-queries';
 import { UserStats } from '@/types/user-types';
 import {
@@ -10,7 +11,7 @@ import { FC, useMemo, useState } from 'react';
 import { PaginationDataTable } from '../PaginationDataTable';
 import { columns } from './columns';
 
-const ResultsDataTable: FC = () => {
+const RecordsDataTable: FC = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -43,8 +44,25 @@ const ResultsDataTable: FC = () => {
     return <div>Loading...</div>;
   }
 
-  if (isError || !statsData?.length) {
-    return null;
+  if (isError) {
+    return (
+      <Alert
+        variant="destructive"
+        description="Error loading your records"
+        title="Something went wrong"
+        className="border-1 border-destructive bg-transparent"
+      />
+    );
+  }
+
+  if (statsData.length === 0) {
+    return (
+      <Alert
+        title="You have no records yet"
+        description="Start typing and make records"
+        className="border-1 border-surface1 bg-transparent"
+      />
+    );
   }
 
   return (
@@ -56,4 +74,4 @@ const ResultsDataTable: FC = () => {
   );
 };
 
-export { ResultsDataTable };
+export { RecordsDataTable };

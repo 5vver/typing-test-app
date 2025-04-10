@@ -65,6 +65,15 @@ export const LoggedInGroup: FC<Props> = ({ onLogoutClick }) => {
           </DropdownMenuItem>
         </Link>
 
+        <Link to="/records" preload="intent">
+          <DropdownMenuItem>
+            <div className="flex gap-x-1">
+              <Icon name="star-solid" size={20} />
+              <span>Records</span>
+            </div>
+          </DropdownMenuItem>
+        </Link>
+
         <DropdownMenuSeparator />
 
         <DropdownMenuItem onClick={onInnerLogout}>

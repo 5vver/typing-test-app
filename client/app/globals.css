@@ -286,7 +286,7 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --success: #358C3F;
+    --success: #358c3f;
     /* Custom colors (#catppuccin mocha reference) */
     --crust: #11111b;
     --mantle: #181825;
@@ -324,7 +324,7 @@
     --card: 237deg, 16%, 23%; /* --surface0 */
     --card-foreground: 210 40% 98%;
     --popover: 237deg, 16%, 23%; /* --surface0 */
-    --popover-foreground: 232deg, 97%, 85%;  /* --lavender */
+    --popover-foreground: 232deg, 97%, 85%; /* --lavender */
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 234deg, 13%, 31%; /* --surface1 */
@@ -356,3 +356,4 @@
     /*@apply text-[color:var(--text)];*/
   }
 }
+

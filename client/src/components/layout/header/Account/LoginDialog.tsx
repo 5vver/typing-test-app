@@ -1,4 +1,4 @@
-import { Alert } from '@components/Alert.tsx';
+import { AlertDialog } from '@/components/AlertDialog';
 import { LoginForm } from '@components/LoginForm';
 import { type LoginFormValues } from '@components/LoginForm/form-schema.ts';
 import {
@@ -63,7 +63,7 @@ export const LoginDialog: FC<Props> = ({ login, setOpen }) => {
         </div>
       </DialogContent>
 
-      <Alert
+      <AlertDialog
         alertOpen={alertOpen}
         setAlertOpen={setAlertOpen}
         setAlertMessage={setAlertMessage}

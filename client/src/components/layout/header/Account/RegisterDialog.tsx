@@ -1,4 +1,4 @@
-import { Alert } from '@components/Alert.tsx';
+import { AlertDialog } from '@/components/AlertDialog';
 import { RegisterForm } from '@components/RegisterForm';
 import { type RegisterFormValues } from '@components/RegisterForm/form-schema.ts';
 import {
@@ -67,7 +67,7 @@ const RegisterDialog: FC<Props> = ({ register, setOpen }) => {
         </div>
       </DialogContent>
 
-      <Alert
+      <AlertDialog
         alertOpen={alertOpen}
         setAlertOpen={setAlertOpen}
         setAlertMessage={setAlertMessage}

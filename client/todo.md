@@ -2,7 +2,7 @@
 
 ## Features:
 
-- User saved test results list
+- [x] User saved test results list
 - Settings - Profile - overall results chart
 - Leaderboard page
 - Settings page
@@ -11,6 +11,7 @@
 ## NEEDS TO BE FIXED:
 
 - [x] Click here to start typing blur bug
+- \_auth.tsx beforeLoad() auth context always false when opening /profile link (even if logged in)
 
 ## UI fixes:
 

@@ -13,7 +13,6 @@ import {
   type UseQueryResult,
 } from '@tanstack/react-query';
 import { PaginationState } from '@tanstack/react-table';
-import { Auth } from '@utils/auth.tsx';
 
 const getUserProfile = async () => {
   const { data, error } = await httpRequest<UserProfile>('/users/profile', {
@@ -27,11 +26,9 @@ const getUserProfile = async () => {
   return data;
 };
 
-const useGetUserProfile = (
-  status: Auth['status'],
-): UseQueryResult<UserProfile> =>
+const useGetUserProfile = (): UseQueryResult<UserProfile> =>
   useQuery({
-    queryKey: ['user-profile', status],
+    queryKey: ['user-profile'],
     queryFn: getUserProfile,
     staleTime: 0,
     gcTime: 0,

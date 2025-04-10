@@ -29,7 +29,7 @@ const navElements: Nav[] = [
   {
     label: 'Leaderboard',
     link: '/leaderboard',
-    icon: 'star-solid',
+    icon: 'trophy-solid',
     color: 'yellow',
   },
   {

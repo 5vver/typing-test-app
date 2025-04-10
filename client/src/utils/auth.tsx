@@ -41,10 +41,15 @@ type AuthProviderProps = {
 const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [auth, setAuth] = useState<Auth>(authInstance);
 
-  const { data: profile, refetch } = useGetUserProfile(auth.status);
+  const { data: profile, refetch } = useGetUserProfile();
 
   useEffect(() => {
-    if (!profile) {
+    if (!profile?.id) {
+      setAuth((prev) => ({
+        ...prev,
+        status: 'loggedOut',
+      }));
+
       return;
     }
 
@@ -65,7 +70,8 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     if (error) throw error;
     if (data !== 'Logged in successfully') return false;
 
-    setAuth((prev) => ({ ...prev, status: 'loggedIn' }));
+    void refetch();
+    // setAuth((prev) => ({ ...prev, status: 'loggedIn' }));
 
     return true;
   };
@@ -84,11 +90,12 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       return false;
     }
 
-    setAuth((prev) => ({
-      ...prev,
-      status: 'loggedOut',
-      profile: undefined,
-    }));
+    // setAuth((prev) => ({
+    //   ...prev,
+    //   status: 'loggedOut',
+    //   profile: undefined,
+    // }));
+    void refetch();
 
     return true;
   };
@@ -107,7 +114,6 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       return false;
     }
 
-    console.log(`Registered successfully: ${username}`);
     return true;
   };
 

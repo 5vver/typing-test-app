@@ -1,5 +1,5 @@
+import { AlertDialog } from '@/components/AlertDialog';
 import { useAuth } from '@/utils/auth.tsx';
-import { Alert } from '@components/Alert.tsx';
 import { LoginForm } from '@components/LoginForm';
 import { type LoginFormValues } from '@components/LoginForm/form-schema.ts';
 import { Spinner } from '@components/Spinner.tsx';
@@ -79,7 +79,7 @@ function LoginComponent() {
         </div>
       </div>
 
-      <Alert
+      <AlertDialog
         alertOpen={alertOpen}
         setAlertOpen={setAlertOpen}
         setAlertMessage={setAlertMessage}
