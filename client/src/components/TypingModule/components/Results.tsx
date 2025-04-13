@@ -1,5 +1,5 @@
+import { ResultsChart } from '@/components/charts/ResultsChart';
 import { Icon } from '@components/Icon';
-import { ResultsChart } from '@components/TypingModule/components/ResultsChart.tsx';
 import type { Stats } from '@components/TypingModule/types.ts';
 import { Typography } from '@components/Typography.tsx';
 import {

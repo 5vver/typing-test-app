@@ -31,7 +31,7 @@ const store = getDefaultStore();
 type TooltipFormatter = NonNullable<
   ComponentProps<typeof ChartTooltip>['formatter']
 >;
-const TooltipFormatter: TooltipFormatter = (value, name, item) => {
+const tooltipFormatter: TooltipFormatter = (value, name, item) => {
   const indicatorColor = item.payload.fill || item.color;
 
   const resultChartValue = store.get(resultChartAtom);
@@ -118,7 +118,7 @@ const ResultsChart: FC = () => {
         <ChartTooltip
           cursor={false}
           content={<ChartTooltipContent labelKey="label" />}
-          formatter={TooltipFormatter}
+          formatter={tooltipFormatter}
         />
 
         <defs>

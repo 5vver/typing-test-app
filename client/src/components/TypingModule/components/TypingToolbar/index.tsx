@@ -1,3 +1,4 @@
+import { useOutsideClick } from '@/hooks/use-outside-click';
 import { DictData } from '@/types/test-types.ts';
 import { Combobox } from '@components/Combobox.tsx';
 import { Icon } from '@components/Icon';
@@ -18,14 +19,14 @@ import { useAtom, useAtomValue } from 'jotai';
 import {
   ChangeEvent,
   FC,
+  RefObject,
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
-
-const timeSettings = ['60', '90', '120'];
-const wordsSettings = ['50', '100', '150'];
+import { timeSettings, wordsSettings } from './constants';
 
 type Props = {
   timerCount: number;
@@ -44,7 +45,13 @@ const TypingToolbar: FC<Props> = ({ timerCount, dicts, onSettingsApply }) => {
   const [settingsWords, setSettingsWords] = useState(settings.words);
   const [settingsDict, setSettingsDict] = useState(settings.dictionary);
 
+  const collapseContentRef = useRef<HTMLDivElement | null>(null);
+
   const { isTyping } = useAtomValue(statusAtom);
+
+  useOutsideClick(collapseContentRef as RefObject<HTMLDivElement>, () => {
+    setIsOpened(false);
+  });
 
   useEffect(() => {
     if (isTyping) {
@@ -66,8 +73,6 @@ const TypingToolbar: FC<Props> = ({ timerCount, dicts, onSettingsApply }) => {
   const onWordsChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const value = parseInt(e.target.value, 10);
-
-      console.log(value);
 
       if (!value || value < 1 || value > 999) return;
 
@@ -150,7 +155,7 @@ const TypingToolbar: FC<Props> = ({ timerCount, dicts, onSettingsApply }) => {
           transition={{ duration: 0.2 }}
           style={{ overflow: 'hidden' }}
         >
-          <CollapsibleContent>
+          <CollapsibleContent ref={collapseContentRef}>
             <div className="flex w-full gap-2 items-center justify-between py-2 px-4 bg-mantle rounded-lg overflow-auto">
               <div className="flex gap-2 items-center">
                 <div className="flex gap-2 items-center">

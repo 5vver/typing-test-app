@@ -57,7 +57,7 @@ export const LoggedInGroup: FC<Props> = ({ onLogoutClick }) => {
 
       <DropdownMenuGroup>
         <Link to="/profile" preload="intent">
-          <DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer">
             <div className="flex gap-x-1">
               <Icon name="cog-6-tooth-solid" size={20} />
               <span>Settings</span>
@@ -66,7 +66,7 @@ export const LoggedInGroup: FC<Props> = ({ onLogoutClick }) => {
         </Link>
 
         <Link to="/records" preload="intent">
-          <DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer">
             <div className="flex gap-x-1">
               <Icon name="star-solid" size={20} />
               <span>Records</span>
@@ -76,7 +76,7 @@ export const LoggedInGroup: FC<Props> = ({ onLogoutClick }) => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem onClick={onInnerLogout}>
+        <DropdownMenuItem className="cursor-pointer" onClick={onInnerLogout}>
           <div className="flex gap-x-1">
             <Icon name="arrow-right-start-on-rectangle" size={20} />
             <span>Log out</span>

@@ -53,6 +53,20 @@ const UserNameEdit: FC<Props> = ({ name, refetch }) => {
       setIsNameEditing(false);
       setEditName(undefined);
     };
+    const onInputKeyPress = (event: KeyboardEvent) => {
+      const key = event.key;
+
+      if (key === 'Enter') {
+        event.preventDefault();
+        onEditSubmit(input.value, name);
+      }
+
+      if (key === 'Escape') {
+        event.preventDefault();
+        setIsNameEditing(false);
+        setEditName(undefined);
+      }
+    };
     const onMouseDown = () => {
       submitButtonDownRef.current = true;
     };
@@ -60,16 +74,19 @@ const UserNameEdit: FC<Props> = ({ name, refetch }) => {
       submitButtonDownRef.current = false;
     };
 
-    input.addEventListener('blur-sm', onInputBlur);
+    input.addEventListener('blur', onInputBlur);
+    input.addEventListener('keydown', onInputKeyPress);
     submitButton.addEventListener('mousedown', onMouseDown);
     submitButton.addEventListener('mouseup', onMouseUp);
 
     return () => {
-      input.removeEventListener('blur-sm', onInputBlur);
+      input.removeEventListener('blur', onInputBlur);
+      input.removeEventListener('keydown', onInputKeyPress);
       submitButton.removeEventListener('mousedown', onMouseDown);
       submitButton.removeEventListener('mouseup', onMouseUp);
     };
-  }, []);
+    /** name dep is for Enter change name variable passed from props */
+  }, [name]);
 
   useLayoutEffect(() => {
     const ghost = ghostNameRef.current;
@@ -103,15 +120,25 @@ const UserNameEdit: FC<Props> = ({ name, refetch }) => {
     [setEditName],
   );
 
-  const onEditSubmit = useCallback(() => {
-    if (!editName || editName === name) {
-      return void setIsNameEditing(false);
-    }
+  const onEditSubmit = useCallback(
+    (newName?: string, oldName?: string) => {
+      const newValue = newName ?? editName ?? '';
+      const oldValue: string = oldName ?? name ?? '';
 
-    changeNickName({ nickname: editName });
+      if (!newValue || newValue === oldValue) {
+        return void setIsNameEditing(false);
+      }
 
-    setIsNameEditing(false);
-  }, [setIsNameEditing, editName, changeNickName, name]);
+      changeNickName({ nickname: newValue });
+
+      setIsNameEditing(false);
+    },
+    [setIsNameEditing, editName, changeNickName, name],
+  );
+
+  const onSumbitButtonClick = useCallback(() => {
+    onEditSubmit();
+  }, [onEditSubmit]);
 
   return (
     <div className="flex gap-1 items-center">
@@ -143,7 +170,7 @@ const UserNameEdit: FC<Props> = ({ name, refetch }) => {
         <Button
           variant="wrapper"
           className="p-0 h-full"
-          onClick={onEditSubmit}
+          onClick={onSumbitButtonClick}
           ref={submitButtonRef}
           disabled={isPending}
         >

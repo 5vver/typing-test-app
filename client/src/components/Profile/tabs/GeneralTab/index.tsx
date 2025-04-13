@@ -14,6 +14,7 @@ const GeneralTab: FC = () => {
   const fallback = name
     ? name
         .split(' ')
+        .slice(0, 2)
         .map((s) => s[0])
         .join('')
         .toUpperCase()
