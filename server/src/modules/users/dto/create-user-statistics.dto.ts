@@ -4,6 +4,8 @@ export class CreateUserStatisticsDto {
   @IsNotEmpty()
   readonly wpm: number;
   @IsNotEmpty()
+  readonly wpm_raw: number;
+  @IsNotEmpty()
   readonly accuracy: number;
   @IsNotEmpty()
   readonly correct_words: number;

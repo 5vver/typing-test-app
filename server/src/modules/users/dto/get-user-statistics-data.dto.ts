@@ -3,6 +3,7 @@ export class GetUserStatisticsDataDto {
     id: string;
     name: string;
     wpm: number;
+    wpmRaw: number;
     correctWords: number;
     incorrectWords: number;
     totalWords: number;

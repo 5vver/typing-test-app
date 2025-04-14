@@ -195,10 +195,10 @@ export const calcGrossWpm = (totalTyped: number, time: number) => {
 
 /*
  * Calculate net words per minute
- * @param totalTyped - number of total typed words
- * @param incorrectTyped - number of incorrect typed words
- * @param time - time in seconds
- * @returns net words per minute
+ * @param {number} totalTyped - number of total typed words
+ * @param {number} incorrectTyped - number of incorrect typed words
+ * @param {number} time - time in seconds
+ * @returns {number} net words per minute
  */
 export const calcNetWpm = (
   totalTyped: number,
@@ -212,9 +212,9 @@ export const calcNetWpm = (
 
 /*
  * Calculate accuracy
- * @param totalTyped - total typed words
- * @param correctTyped - number of correct typed words
- * @returns accuracy in percentage
+ * @param {number} totalTyped - total typed words
+ * @param {number} correctTyped - number of correct typed words
+ * @returns {number} accuracy in percentage
  */
 export const calcAccuracy = (totalTyped: number, correctTyped: number) => {
   const acc = (correctTyped / totalTyped) * 100;
@@ -273,11 +273,13 @@ export const useTimerCountdown = (initialTimerCount = 60) => {
       }
       return;
     }
+
     /* on timer finish **/
     if (timerCount <= 0) {
       setStatus((prev) => ({ ...prev, isFinished: true }));
       setStats((prev) => ({
         ...prev,
+        wpmRaw: calcGrossWpm(prev.totalChars, initialTimerCount),
         wpm: calcNetWpm(
           prev.totalChars,
           prev.incorrectChars,

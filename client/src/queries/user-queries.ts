@@ -38,24 +38,28 @@ const useGetUserProfile = (): UseQueryResult<UserProfile> =>
 const saveResults = async (payload: UserResultPayload) => {
   const { stats, testId } = payload;
 
-  const { data, error } = await httpRequest<UserStats>('/users/result/save', {
-    method: 'POST',
-    data: {
-      wpm: stats.wpm,
-      accuracy: stats.accuracy,
-      correct_words: stats.correctWords,
-      incorrect_words: stats.incorrectWords,
-      total_words: stats.totalWords,
-      correct_characters: stats.correctChars,
-      missed_characters: stats.missedChars,
-      total_characters: stats.totalChars,
-      testId,
+  const { data, error } = await httpRequest<BasicResponse>(
+    '/users/result/save',
+    {
+      method: 'POST',
+      data: {
+        wpm: stats.wpm,
+        wpm_raw: stats.wpmRaw,
+        accuracy: stats.accuracy,
+        correct_words: stats.correctWords,
+        incorrect_words: stats.incorrectWords,
+        total_words: stats.totalWords,
+        correct_characters: stats.correctChars,
+        missed_characters: stats.missedChars,
+        total_characters: stats.totalChars,
+        testId,
+      },
+      withCredentials: true,
     },
-    withCredentials: true,
-  });
+  );
 
-  if (!data || error) {
-    return null;
+  if (!data?.success || error) {
+    throw new Error(data?.message || 'UNKNOWN_ERROR');
   }
 
   return data;
@@ -104,7 +108,7 @@ const useGetUserResults = (
 ) =>
   useQuery({
     queryKey: ['getUserResults', pagination, filter],
-    queryFn: () => getUserResults(pagination),
+    queryFn: () => getUserResults(pagination, filter),
     placeholderData: keepPreviousData,
   });
 

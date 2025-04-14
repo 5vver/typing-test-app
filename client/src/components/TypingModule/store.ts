@@ -19,6 +19,7 @@ const statusAtom = atom<Status>(blankStatus);
 
 const blankStats: Stats = {
   wpm: 0,
+  wpmRaw: 0,
   accuracy: 0,
   correctWords: 0,
   incorrectWords: 0,

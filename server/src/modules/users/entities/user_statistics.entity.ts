@@ -16,6 +16,9 @@ export class UserStatisticsEntity {
   @Column({ default: 0 })
   wpm: number;
 
+  @Column({ default: 0 })
+  wpm_raw: number;
+
   @Column({ default: 0, type: 'float' })
   accuracy: number;
 

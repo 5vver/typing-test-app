@@ -12,6 +12,7 @@ export type UserStats = {
   /** Test title */
   name: string;
   wpm: number;
+  wpmRaw: number;
   accuracy: number;
   correctWords: number;
   incorrectWords: number;
@@ -24,7 +25,7 @@ export type UserStats = {
 };
 
 export type UserResultPayload = {
-  stats: UserStats;
+  stats: Omit<UserStats, 'id' | 'name' | 'timestamp'>;
   testId: string;
 };
 

@@ -26,7 +26,7 @@ type Status = {
   isFocused: boolean;
 };
 
-type Stats = Omit<UserStats, 'id' | 'name'>;
+type Stats = Omit<UserStats, 'id' | 'name' | 'timestamp'>;
 
 type Settings = {
   timerCount: number;

@@ -213,6 +213,7 @@ export class UsersService {
           id: stat.id,
           name: stat.test.title,
           wpm: stat.wpm,
+          wpmRaw: stat.wpm_raw,
           correctWords: stat.correct_words,
           incorrectWords: stat.incorrect_words,
           totalWords: stat.total_words,
