@@ -9,7 +9,9 @@ import {
   CardTitle,
 } from '@components/ui/card.tsx';
 import { Separator } from '@components/ui/separator.tsx';
+import { useAtomValue } from 'jotai';
 import { type FC } from 'react';
+import { resultChartAtom } from '../store';
 
 type Props = {
   stats: Stats;
@@ -26,6 +28,8 @@ const Results: FC<Props> = ({ stats, isFinished }) => {
     incorrectChars,
     totalChars,
   } = stats;
+
+  const resultChartData = useAtomValue(resultChartAtom);
 
   if (!isFinished) {
     return null;
@@ -75,8 +79,9 @@ const Results: FC<Props> = ({ stats, isFinished }) => {
               </Typography>
             </div>
           </div>
+
           <div className="w-full h-full">
-            <ResultsChart />
+            <ResultsChart data={resultChartData} />
           </div>
         </div>
       </CardContent>

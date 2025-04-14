@@ -1,11 +1,11 @@
 import type { WordData } from '@/types/test-types.ts';
 import type {
-  ChartData,
   Settings,
   Stats,
   Status,
 } from '@components/TypingModule/types.ts';
 import { atom } from 'jotai';
+import { ResultChartData } from '../charts/ResultsChart/types';
 
 const wordsDictAtom = atom<WordData[]>([]);
 
@@ -30,7 +30,7 @@ const blankStats: Stats = {
 };
 const statsAtom = atom<Stats>(blankStats);
 
-const resultChartAtom = atom<ChartData[]>([]);
+const resultChartAtom = atom<ResultChartData[]>([]);
 
 const settingsAtom = atom<Settings>({
   timerCount: 30,

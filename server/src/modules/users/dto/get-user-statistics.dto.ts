@@ -13,5 +13,6 @@ export class GetUserStatisticsDto {
     dateTo?: string;
     wpmFrom?: number;
     wpmTo?: number;
+    order?: 'ASC' | 'DESC';
   };
 }

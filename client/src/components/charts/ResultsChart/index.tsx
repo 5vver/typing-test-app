@@ -1,14 +1,13 @@
-import { resultChartAtom } from '@components/TypingModule/store.ts';
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from '@components/ui/chart.tsx';
-import { getDefaultStore, useAtomValue } from 'jotai';
 import * as React from 'react';
 import { ComponentProps, type FC } from 'react';
 import { Area, AreaChart, CartesianGrid, Dot, XAxis, YAxis } from 'recharts';
+import { ResultChartData } from './types';
 
 const chartConfig = {
   rawWpm: {
@@ -19,14 +18,15 @@ const chartConfig = {
     label: 'WPM',
     color: 'var(--mauve)',
   },
-  mistake: {
+  mistakeRate: {
     label: 'Mistakes',
     color: 'var(--red)',
   },
+  mistake: {
+    label: 'Mistakes',
+  },
   label: { label: 'Statistic' },
 } satisfies ChartConfig;
-
-const store = getDefaultStore();
 
 type TooltipFormatter = NonNullable<
   ComponentProps<typeof ChartTooltip>['formatter']
@@ -34,11 +34,12 @@ type TooltipFormatter = NonNullable<
 const tooltipFormatter: TooltipFormatter = (value, name, item) => {
   const indicatorColor = item.payload.fill || item.color;
 
-  const resultChartValue = store.get(resultChartAtom);
-  const mistakeRate = resultChartValue.find(
-    ({ timestamp }) => item.payload.timestamp === timestamp,
-  )?.mistakeRate;
-  const val = name === 'mistake' && mistakeRate ? mistakeRate : value;
+  const val =
+    name === 'mistake' &&
+    'mistakeRate' in item.payload &&
+    item.payload.mistakeRate
+      ? item.payload.mistakeRate
+      : value;
 
   return (
     <>
@@ -57,6 +58,7 @@ const tooltipFormatter: TooltipFormatter = (value, name, item) => {
             {chartConfig[name as keyof typeof chartConfig]?.label}
           </span>
         </div>
+
         {value && (
           <span className="font-mono font-medium tabular-nums text-foreground">
             {val.toLocaleString()}
@@ -67,13 +69,15 @@ const tooltipFormatter: TooltipFormatter = (value, name, item) => {
   );
 };
 
-const ResultsChart: FC = () => {
-  const resultChart = useAtomValue(resultChartAtom);
+type Props = {
+  data: ResultChartData[];
+};
 
+const ResultsChart: FC<Props> = ({ data }) => {
   return (
     <ChartContainer config={chartConfig}>
       <AreaChart
-        data={resultChart}
+        data={data}
         margin={{
           left: 12,
           right: 12,
@@ -149,12 +153,12 @@ const ResultsChart: FC = () => {
           <linearGradient id="fillMistake" x1="0" y1="0" x2="0" y2="1">
             <stop
               offset="5%"
-              stopColor="var(--color-mistake)"
+              stopColor="var(--color-mistakeRate)"
               stopOpacity={0.8}
             />
             <stop
               offset="95%"
-              stopColor="var(--color-mistake)"
+              stopColor="var(--color-mistakeRate)"
               stopOpacity={0.2}
             />
           </linearGradient>
@@ -181,11 +185,11 @@ const ResultsChart: FC = () => {
         <Area
           dataKey="mistake"
           type="natural"
-          stroke="var(--color-mistake)"
+          stroke="var(--color-mistakeRate)"
           fill="url(#fillMistake)"
-          stackId="mistakeStack"
+          stackId="mistakeRateStack"
           yAxisId="left"
-          dot={<Dot r={4} fill="var(--color-mistake)" />}
+          dot={<Dot r={4} fill="var(--color-mistakeRate)" />}
         />
       </AreaChart>
     </ChartContainer>

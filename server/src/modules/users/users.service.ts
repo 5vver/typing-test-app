@@ -195,12 +195,13 @@ export class UsersService {
   }
 
   async getUserResults(userId: string, payload: GetUserStatisticsDto) {
-    const { pageIndex, pageSize } = payload;
+    const { pageIndex, pageSize, filter } = payload;
 
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     const [statistics, total] =
       await this.usersStatisticsRepository.findAndCount({
         where: { user },
+        ...(filter?.order ? { order: { id: filter.order } } : {}),
         skip: pageIndex * pageSize,
         take: pageSize,
         relations: { test: true },

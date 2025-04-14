@@ -1,4 +1,3 @@
-import { useOutsideClick } from '@/hooks/use-outside-click';
 import { DictData } from '@/types/test-types.ts';
 import { Combobox } from '@components/Combobox.tsx';
 import { Icon } from '@components/Icon';
@@ -19,7 +18,6 @@ import { useAtom, useAtomValue } from 'jotai';
 import {
   ChangeEvent,
   FC,
-  RefObject,
   useCallback,
   useEffect,
   useMemo,
@@ -48,10 +46,6 @@ const TypingToolbar: FC<Props> = ({ timerCount, dicts, onSettingsApply }) => {
   const collapseContentRef = useRef<HTMLDivElement | null>(null);
 
   const { isTyping } = useAtomValue(statusAtom);
-
-  useOutsideClick(collapseContentRef as RefObject<HTMLDivElement>, () => {
-    setIsOpened(false);
-  });
 
   useEffect(() => {
     if (isTyping) {
@@ -122,28 +116,50 @@ const TypingToolbar: FC<Props> = ({ timerCount, dicts, onSettingsApply }) => {
           </Typography>
         </div>
 
-        <CollapsibleTrigger asChild className="absolute right-0">
-          <motion.div
-            key="settings-button"
-            initial={{ opacity: 0, display: 'block' }}
-            animate={{
-              opacity: !isTyping && !isOpened ? 1 : 0,
-              display: !isTyping && !isOpened ? 'block' : 'none',
-            }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            style={{ overflow: 'hidden' }}
-          >
-            <Button variant="wrapper" className="w-[20px] h-[20px]">
-              <Icon
-                name="adjustments-horizontal"
-                size={20}
-                color="lavender"
-                hover
-              />
-            </Button>
-          </motion.div>
-        </CollapsibleTrigger>
+        <AnimatePresence>
+          {!isTyping && !isOpened && (
+            <CollapsibleTrigger asChild className="absolute right-0">
+              <motion.div
+                key="settings-open-button"
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: 1,
+                }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                style={{ overflow: 'hidden' }}
+              >
+                <Button variant="wrapper" className="w-[20px] h-[20px]">
+                  <Icon
+                    name="adjustments-horizontal"
+                    size={20}
+                    color="lavender"
+                    hover
+                  />
+                </Button>
+              </motion.div>
+            </CollapsibleTrigger>
+          )}
+
+          {isOpened && (
+            <CollapsibleTrigger asChild className="absolute right-0">
+              <motion.div
+                key="settings-close-button"
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: 1,
+                }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
+                style={{ overflow: 'hidden' }}
+              >
+                <Button variant="wrapper" className="w-[20px] h-[20px]">
+                  <Icon name="x-mark" size={20} color="lavender" hover />
+                </Button>
+              </motion.div>
+            </CollapsibleTrigger>
+          )}
+        </AnimatePresence>
       </div>
 
       <AnimatePresence>

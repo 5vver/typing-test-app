@@ -300,10 +300,10 @@
     --subtext0: #a6adc8;
     --subtext1: #bac2de;
     --text: #cdd6f4;
-    --text-30: #9096ab;
+    --text30: #9096ab;
     --lavender: #b4befe;
-    --lavender-30: #7e85b2;
-    --lavender-70: #36394c;
+    --lavender30: #7e85b2;
+    --lavender70: #36394c;
     --blue: #89b4fa;
     --sapphire: #74c7ec;
     --sky: #89dceb;
@@ -335,7 +335,7 @@
     --accent-foreground: 226deg, 64%, 88%; /* --text */
     --destructive: 351deg, 74%, 73%; /* --red */
     --destructive-foreground: 210 40% 98%;
-    --border: 237deg, 16%, 23%;
+    --border: 234deg, 13%, 31%;
     --input: 237deg, 16%, 23%;
     --ring: 212.7 26.8% 83.9%;
     --chart-1: 220 70% 50%;
@@ -343,7 +343,7 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    --text-30: #9096ab;
+    --text30: #9096ab;
   }
 }
 
@@ -356,4 +356,3 @@
     /*@apply text-[color:var(--text)];*/
   }
 }
-

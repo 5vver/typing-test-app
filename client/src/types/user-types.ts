@@ -20,6 +20,7 @@ export type UserStats = {
   incorrectChars: number;
   missedChars: number;
   totalChars: number;
+  timestamp: number;
 };
 
 export type UserResultPayload = {
@@ -27,7 +28,11 @@ export type UserResultPayload = {
   testId: string;
 };
 
-export type GetUserResultsPayload = {
-  page: number;
-  pageSize: number;
+export type UserResultFilter = {
+  name?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  wpmFrom?: number;
+  wpmTo?: number;
+  order?: 'ASC' | 'DESC';
 };

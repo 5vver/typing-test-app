@@ -26,15 +26,7 @@ type Status = {
   isFocused: boolean;
 };
 
-type Stats = Omit<UserStats, 'id'>;
-
-type ChartData = {
-  timestamp: number;
-  rawWpm: number;
-  netWpm: number;
-  mistake?: number;
-  mistakeRate?: number;
-};
+type Stats = Omit<UserStats, 'id' | 'name'>;
 
 type Settings = {
   timerCount: number;
@@ -52,7 +44,6 @@ type AreaFocusData = {
 
 export {
   type AreaFocusData,
-  type ChartData,
   type GenerateWords,
   type Settings,
   type Stats,

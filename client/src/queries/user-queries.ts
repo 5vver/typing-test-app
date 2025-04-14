@@ -2,6 +2,7 @@ import { useToast } from '@/hooks/use-toast';
 import { BasicResponse } from '@/types';
 import type {
   UserProfile,
+  UserResultFilter,
   UserResultPayload,
   UserStats,
 } from '@/types/user-types.ts';
@@ -75,12 +76,18 @@ const useSaveResults = () => {
   });
 };
 
-const getUserResults = async (payload: PaginationState) => {
+const getUserResults = async (
+  payload: PaginationState,
+  filter?: UserResultFilter,
+) => {
   const { data, error } = await httpRequest<
     BasicResponse<{ stats: UserStats[]; total: number }>
   >('/users/result/get', {
     method: 'POST',
-    data: payload,
+    data: {
+      ...payload,
+      filter,
+    },
     withCredentials: true,
   });
 
@@ -91,9 +98,12 @@ const getUserResults = async (payload: PaginationState) => {
   return data.data;
 };
 
-const useGetUserResults = (pagination: PaginationState) =>
+const useGetUserResults = (
+  pagination: PaginationState,
+  filter?: UserResultFilter,
+) =>
   useQuery({
-    queryKey: ['getUserResults', pagination],
+    queryKey: ['getUserResults', pagination, filter],
     queryFn: () => getUserResults(pagination),
     placeholderData: keepPreviousData,
   });
