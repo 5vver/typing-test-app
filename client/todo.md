@@ -3,6 +3,7 @@
 ## Features:
 
 - [x] User saved test results list
+- !!! Finish admin panel dicts table - first removeDict api endpoint
 - Settings - Profile - overall results chart
 - Leaderboard page
 - Settings page

@@ -33,12 +33,6 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  // TODO: Remove this endpoint
-  @Get()
-  getAll() {
-    return this.usersService.findAll();
-  }
-
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req: AuthenticatedRequest) {
@@ -49,16 +43,6 @@ export class UsersController {
     const picture = await this.usersService.getProfilePicture(id);
 
     return { id, username, email, role, nickname, avatar: picture?.url };
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -29,4 +29,23 @@ const useProcessDictQuery = (): UseMutationResult<
     mutationFn: (payload: ProcessDict) => processDictQuery(payload),
   });
 
-export { useProcessDictQuery };
+const removeDictQuery = async (id: string) => {
+  const { data, error } = await httpRequest<{ success: boolean }>(
+    '/tests/removeDict',
+    { method: 'DELETE', data: { id } },
+  );
+
+  if (!data?.success || error) {
+    throw error;
+  }
+
+  return data;
+};
+
+const useRemoveDictQuery = (id: string) =>
+  useMutation({
+    mutationKey: ['removeDict'],
+    mutationFn: () => removeDictQuery(id),
+  });
+
+export { useProcessDictQuery, useRemoveDictQuery };

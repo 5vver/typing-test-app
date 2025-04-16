@@ -1,3 +1,4 @@
+import { BasicResponse } from '@/types';
 import { DictData, SelectDictWords, WordData } from '@/types/test-types.ts';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
@@ -31,10 +32,12 @@ const useGetRandomWords = (
 };
 
 const getDictsQuery = async () => {
-  const { data, error } = await httpRequest<DictData[]>('/tests/getDicts');
+  const { data, error } =
+    await httpRequest<BasicResponse<DictData[]>>('/tests/getDicts');
 
-  if (error) throw error;
-  if (!data) return null;
+  if (!data?.success || error) {
+    throw new Error(data?.message || 'UNKNOWN_ERROR');
+  }
 
   return data;
 };
@@ -46,20 +49,5 @@ const useGetDicts = (): UseQueryResult<DictData[]> => {
     refetchOnWindowFocus: false,
   });
 };
-
-const getResultsListQuery = async () => {
-  const { data, error } = await httpRequest<DictData[]>(
-    '/tests/getResultsList',
-  );
-
-  if (!data || error) {
-    return null;
-  }
-
-  return data;
-};
-
-const useGetResultsList = (): UseQueryResult<DictData[]> =>
-  useQuery({ queryKey: ['resultsList'], queryFn: () => getResultsListQuery() });
 
 export { getRandomWords, useGetDicts, useGetRandomWords };

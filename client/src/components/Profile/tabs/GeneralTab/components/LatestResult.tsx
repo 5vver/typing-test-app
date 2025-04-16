@@ -16,7 +16,7 @@ import { FC, useMemo } from 'react';
 const LatestResultCard: FC = () => {
   const { data, isLoading, isError } = useGetUserResults(
     { pageIndex: 0, pageSize: 1 },
-    { order: 'ASC' },
+    { order: 'DESC' },
   );
 
   const stats = useMemo(() => data?.stats[0], [data]);
@@ -28,7 +28,7 @@ const LatestResultCard: FC = () => {
 
     return [
       { statKey: 'wpmNet', value: stats.wpm, fill: 'var(--mauve)' },
-      { statKey: 'wpmRaw', value: 11, fill: 'var(--teal)' },
+      { statKey: 'wpmRaw', value: stats.wpmRaw, fill: 'var(--teal)' },
       { statKey: 'mistakes', value: stats.incorrectChars, fill: 'var(--red)' },
     ] as ResultBarChartData[];
   }, [data]);

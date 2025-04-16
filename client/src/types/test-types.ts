@@ -12,6 +12,7 @@ type SelectDictWords = {
 type DictData = {
   id: string;
   title: string;
+  test_words: [{ id: string }];
 };
 
 export type { DictData, SelectDictWords, WordData };

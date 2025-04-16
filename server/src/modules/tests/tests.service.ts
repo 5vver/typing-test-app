@@ -7,15 +7,17 @@ import { TestWordsEntity } from './entities/test_words.entity';
 import { SelectWordsOptionsDto } from './dto/select-words-options.dto';
 import { dataSourceRepository } from '../../database/constants';
 import { ProcessFormDictDto } from './dto/process-form-dict.dto';
+import { testsRepositoriesConstants } from './constants';
+import { GetDictsResponse } from './dto/get-dicts-response.dto';
 
 @Injectable()
 export class TestsService {
   constructor(
-    @Inject('TESTS_REPOSITORY')
+    @Inject(testsRepositoriesConstants.tests)
     private testsRepository: Repository<TestEntity>,
-    @Inject('WORDS_REPOSITORY')
+    @Inject(testsRepositoriesConstants.words)
     private wordsRepository: Repository<WordsEntity>,
-    @Inject('TESTS_WORDS_REPOSITORY')
+    @Inject(testsRepositoriesConstants.testsWords)
     private testsWordsRepository: Repository<TestWordsEntity>,
     @Inject(dataSourceRepository)
     private dataSource: DataSource,
@@ -40,14 +42,35 @@ export class TestsService {
     return testWords.map(({ word }) => word);
   }
 
-  getDicts() {
-    return this.testsRepository.find();
+  async getDicts(id?: string) {
+    if (id) {
+      const dict = await this.testsRepository.findOneBy({
+        id,
+      });
+
+      return { dicts: [dict], words: 0 } as GetDictsResponse;
+    }
+
+    const dicts = await this.testsRepository.find({
+      relations: { test_words: true },
+    });
+
+    return { dicts } as GetDictsResponse;
   }
 
   async removeDict(id: string) {
-    await this.testsWordsRepository.delete({ test: { id } });
+    const { dicts } = await this.getDicts(id);
+    const test = dicts[0];
 
-    return await this.testsRepository.delete({ id });
+    if (!test) {
+      return { affected: 0 };
+    }
+
+    await this.testsWordsRepository.delete({
+      test,
+    });
+
+    return await this.testsRepository.delete({ id: test.id });
   }
 
   async processFormDict({ title, words, lang }: ProcessFormDictDto) {

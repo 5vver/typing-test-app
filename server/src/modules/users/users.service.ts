@@ -1,20 +1,24 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { UserEntity } from './entities/user.entity';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { UserStatisticsEntity } from './entities/user_statistics.entity';
-import { CreateUserDto } from './dto/create-user.dto';
 import { saltRounds, usersRepositoriesConstants } from './constants';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UserEntity } from './entities/user.entity';
+import { UserStatisticsEntity } from './entities/user_statistics.entity';
 
 import * as bcrypt from 'bcrypt';
-import { UserPicturesEntity } from './entities/user_pictures.entity';
-import { join } from 'path';
 import { promises as fs } from 'fs';
-import { CreateUserStatisticsDto } from './dto/create-user-statistics.dto';
-import { testsRepositoriesConstants } from '../tests/constants';
-import { TestEntity } from '../tests/entities/test.entity';
-import { GetUserStatisticsDto } from './dto/get-user-statistics.dto';
-import { GetUserStatisticsDataDto } from './dto/get-user-statistics-data.dto';
+import { join } from 'path';
 import { GenericResponse } from 'src/types';
+import { TestsService } from '../tests/tests.service';
+import { CreateUserStatisticsDto } from './dto/create-user-statistics.dto';
+import { GetUserStatisticsDataDto } from './dto/get-user-statistics-data.dto';
+import { GetUserStatisticsDto } from './dto/get-user-statistics.dto';
+import { UserPicturesEntity } from './entities/user_pictures.entity';
 
 @Injectable()
 export class UsersService {
@@ -25,8 +29,8 @@ export class UsersService {
     private readonly usersStatisticsRepository: Repository<UserStatisticsEntity>,
     @Inject(usersRepositoriesConstants.usersPictures)
     private readonly usersPicturesRepository: Repository<UserPicturesEntity>,
-    @Inject(testsRepositoriesConstants.tests)
-    private readonly testsRepository: Repository<TestEntity>,
+    @Inject(forwardRef(() => TestsService))
+    private readonly testsService: TestsService,
   ) {}
 
   async create(dto: CreateUserDto): Promise<string> {
@@ -174,9 +178,7 @@ export class UsersService {
 
   async saveResults(userId: string, stats: CreateUserStatisticsDto) {
     const user = await this.usersRepository.findOne({ where: { id: userId } });
-    const test = await this.testsRepository.findOne({
-      where: { id: stats.testId },
-    });
+    const { dicts } = await this.testsService.getDicts(stats.testId);
 
     if (!user) {
       throw new NotFoundException('User is not found');
@@ -189,7 +191,7 @@ export class UsersService {
     return await this.usersStatisticsRepository.insert({
       ...stats,
       user,
-      test,
+      test: dicts[0],
       timestamp: new Date().toISOString(),
     });
   }
@@ -201,7 +203,7 @@ export class UsersService {
     const [statistics, total] =
       await this.usersStatisticsRepository.findAndCount({
         where: { user },
-        ...(filter?.order ? { order: { id: filter.order } } : {}),
+        ...(filter?.order ? { order: { timestamp: filter.order } } : {}),
         skip: pageIndex * pageSize,
         take: pageSize,
         relations: { test: true },

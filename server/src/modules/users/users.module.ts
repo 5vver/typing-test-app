@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { DatabaseModule } from '../../database/database.module';
@@ -8,15 +8,14 @@ import {
   usersStatisticsProviders,
 } from './users.providers';
 import { MulterModule } from '../multer.module';
-import { testsProviders } from '../tests/tests.providers';
+import { TestsModule } from '../tests/tests.module';
 
 @Module({
-  imports: [DatabaseModule, MulterModule],
+  imports: [DatabaseModule, MulterModule, forwardRef(() => TestsModule)],
   providers: [
     ...usersProviders,
     ...usersStatisticsProviders,
     ...usersPicturesProviders,
-    ...testsProviders,
     UsersService,
   ],
   controllers: [UsersController],

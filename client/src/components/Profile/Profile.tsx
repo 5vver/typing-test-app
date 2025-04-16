@@ -1,6 +1,6 @@
+import { DictJsonForm } from '@/components/AdminPanel/components/DictJsonForm';
 import { AccountTab } from '@/components/Profile/tabs/AccountTab/AccountTab';
 import { GeneralTab } from '@/components/Profile/tabs/GeneralTab';
-import { DictJsonForm } from '@components/AdminPanel/DictJsonForm.tsx';
 import { Typography } from '@components/Typography.tsx';
 import { Separator } from '@components/ui/separator.tsx';
 import {
@@ -20,6 +20,8 @@ type Props = {
 };
 
 export const Profile: FC<Props> = ({ auth }) => {
+  const role = auth.profile?.role;
+
   const [tab, setTab] = useState<ProfileTabs>('general');
   const navigate = useNavigate();
 
@@ -80,13 +82,17 @@ export const Profile: FC<Props> = ({ auth }) => {
             Records
           </TabsTrigger>
 
-          <Separator orientation="horizontal" className="bg-surface1" />
-          <TabsTrigger
-            value="admin"
-            className="w-full justify-start text-md cursor-pointer"
-          >
-            Dictionary Control Panel
-          </TabsTrigger>
+          {role === 'admin' && (
+            <>
+              <Separator orientation="horizontal" className="bg-surface1" />
+              <TabsTrigger
+                value="admin"
+                className="w-full justify-start text-md cursor-pointer"
+              >
+                Dictionary Control Panel
+              </TabsTrigger>
+            </>
+          )}
         </TabsList>
       </div>
 
